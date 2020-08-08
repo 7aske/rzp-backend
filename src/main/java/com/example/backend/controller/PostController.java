@@ -2,11 +2,16 @@
 package com.example.backend.controller;
 
 import com.example.backend.entity.Post;
+import com.example.backend.entity.dto.PostDTO;
+import com.example.backend.entity.dto.PostSaveDTO;
+import com.example.backend.entity.dto.http.ClientError;
 import com.example.backend.service.PostService;
+import com.example.backend.service.impl.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -26,13 +31,20 @@ public class PostController {
 	}
 
 	@GetMapping("/getAllPublished")
-	public ResponseEntity<List<Post>> getAllPublished(){
-		return ResponseEntity.ok(postService.findAllByPostPublished(true));
+	public ResponseEntity<List<PostDTO>> getAllPublished(HttpServletRequest request) {
+		String locale = (String) request.getAttribute("locale");
+		return ResponseEntity.ok(postService.findAllDTOByPostPublishedAndLocale(true, locale));
+
 	}
 
 	@PostMapping("/save")
-	public ResponseEntity<Post> save(@RequestBody Post post) {
-		return ResponseEntity.ok(postService.save(post));
+	public ResponseEntity<Object> save(@RequestBody PostSaveDTO post) {
+		try {
+			return ResponseEntity.ok(new PostDTO(postService.save(post)));
+		} catch (PostServiceImpl.PostValidationException e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 
 	@PutMapping("/update")

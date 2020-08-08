@@ -17,6 +17,8 @@ public interface RoleService {
 
 	Role findAllByRoleName(String roleName);
 
+	List<Role> findAllByUserUsername(String userUsername);
+
 	boolean deleteById(Long idRole);
 
 	boolean deleteByRoleName(String roleName);

@@ -1,5 +1,6 @@
 package com.example.backend.entity;
 
+import com.example.backend.entity.dto.UserDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,5 +38,11 @@ public class User implements Serializable {
 	private String userDisplayName;
 	@Column(name = "user_date_created")
 	private LocalDate userDateCreated;
+	@ManyToMany
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name= "id_role"), inverseJoinColumns = @JoinColumn(name = "id_user"))
+	private List<Role> userRoles = new ArrayList<>();
 
+	public UserDTO getDTO(){
+		return new UserDTO(this);
+	}
 }

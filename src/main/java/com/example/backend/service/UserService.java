@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.User;
+// import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,6 +27,8 @@ public interface UserService {
 	List<User> findAllByUserLastName(String userLastName);
 
 	List<User> findAllByUserDisplayName(String userDisplayName);
+
+	// List<GrantedAuthority> getAllRolesByUsername(String username);
 
 	boolean deleteById(Long idUser);
 }

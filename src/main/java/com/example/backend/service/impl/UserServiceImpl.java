@@ -1,10 +1,18 @@
 package com.example.backend.service.impl;
 
+import com.example.backend.entity.Role;
+import com.example.backend.entity.UserRole;
+import com.example.backend.repository.RoleRepository;
+import com.example.backend.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.security.core.GrantedAuthority;
+// import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.UserService;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -12,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Override
 	public List<User> findAll() {
@@ -26,6 +37,15 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 	}
+
+	// @Override
+	// public List<GrantedAuthority> getAllRolesByUsername(String username) {
+	// 	List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
+	// 	for (Role role : roleRepository.findAllByUserUsername(username)) {
+	// 		grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName().toUpperCase()));
+	// 	}
+	// 	return grantedAuthorityList;
+	// }
 
 	@Override
 	public User findByUserUsername(String userUsername) {
