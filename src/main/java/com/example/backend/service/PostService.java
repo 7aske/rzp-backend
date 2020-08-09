@@ -12,7 +12,7 @@ public interface PostService {
 
 	List<Post> findAll();
 
-	void delete(Post post);
+	void delete(Post post) throws Exception;
 
 	Post save(PostDTO post) throws PostServiceImpl.PostValidationException;
 

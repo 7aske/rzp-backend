@@ -10,6 +10,6 @@ import com.example.backend.entity.Category;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	Optional<Category> findByIdCategory(Long idCategory);
-	List<Category> findAllByCategoryName(String categoryName);
-	boolean deleteAllByCategoryName(String categoryName);
+	Optional<Category> findByCategoryName(String categoryName);
+	void deleteAllByCategoryName(String categoryName);
 }

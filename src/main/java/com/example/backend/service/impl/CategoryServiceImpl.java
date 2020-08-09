@@ -1,5 +1,6 @@
 package com.example.backend.service.impl;
 
+import com.example.backend.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.backend.entity.Category;
@@ -20,43 +21,64 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category findById(Long idCategory) {
-		if (categoryRepository.findById(idCategory).isPresent()) {
-			return categoryRepository.findById(idCategory).get();
-		} else {
-			return null;
+		return categoryRepository.findByIdCategory(idCategory).orElse(null);
+	}
+
+	@Override
+	public Category findByCategoryName(String categoryName) {
+		return categoryRepository.findByCategoryName(categoryName).orElse(null);
+	}
+
+	@Override
+	public Category save(Category category) throws CategoryValidationException {
+		validate(category);
+		if (categoryRepository.findByCategoryName(category.getCategoryName()).isPresent()) {
+			throw new CategoryValidationException("category.save.name-exists");
+		}
+
+		return categoryRepository.save(category);
+	}
+
+	@Override
+	public Category update(Category newCategory) throws CategoryValidationException {
+		validate(newCategory);
+		Category category = categoryRepository.findByIdCategory(newCategory.getIdCategory()).orElseThrow(() -> new CategoryValidationException("category.save.category-not-found"));
+		boolean isTagNameValid = category.getCategoryName().equals(newCategory.getCategoryName()) ||
+				!categoryRepository.findByCategoryName(newCategory.getCategoryName()).isPresent();
+
+		if (!isTagNameValid) {
+			throw new CategoryValidationException("category.save.name-exists");
+		}
+
+		category.setCategoryName(newCategory.getCategoryName());
+
+		return categoryRepository.save(newCategory);
+	}
+
+	@Override
+	public void delete(Category category) {
+		categoryRepository.delete(category);
+	}
+
+	@Override
+	public void deleteById(Long idCategory) throws Exception {
+		categoryRepository.deleteById(idCategory);
+	}
+
+	@Override
+	public void deleteAllByCategoryName(String categoryName) throws Exception {
+		categoryRepository.deleteAllByCategoryName(categoryName);
+	}
+
+	private void validate(Category category) throws CategoryValidationException {
+		if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
+			throw new CategoryValidationException("category.save.name-invalid");
 		}
 	}
 
-	@Override
-	public List<Category> findAllByCategoryName(String categoryName) {
-		return categoryRepository.findAllByCategoryName(categoryName);
+	public static class CategoryValidationException extends Exception {
+		public CategoryValidationException(String message) {
+			super(message);
+		}
 	}
-
-	@Override
-	public Category save(Category category) {
-		return categoryRepository.save(category);
-	}
-
-	@Override
-	public Category update(Category category) {
-		return categoryRepository.save(category);
-	}
-
-	@Override
-	public boolean delete(Category category) {
-		categoryRepository.delete(category);
-		return !categoryRepository.findById(category.getIdCategory()).isPresent();
-	}
-
-	@Override
-	public boolean deleteById(Long idCategory) {
-		categoryRepository.deleteById(idCategory);
-		return !categoryRepository.findById(idCategory).isPresent();
-	}
-
-	@Override
-	public boolean deleteAllByCategoryName(String categoryName) {
-		return categoryRepository.deleteAllByCategoryName(categoryName);
-	}
-
 }

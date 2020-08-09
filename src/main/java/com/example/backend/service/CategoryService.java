@@ -1,23 +1,25 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Category;
+import com.example.backend.service.impl.CategoryServiceImpl;
+
 import java.util.List;
 
 public interface CategoryService {
 
 	List<Category> findAll();
 
-	boolean delete(Category category);
+	void delete(Category category) throws Exception;
 
-	Category save(Category category);
+	Category save(Category category) throws CategoryServiceImpl.CategoryValidationException;
 
-	Category update(Category category);
+	Category update(Category category) throws CategoryServiceImpl.CategoryValidationException;
 
 	Category findById(Long idCategory);
 
-	List<Category> findAllByCategoryName(String categoryName);
+	Category findByCategoryName(String categoryName);
 
-	boolean deleteById(Long idCategory);
+	void deleteById(Long idCategory) throws Exception;
 
-	boolean deleteAllByCategoryName(String categoryName);
+	void deleteAllByCategoryName(String categoryName) throws Exception;
 }

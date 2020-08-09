@@ -139,27 +139,27 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void delete(Post post) {
+	public void delete(Post post) throws Exception{
 		postRepository.delete(post);
 	}
 
 	@Override
-	public void deleteById(Long idPost) {
+	public void deleteById(Long idPost) throws Exception {
 		postRepository.deleteById(idPost);
 	}
 
 	@Override
-	public void deleteAllByIdUser(User idUser) {
+	public void deleteAllByIdUser(User idUser) throws Exception {
 		postRepository.deleteAllByIdUser(idUser);
 	}
 
 	@Override
-	public void deleteAllByIdCategory(Category idCategory) {
+	public void deleteAllByIdCategory(Category idCategory) throws Exception {
 		postRepository.deleteAllByIdCategory(idCategory);
 	}
 
 	@Override
-	public void deleteAllByPostPublished(Boolean postPublished) {
+	public void deleteAllByPostPublished(Boolean postPublished) throws Exception {
 		postRepository.deleteAllByPostPublished(postPublished);
 	}
 

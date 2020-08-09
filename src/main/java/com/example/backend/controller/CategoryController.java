@@ -2,7 +2,10 @@
 package com.example.backend.controller;
 
 import com.example.backend.entity.Category;
+import com.example.backend.entity.dto.http.ClientError;
+import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.service.CategoryService;
+import com.example.backend.service.impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,22 +30,44 @@ public class CategoryController {
 
 
 	@PostMapping("/save")
-	public ResponseEntity<Category> save(@RequestBody Category category) {
-		return ResponseEntity.ok(categoryService.save(category));
+	public ResponseEntity<Object> save(@RequestBody Category category) {
+		try {
+			return ResponseEntity.ok(categoryService.save(category));
+		} catch (CategoryServiceImpl.CategoryValidationException e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Category> update(@RequestBody Category category) {
-		return ResponseEntity.ok(categoryService.update(category));
+	public ResponseEntity<Object> update(@RequestBody Category category) {
+		try {
+			return ResponseEntity.ok(categoryService.update(category));
+		} catch (CategoryServiceImpl.CategoryValidationException e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 
 	@DeleteMapping("/delete")
 	public ResponseEntity<Object> delete(@RequestBody Category category) {
-		return ResponseEntity.ok(categoryService.delete(category));
+		try {
+	        categoryService.delete(category);
+			return ResponseEntity.ok(new ClientMessage("deleted"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 
 	@DeleteMapping("/deleteById/{idCategory}")
 	public ResponseEntity<Object> deleteById(@PathVariable Long idCategory) {
-		return ResponseEntity.ok(categoryService.deleteById(idCategory));
+		try {
+			categoryService.deleteById(idCategory);
+			return ResponseEntity.ok(new ClientMessage("deleted"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 }

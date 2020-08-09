@@ -3,6 +3,7 @@ package com.example.backend.controller;
 
 import com.example.backend.entity.Tag;
 import com.example.backend.entity.dto.http.ClientError;
+import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.service.TagService;
 import com.example.backend.service.impl.PostServiceImpl;
 import com.example.backend.service.impl.TagServiceImpl;
@@ -56,11 +57,23 @@ public class TagController {
 
 	@DeleteMapping("/delete")
 	public ResponseEntity<Object> delete(@RequestBody Tag tag) {
-		return ResponseEntity.ok(tagService.delete(tag));
+		try {
+			tagService.delete(tag);
+			return ResponseEntity.ok(new ClientMessage("deleted"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 
 	@DeleteMapping("/deleteById/{idTag}")
 	public ResponseEntity<Object> deleteById(@PathVariable Long idTag) {
-		return ResponseEntity.ok(tagService.deleteById(idTag));
+		try {
+			tagService.deleteById(idTag);
+			return ResponseEntity.ok(new ClientMessage("deleted"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 }
