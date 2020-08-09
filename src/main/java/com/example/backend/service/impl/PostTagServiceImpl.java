@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.example.backend.entity.PostTag;
 import com.example.backend.repository.PostTagRepository;
 import com.example.backend.service.PostTagService;
+
 import java.util.List;
 
 @Service
@@ -65,6 +66,4 @@ public class PostTagServiceImpl implements PostTagService {
 	public boolean deleteAllByIdPost(Long idPost) {
 		return false;
 	}
-
-
 }

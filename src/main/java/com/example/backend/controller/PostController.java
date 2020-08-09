@@ -38,7 +38,14 @@ public class PostController {
 	@GetMapping("/getAllPublished")
 	public ResponseEntity<List<PostDTO>> getAllPublished(HttpServletRequest request) {
 		String locale = (String) request.getAttribute("locale");
-		return ResponseEntity.ok(postService.findAllDTOByPostPublishedAndLocale(true, locale));
+		return ResponseEntity.ok(postService.findAllDTOByPostPublished(true));
+	}
+
+
+	@GetMapping("/getAllPublished/{categoryName}")
+	public ResponseEntity<List<PostDTO>> getAllPublishedByCategoryName(@RequestParam String categoryName, HttpServletRequest request) {
+		String locale = (String) request.getAttribute("locale");
+		return ResponseEntity.ok(postService.findAllDTOByPostPublished(true));
 	}
 
 	@PostMapping("/save")

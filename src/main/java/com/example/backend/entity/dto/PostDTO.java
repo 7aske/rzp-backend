@@ -1,11 +1,10 @@
 package com.example.backend.entity.dto;
 
-import com.example.backend.entity.Category;
+import com.example.backend.entity.Tag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,10 +15,12 @@ public class PostDTO {
 	private Long idPost;
 	private Long idUser;
 	private Long idCategory;
-	private List<PostTranslationDTO> postTranslations;
 	private Boolean postPublished;
-	private Boolean postDeleted;
 	private LocalDate postDatePosted;
 	private Long postViews;
-
+	private String postTitle;
+	private String postExcerpt;
+	private String postBody;
+	private String postSlug;
+	private List<Tag> tagList;
 }

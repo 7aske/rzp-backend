@@ -20,29 +20,27 @@ public interface PostService {
 
 	Post findById(Long idPost);
 
-	Post findByPostSlug(String postSlug, String locale);
+	Post findByPostSlug(String postSlug);
 
-	PostDTO findDTOByPostSlug(String postSlug, String locale);
+	PostDTO findDTOByPostSlug(String postSlug);
 
-	Post findAllByPostTitle(String postTitle, String locale);
+	Post findAllByPostTitle(String postTitle);
 
 	List<Post> findAllByIdUser(User idUser);
 
 	List<Post> findAllByIdCategory(Category idCategory);
 
-	List<Post> findAllByPostDeleted(Boolean postDeleted);
-
 	List<Post> findAllByPostPublished(Boolean postPublished);
 
-	List<PostDTO> findAllDTOByPostPublishedAndLocale(Boolean postPublished, String locale);
+	List<PostDTO> findAllDTOByPostPublishedTrueAndCategoryName(String categoryName);
+
+	List<PostDTO> findAllDTOByPostPublished(Boolean postPublished);
 
 	void deleteById(Long idPost) throws Exception;
 
 	void deleteAllByIdUser(User idUser) throws Exception;
 
 	void deleteAllByIdCategory(Category idCategory) throws Exception;
-
-	void deleteAllByPostDeleted(Boolean postDeleted) throws Exception;
 
 	void deleteAllByPostPublished(Boolean postPublished) throws Exception;
 

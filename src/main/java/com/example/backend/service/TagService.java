@@ -1,6 +1,8 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Tag;
+import com.example.backend.service.impl.TagServiceImpl;
+
 import java.util.List;
 
 public interface TagService {
@@ -9,9 +11,9 @@ public interface TagService {
 
 	boolean delete(Tag tag);
 
-	Tag save(Tag tag);
+	Tag save(Tag tag) throws TagServiceImpl.TagValidationException;
 
-	Tag update(Tag tag);
+	Tag update(Tag tag) throws TagServiceImpl.TagValidationException;
 
 	Tag findById(Long idTag);
 

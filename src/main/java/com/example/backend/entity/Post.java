@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import com.example.backend.entity.Tag;
 
 import javax.persistence.*;
 
@@ -33,65 +34,22 @@ public class Post implements Serializable {
 	@ManyToOne
 	private Category idCategory;
 
-	@OneToMany(mappedBy = "idPost", cascade = CascadeType.ALL)
-	@ToString.Exclude
-	private List<PostTranslation> postTranslations;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "id_post"), inverseJoinColumns = @JoinColumn(name = "id_tag"))
+	private List<Tag> tagList;
 
+	@Column(name = "post_title")
+	private String postTitle;
+	@Column(name = "post_excerpt")
+	private String postExcerpt;
+	@Column(name = "post_body")
+	private String postBody;
+	@Column(name = "post_slug")
+	private String postSlug;
 	@Column(name = "post_date_posted")
 	private LocalDate postDatePosted = LocalDate.now();
-	@Column(name = "post_deleted")
-	private Boolean postDeleted = false;
 	@Column(name = "post_published")
 	private Boolean postPublished = true;
 	@Column(name = "post_views")
 	private Long postViews = 0L;
-
-	public PostTranslation getPostTranslation(String locale) {
-		return getPostTranslations()
-				.stream()
-				.filter(translation -> translation
-						.getLanguage()
-						.getLanguageName()
-						.equals(locale))
-				.findFirst().orElse(null);
-	}
-
-	public boolean isLocalizedFor(String locale) {
-		return getPostTranslation(locale) != null;
-	}
-
-	public String getPostTitle(String locale) {
-		PostTranslation postTranslation = getPostTranslation(locale);
-		if (postTranslation != null) {
-			return postTranslation.getPostTitleTranslation();
-		}
-		return "";
-	}
-
-	public String getPostExcerpt(String locale) {
-		PostTranslation postTranslation = getPostTranslation(locale);
-		if (postTranslation != null) {
-			return postTranslation.getPostExcerptTranslation();
-		}
-		return "";
-	}
-
-
-	public String getPostBody(String locale) {
-		PostTranslation postTranslation = getPostTranslation(locale);
-		if (postTranslation != null) {
-			return postTranslation.getPostBodyTranslation();
-		}
-		return "";
-	}
-
-
-	public String getPostSlug(String locale) {
-		PostTranslation postTranslation = getPostTranslation(locale);
-		if (postTranslation != null) {
-			return postTranslation.getPostSlugTranslation();
-		}
-		return "";
-	}
-
 }

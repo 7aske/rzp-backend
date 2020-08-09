@@ -16,12 +16,14 @@ public class PostAdapter {
 		postDTO.setIdUser(post.getIdUser().getIdUser());
 		postDTO.setIdCategory(post.getIdCategory().getIdCategory());
 		postDTO.setPostDatePosted(post.getPostDatePosted());
-		postDTO.setPostDeleted(post.getPostDeleted());
 		postDTO.setPostPublished(post.getPostPublished());
 		postDTO.setPostViews(post.getPostViews());
 
-		postDTO.setPostTranslations(PostTranslationAdapter.adapt(post.getPostTranslations()));
-
+		postDTO.setPostTitle(post.getPostTitle());
+		postDTO.setPostSlug(post.getPostSlug());
+		postDTO.setPostExcerpt(post.getPostExcerpt());
+		postDTO.setPostBody(post.getPostBody());
+		postDTO.setTagList(post.getTagList());
 		return postDTO;
 	}
 

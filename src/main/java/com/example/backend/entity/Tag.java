@@ -1,8 +1,10 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -21,4 +23,9 @@ public class Tag implements Serializable {
 
 	@Column(name = "tag_name")
 	private String tagName;
+
+	@JsonIgnore
+	@ToString.Exclude
+	@ManyToMany(mappedBy = "tagList")
+	private List<Post> postList;
 }

@@ -2,7 +2,11 @@
 package com.example.backend.controller;
 
 import com.example.backend.entity.Tag;
+import com.example.backend.entity.dto.http.ClientError;
 import com.example.backend.service.TagService;
+import com.example.backend.service.impl.PostServiceImpl;
+import com.example.backend.service.impl.TagServiceImpl;
+import javafx.beans.binding.ObjectExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +35,23 @@ public class TagController {
 	}
 
 	@PostMapping("/save")
-	public ResponseEntity<Tag> save(@RequestBody Tag tag) {
-		return ResponseEntity.ok(tagService.save(tag));
+	public ResponseEntity<Object> save(@RequestBody Tag tag) {
+		try {
+			return ResponseEntity.ok(tagService.save(tag));
+		} catch (TagServiceImpl.TagValidationException e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Tag> update(@RequestBody Tag tag) {
-		return ResponseEntity.ok(tagService.update(tag));
+	public ResponseEntity<Object> update(@RequestBody Tag tag) {
+		try {
+			return ResponseEntity.ok(tagService.update(tag));
+		} catch (TagServiceImpl.TagValidationException e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 
 	@DeleteMapping("/delete")

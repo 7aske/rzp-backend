@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.example.backend.entity.Tag;
 import com.example.backend.repository.TagRepository;
 import com.example.backend.service.TagService;
+
 import java.util.List;
 
 @Service
@@ -20,11 +21,7 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public Tag findById(Long idTag) {
-		if (tagRepository.findById(idTag).isPresent()) {
-			return tagRepository.findById(idTag).get();
-		} else {
-			return null;
-		}
+		return tagRepository.findById(idTag).orElse(null);
 	}
 
 	@Override
@@ -33,12 +30,27 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public Tag save(Tag tag) {
+	public Tag save(Tag tag) throws TagValidationException {
+		validate(tag);
+		if (tagRepository.findByTagName(tag.getTagName()).isPresent()) {
+			throw new TagValidationException("tag.save.name-exists");
+		}
 		return tagRepository.save(tag);
 	}
 
 	@Override
-	public Tag update(Tag tag) {
+	public Tag update(Tag newTag) throws TagValidationException {
+		validate(newTag);
+		Tag tag = tagRepository.findByIdTag(newTag.getIdTag()).orElseThrow(() -> new TagValidationException("tag.save.tag-not-found"));
+		boolean isTagNameValid = tag.getTagName().equals(newTag.getTagName()) ||
+				!tagRepository.findByTagName(newTag.getTagName()).isPresent();
+
+		if (!isTagNameValid) {
+			throw new TagValidationException("tag.save.name-exists");
+		}
+
+		tag.setTagName(newTag.getTagName());
+
 		return tagRepository.save(tag);
 	}
 
@@ -59,4 +71,15 @@ public class TagServiceImpl implements TagService {
 		return tagRepository.deleteByTagName(tagName);
 	}
 
+	private void validate(Tag tag) throws TagValidationException {
+		if (tag.getTagName() == null || tag.getTagName().isEmpty()) {
+			throw new TagValidationException("tag.save.name-invalid");
+		}
+	}
+
+	public static class TagValidationException extends Exception {
+		public TagValidationException(String message) {
+			super(message);
+		}
+	}
 }

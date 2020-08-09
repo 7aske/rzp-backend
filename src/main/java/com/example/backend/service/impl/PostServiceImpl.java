@@ -1,7 +1,6 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.adapter.PostAdapter;
-import com.example.backend.adapter.PostTranslationAdapter;
 import com.example.backend.entity.*;
 import com.example.backend.entity.data.Locale;
 import com.example.backend.entity.dto.*;
@@ -40,13 +39,13 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Post findByPostSlug(String postSlug, String locale) {
-		return postRepository.findByPostSlug(postSlug, locale).orElse(null);
+	public Post findByPostSlug(String postSlug) {
+		return postRepository.findByPostSlug(postSlug).orElse(null);
 	}
 
 	@Override
-	public PostDTO findDTOByPostSlug(String postSlug, String locale) {
-		return PostAdapter.adapt(postRepository.findByPostSlug(postSlug, locale).orElse(null));
+	public PostDTO findDTOByPostSlug(String postSlug) {
+		return PostAdapter.adapt(postRepository.findByPostSlug(postSlug).orElse(null));
 	}
 
 	@Override
@@ -60,13 +59,8 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Post findAllByPostTitle(String postTitle, String locale) {
-		return postRepository.findByPostTitle(postTitle, locale).orElse(null);
-	}
-
-	@Override
-	public List<Post> findAllByPostDeleted(Boolean postDeleted) {
-		return postRepository.findAllByPostDeleted(postDeleted);
+	public Post findAllByPostTitle(String postTitle) {
+		return postRepository.findByPostTitle(postTitle).orElse(null);
 	}
 
 	@Override
@@ -75,7 +69,15 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDTO> findAllDTOByPostPublishedAndLocale(Boolean postPublished, String locale) {
+	public List<PostDTO> findAllDTOByPostPublishedTrueAndCategoryName(String categoryName) {
+		return postRepository.findAllByPostPublishedTrueAndIdCategoryCategoryName(categoryName)
+				.stream()
+				.map(PostAdapter::adapt)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PostDTO> findAllDTOByPostPublished(Boolean postPublished) {
 		return postRepository.findAllByPostPublished(postPublished)
 				.stream()
 				.map(PostAdapter::adapt)
@@ -83,62 +85,57 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Post save(PostDTO post) throws PostValidationException {
-		validatePost(post);
+	public Post save(PostDTO postDTO) throws PostValidationException {
+		validatePost(postDTO);
 
-		Post newPost = new Post();
-		Category category = categoryRepository.findByIdCategory(post.getIdCategory()).orElse(null);
-
-		newPost.setIdCategory(category);
-		newPost.setIdUser(userRepository.findById(post.getIdUser()).orElse(null));
-
-		List<PostTranslation> postTranslations = new ArrayList<>();
-		for (PostTranslationDTO postTranslation : post.getPostTranslations()) {
-			Language language = languageRepository.findByLanguageName(postTranslation.getLocale()).orElse(null);
-			PostTranslation newPostTranslation = PostTranslationAdapter.adapt(postTranslation);
-			newPostTranslation.setLanguage(language);
-			newPostTranslation.setIdPost(newPost);
-			postTranslations.add(newPostTranslation);
+		boolean isSlugValid = !postRepository.findByPostSlug(postDTO.getPostSlug()).isPresent();
+		if (!isSlugValid) {
+			throw new PostValidationException("post.save.slug-exists");
 		}
 
-		newPost.setPostTranslations(postTranslations);
+		Post post = new Post();
+		Category category = categoryRepository.findByIdCategory(postDTO.getIdCategory()).orElse(null);
+		User user = userRepository.findById(postDTO.getIdUser()).orElse(null);
 
-		return postRepository.save(newPost);
+		post.setPostTitle(postDTO.getPostTitle());
+		post.setPostSlug(postDTO.getPostSlug());
+		post.setPostExcerpt(postDTO.getPostExcerpt());
+		post.setPostBody(postDTO.getPostBody());
+		post.setTagList(postDTO.getTagList());
+
+		post.setIdCategory(category);
+		post.setIdUser(user);
+
+		return postRepository.save(post);
 	}
 
 	@Override
-	public Post update(PostDTO post) throws PostValidationException {
-		validatePost(post);
+	public Post update(PostDTO postDTO) throws PostValidationException {
+		validatePost(postDTO);
 
-
-		Post newPost = postRepository.findByIdPost(post.getIdPost())
+		Post post = postRepository.findByIdPost(postDTO.getIdPost())
 				.orElseThrow(() -> new PostValidationException("post.save.post-not-found"));
 
-		Category category = categoryRepository.findByIdCategory(post.getIdCategory()).orElse(null);
+		Category category = categoryRepository.findByIdCategory(postDTO.getIdCategory()).orElse(null);
 
-		newPost.setIdCategory(category);
-		newPost.setPostDeleted(post.getPostDeleted());
-		newPost.setPostPublished(post.getPostPublished());
-
-		List<PostTranslation> postTranslations = new ArrayList<>();
-		for (PostTranslationDTO postTranslation : post.getPostTranslations()) {
-			boolean isSlugValid = newPost.getPostTranslation(postTranslation.getLocale()).getPostSlugTranslation().equals(postTranslation.getPostSlugTranslation()) ||
-					!postRepository.findByPostSlug(postTranslation.getPostSlugTranslation(), postTranslation.getLocale()).isPresent();
-
-			if (!isSlugValid) {
-				throw new PostValidationException("post.save.slug-exists");
-			}
-
-			Language language = languageRepository.findByLanguageName(postTranslation.getLocale()).orElse(null);
-			PostTranslation newPostTranslation = PostTranslationAdapter.adapt(postTranslation);
-			newPostTranslation.setLanguage(language);
-			newPostTranslation.setIdPost(newPost);
-			postTranslations.add(newPostTranslation);
+		boolean isSlugValid = post.getPostSlug().equals(postDTO.getPostSlug()) ||
+				!postRepository.findByPostSlug(post.getPostSlug()).isPresent();
+		if (!isSlugValid) {
+			throw new PostValidationException("post.save.slug-exists");
 		}
 
-		newPost.setPostTranslations(postTranslations);
+		post.setIdCategory(category);
+		post.setPostPublished(postDTO.getPostPublished());
 
-		return postRepository.save(newPost);
+		post.setPostTitle(postDTO.getPostTitle());
+		post.setPostSlug(postDTO.getPostSlug());
+		post.setPostExcerpt(postDTO.getPostExcerpt());
+		post.setPostBody(postDTO.getPostBody());
+		post.setTagList(postDTO.getTagList());
+
+		post.setIdCategory(category);
+
+		return postRepository.save(post);
 	}
 
 	@Override
@@ -162,41 +159,26 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void deleteAllByPostDeleted(Boolean postDeleted) {
-		postRepository.deleteAllByPostDeleted(postDeleted);
-	}
-
-	@Override
 	public void deleteAllByPostPublished(Boolean postPublished) {
 		postRepository.deleteAllByPostPublished(postPublished);
 	}
 
 	private void validatePost(PostDTO post) throws PostValidationException {
 
-		if (post.getPostTranslations() == null || post.getPostTranslations().size() == 0) {
-			throw new PostValidationException("post.save.translations-invalid");
+		if (post.getPostSlug() == null || post.getPostSlug().isEmpty()) {
+			throw new PostValidationException("post.save.slug-empty");
 		}
 
-		for (PostTranslationDTO postTranslation : post.getPostTranslations()) {
-			if (postTranslation.getLocale() == null || postTranslation.getLocale().isEmpty() || !Locale.VALID_LOCALES.contains(postTranslation.getLocale())) {
-				throw new PostValidationException("post.save.locale-invalid");
-			}
+		if (post.getPostTitle() == null || post.getPostTitle().isEmpty()) {
+			throw new PostValidationException("post.save.title-empty");
+		}
 
-			if (postTranslation.getPostSlugTranslation() == null || postTranslation.getPostSlugTranslation().isEmpty()) {
-				throw new PostValidationException("post.save.slug-empty");
-			}
+		if (post.getPostBody() == null || post.getPostBody().isEmpty()) {
+			throw new PostValidationException("post.save.body-empty");
+		}
 
-			if (postTranslation.getPostTitleTranslation() == null || postTranslation.getPostTitleTranslation().isEmpty()) {
-				throw new PostValidationException("post.save.title-empty");
-			}
-
-			if (postTranslation.getPostBodyTranslation() == null || postTranslation.getPostBodyTranslation().isEmpty()) {
-				throw new PostValidationException("post.save.body-empty");
-			}
-
-			if (postTranslation.getPostExcerptTranslation() == null || postTranslation.getPostExcerptTranslation().isEmpty()) {
-				throw new PostValidationException("post.save.excerpt-empty");
-			}
+		if (post.getPostExcerpt() == null || post.getPostExcerpt().isEmpty()) {
+			throw new PostValidationException("post.save.excerpt-empty");
 		}
 
 		if (post.getIdCategory() == null) {
