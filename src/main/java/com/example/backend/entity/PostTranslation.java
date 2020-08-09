@@ -1,5 +1,6 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,8 +17,9 @@ public class PostTranslation {
 	@Column(name = "id_post_translation")
 	private Long idPostTranslation;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_post", referencedColumnName = "id_post")
+	@JsonIgnore
 	private Post idPost;
 
 	@ManyToOne

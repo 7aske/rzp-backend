@@ -2,13 +2,11 @@
 package com.example.backend.controller;
 
 import com.example.backend.entity.PostTag;
-import com.example.backend.entity.dto.PostDTO;
 import com.example.backend.service.PostTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController

@@ -1,5 +1,6 @@
 package com.example.backend.entity.dto;
 
+import com.example.backend.entity.Language;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

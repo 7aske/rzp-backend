@@ -15,5 +15,9 @@ public class Locale  {
 		VALID_LOCALES.add(RS);
 	}
 
+	public static boolean isValidLocale(String locale){
+		return VALID_LOCALES.contains(locale);
+	}
+
 	private Locale(){}
 }

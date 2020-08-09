@@ -3,33 +3,32 @@ package com.example.backend.service;
 import com.example.backend.entity.Category;
 import com.example.backend.entity.Post;
 import com.example.backend.entity.User;
-import com.example.backend.entity.data.Locale;
 import com.example.backend.entity.dto.PostDTO;
-import com.example.backend.entity.dto.PostSaveDTO;
 import com.example.backend.service.impl.PostServiceImpl;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface PostService {
 
 	List<Post> findAll();
 
-	boolean delete(Post post);
+	void delete(Post post);
 
-	Post save(PostSaveDTO post) throws PostServiceImpl.PostValidationException;
+	Post save(PostDTO post) throws PostServiceImpl.PostValidationException;
 
-	Post update(Post post);
+	Post update(PostDTO post) throws PostServiceImpl.PostValidationException;
 
 	Post findById(Long idPost);
 
 	Post findByPostSlug(String postSlug, String locale);
 
+	PostDTO findDTOByPostSlug(String postSlug, String locale);
+
+	Post findAllByPostTitle(String postTitle, String locale);
+
 	List<Post> findAllByIdUser(User idUser);
 
 	List<Post> findAllByIdCategory(Category idCategory);
-
-	Post findAllByPostTitle(String postTitle, String locale);
 
 	List<Post> findAllByPostDeleted(Boolean postDeleted);
 
@@ -37,14 +36,14 @@ public interface PostService {
 
 	List<PostDTO> findAllDTOByPostPublishedAndLocale(Boolean postPublished, String locale);
 
-	boolean deleteById(Long idPost);
+	void deleteById(Long idPost) throws Exception;
 
-	boolean deleteAllByIdUser(User idUser);
+	void deleteAllByIdUser(User idUser) throws Exception;
 
-	boolean deleteAllByIdCategory(Category idCategory);
+	void deleteAllByIdCategory(Category idCategory) throws Exception;
 
-	boolean deleteAllByPostDeleted(Boolean postDeleted);
+	void deleteAllByPostDeleted(Boolean postDeleted) throws Exception;
 
-	boolean deleteAllByPostPublished(Boolean postPublished);
+	void deleteAllByPostPublished(Boolean postPublished) throws Exception;
 
 }

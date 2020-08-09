@@ -1,6 +1,6 @@
 package com.example.backend.entity;
 
-import com.example.backend.entity.data.Locale;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,27 +26,27 @@ public class Post implements Serializable {
 
 	@JoinColumn(name = "id_user", referencedColumnName = "id_user")
 	@ManyToOne
+	@JsonIgnore
 	private User idUser;
 
 	@JoinColumn(name = "id_category", referencedColumnName = "id_category")
 	@ManyToOne
 	private Category idCategory;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_post")
+	@OneToMany(mappedBy = "idPost", cascade = CascadeType.ALL)
 	@ToString.Exclude
 	private List<PostTranslation> postTranslations;
 
 	@Column(name = "post_date_posted")
-	private LocalDate postDatePosted;
+	private LocalDate postDatePosted = LocalDate.now();
 	@Column(name = "post_deleted")
-	private Boolean postDeleted;
+	private Boolean postDeleted = false;
 	@Column(name = "post_published")
-	private Boolean postPublished;
+	private Boolean postPublished = true;
 	@Column(name = "post_views")
-	private Long postViews;
+	private Long postViews = 0L;
 
-	private PostTranslation getTranslation(String locale) {
+	public PostTranslation getPostTranslation(String locale) {
 		return getPostTranslations()
 				.stream()
 				.filter(translation -> translation
@@ -57,11 +57,11 @@ public class Post implements Serializable {
 	}
 
 	public boolean isLocalizedFor(String locale) {
-		return getTranslation(locale) != null;
+		return getPostTranslation(locale) != null;
 	}
 
 	public String getPostTitle(String locale) {
-		PostTranslation postTranslation = getTranslation(locale);
+		PostTranslation postTranslation = getPostTranslation(locale);
 		if (postTranslation != null) {
 			return postTranslation.getPostTitleTranslation();
 		}
@@ -69,7 +69,7 @@ public class Post implements Serializable {
 	}
 
 	public String getPostExcerpt(String locale) {
-		PostTranslation postTranslation = getTranslation(locale);
+		PostTranslation postTranslation = getPostTranslation(locale);
 		if (postTranslation != null) {
 			return postTranslation.getPostExcerptTranslation();
 		}
@@ -78,7 +78,7 @@ public class Post implements Serializable {
 
 
 	public String getPostBody(String locale) {
-		PostTranslation postTranslation = getTranslation(locale);
+		PostTranslation postTranslation = getPostTranslation(locale);
 		if (postTranslation != null) {
 			return postTranslation.getPostBodyTranslation();
 		}
@@ -87,7 +87,7 @@ public class Post implements Serializable {
 
 
 	public String getPostSlug(String locale) {
-		PostTranslation postTranslation = getTranslation(locale);
+		PostTranslation postTranslation = getPostTranslation(locale);
 		if (postTranslation != null) {
 			return postTranslation.getPostSlugTranslation();
 		}

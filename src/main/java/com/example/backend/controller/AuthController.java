@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.adapter.UserAdapter;
 import com.example.backend.entity.User;
 import com.example.backend.entity.dto.LoginDTO;
 import com.example.backend.entity.dto.http.ClientError;
@@ -25,7 +26,7 @@ public class AuthController {
 		try {
 			User user = authService.login(loginDTO);
 
-			return ResponseEntity.ok(user.getDTO());
+			return ResponseEntity.ok(UserAdapter.adapt(user));
 		} catch (AuthServiceImpl.LoginException e) {
 			e.printStackTrace();
 			return ResponseEntity

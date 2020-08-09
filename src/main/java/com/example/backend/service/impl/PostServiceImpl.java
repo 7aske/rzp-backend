@@ -1,19 +1,15 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.entity.Category;
-import com.example.backend.entity.PostTranslation;
-import com.example.backend.entity.User;
+import com.example.backend.adapter.PostAdapter;
+import com.example.backend.adapter.PostTranslationAdapter;
+import com.example.backend.entity.*;
 import com.example.backend.entity.data.Locale;
-import com.example.backend.entity.dto.PostDTO;
-import com.example.backend.entity.dto.PostSaveDTO;
-import com.example.backend.entity.dto.PostTranslationSaveDTO;
+import com.example.backend.entity.dto.*;
 import com.example.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.backend.entity.Post;
 import com.example.backend.service.PostService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,16 +21,13 @@ public class PostServiceImpl implements PostService {
 	private PostRepository postRepository;
 
 	@Autowired
-	private PostTranslationRepository postTranslationRepository;
-
-	@Autowired
-	private CategoryRepository categoryRepository;
-
-	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private LanguageRepository languageRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	@Override
 	public List<Post> findAll() {
@@ -43,16 +36,17 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public Post findById(Long idPost) {
-		if (postRepository.findById(idPost).isPresent()) {
-			return postRepository.findById(idPost).get();
-		} else {
-			return null;
-		}
+		return postRepository.findById(idPost).orElse(null);
 	}
 
 	@Override
 	public Post findByPostSlug(String postSlug, String locale) {
 		return postRepository.findByPostSlug(postSlug, locale).orElse(null);
+	}
+
+	@Override
+	public PostDTO findDTOByPostSlug(String postSlug, String locale) {
+		return PostAdapter.adapt(postRepository.findByPostSlug(postSlug, locale).orElse(null));
 	}
 
 	@Override
@@ -84,27 +78,112 @@ public class PostServiceImpl implements PostService {
 	public List<PostDTO> findAllDTOByPostPublishedAndLocale(Boolean postPublished, String locale) {
 		return postRepository.findAllByPostPublished(postPublished)
 				.stream()
-				.map(p -> new PostDTO(p, locale))
+				.map(PostAdapter::adapt)
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public Post save(PostSaveDTO post) throws PostValidationException {
+	public Post save(PostDTO post) throws PostValidationException {
+		validatePost(post);
+
+		Post newPost = new Post();
+		Category category = categoryRepository.findByIdCategory(post.getIdCategory()).orElse(null);
+
+		newPost.setIdCategory(category);
+		newPost.setIdUser(userRepository.findById(post.getIdUser()).orElse(null));
+
+		List<PostTranslation> postTranslations = new ArrayList<>();
+		for (PostTranslationDTO postTranslation : post.getPostTranslations()) {
+			Language language = languageRepository.findByLanguageName(postTranslation.getLocale()).orElse(null);
+			PostTranslation newPostTranslation = PostTranslationAdapter.adapt(postTranslation);
+			newPostTranslation.setLanguage(language);
+			newPostTranslation.setIdPost(newPost);
+			postTranslations.add(newPostTranslation);
+		}
+
+		newPost.setPostTranslations(postTranslations);
+
+		return postRepository.save(newPost);
+	}
+
+	@Override
+	public Post update(PostDTO post) throws PostValidationException {
+		validatePost(post);
+
+
+		Post newPost = postRepository.findByIdPost(post.getIdPost())
+				.orElseThrow(() -> new PostValidationException("post.save.post-not-found"));
+
+		Category category = categoryRepository.findByIdCategory(post.getIdCategory()).orElse(null);
+
+		newPost.setIdCategory(category);
+		newPost.setPostDeleted(post.getPostDeleted());
+		newPost.setPostPublished(post.getPostPublished());
+
+		List<PostTranslation> postTranslations = new ArrayList<>();
+		for (PostTranslationDTO postTranslation : post.getPostTranslations()) {
+			boolean isSlugValid = newPost.getPostTranslation(postTranslation.getLocale()).getPostSlugTranslation().equals(postTranslation.getPostSlugTranslation()) ||
+					!postRepository.findByPostSlug(postTranslation.getPostSlugTranslation(), postTranslation.getLocale()).isPresent();
+
+			if (!isSlugValid) {
+				throw new PostValidationException("post.save.slug-exists");
+			}
+
+			Language language = languageRepository.findByLanguageName(postTranslation.getLocale()).orElse(null);
+			PostTranslation newPostTranslation = PostTranslationAdapter.adapt(postTranslation);
+			newPostTranslation.setLanguage(language);
+			newPostTranslation.setIdPost(newPost);
+			postTranslations.add(newPostTranslation);
+		}
+
+		newPost.setPostTranslations(postTranslations);
+
+		return postRepository.save(newPost);
+	}
+
+	@Override
+	public void delete(Post post) {
+		postRepository.delete(post);
+	}
+
+	@Override
+	public void deleteById(Long idPost) {
+		postRepository.deleteById(idPost);
+	}
+
+	@Override
+	public void deleteAllByIdUser(User idUser) {
+		postRepository.deleteAllByIdUser(idUser);
+	}
+
+	@Override
+	public void deleteAllByIdCategory(Category idCategory) {
+		postRepository.deleteAllByIdCategory(idCategory);
+	}
+
+	@Override
+	public void deleteAllByPostDeleted(Boolean postDeleted) {
+		postRepository.deleteAllByPostDeleted(postDeleted);
+	}
+
+	@Override
+	public void deleteAllByPostPublished(Boolean postPublished) {
+		postRepository.deleteAllByPostPublished(postPublished);
+	}
+
+	private void validatePost(PostDTO post) throws PostValidationException {
+
 		if (post.getPostTranslations() == null || post.getPostTranslations().size() == 0) {
 			throw new PostValidationException("post.save.translations-invalid");
 		}
 
-		for (PostTranslationSaveDTO postTranslation : post.getPostTranslations()) {
+		for (PostTranslationDTO postTranslation : post.getPostTranslations()) {
 			if (postTranslation.getLocale() == null || postTranslation.getLocale().isEmpty() || !Locale.VALID_LOCALES.contains(postTranslation.getLocale())) {
 				throw new PostValidationException("post.save.locale-invalid");
 			}
 
 			if (postTranslation.getPostSlugTranslation() == null || postTranslation.getPostSlugTranslation().isEmpty()) {
 				throw new PostValidationException("post.save.slug-empty");
-			}
-
-			if (postRepository.findByPostSlug(postTranslation.getPostSlugTranslation(), postTranslation.getLocale()).isPresent()) {
-				throw new PostValidationException("post.save.slug-exists");
 			}
 
 			if (postTranslation.getPostTitleTranslation() == null || postTranslation.getPostTitleTranslation().isEmpty()) {
@@ -124,66 +203,9 @@ public class PostServiceImpl implements PostService {
 			throw new PostValidationException("post.save.category-invalid");
 		}
 
-		Post newPost = new Post();
-		newPost.setIdCategory(post.getIdCategory());
-		newPost.setIdUser(userRepository.findById(post.getIdUser()).orElse(null));
-		newPost.setPostDatePosted(LocalDate.now());
-		newPost.setPostViews(0L);
-		newPost.setPostPublished(true);
-		newPost.setPostDeleted(false);
-
-		List<PostTranslation> postTranslations = new ArrayList<>();
-		for (PostTranslationSaveDTO postTranslation : post.getPostTranslations()) {
-			PostTranslation newPostTranslation = new PostTranslation();
-			newPostTranslation.setLanguage(languageRepository.findByLanguageName(postTranslation.getLocale()).orElse(null));
-			newPostTranslation.setPostBodyTranslation(postTranslation.getPostBodyTranslation());
-			newPostTranslation.setPostExcerptTranslation(postTranslation.getPostExcerptTranslation());
-			newPostTranslation.setPostTitleTranslation(postTranslation.getPostTitleTranslation());
-			newPostTranslation.setPostSlugTranslation(postTranslation.getPostSlugTranslation());
-			newPostTranslation.setIdPost(newPost);
-			postTranslations.add(newPostTranslation);
+		if (!categoryRepository.findByIdCategory(post.getIdCategory()).isPresent()) {
+			throw new PostValidationException("post.save.category-not-found");
 		}
-
-		newPost.setPostTranslations(postTranslations);
-
-		return postRepository.save(newPost);
-	}
-
-	@Override
-	public Post update(Post post) {
-		return postRepository.save(post);
-	}
-
-	@Override
-	public boolean delete(Post post) {
-		postRepository.delete(post);
-		return !postRepository.findById(post.getIdPost()).isPresent();
-	}
-
-	@Override
-	public boolean deleteById(Long idPost) {
-		postRepository.deleteById(idPost);
-		return !postRepository.findById(idPost).isPresent();
-	}
-
-	@Override
-	public boolean deleteAllByIdUser(User idUser) {
-		return postRepository.deleteAllByIdUser(idUser);
-	}
-
-	@Override
-	public boolean deleteAllByIdCategory(Category idCategory) {
-		return postRepository.deleteAllByIdCategory(idCategory);
-	}
-
-	@Override
-	public boolean deleteAllByPostDeleted(Boolean postDeleted) {
-		return postRepository.deleteAllByPostDeleted(postDeleted);
-	}
-
-	@Override
-	public boolean deleteAllByPostPublished(Boolean postPublished) {
-		return postRepository.deleteAllByPostPublished(postPublished);
 	}
 
 	public static class PostValidationException extends Exception {

@@ -29,17 +29,4 @@ public class UserDTO {
 	private String userDisplayName;
 	private LocalDate userDateCreated;
 	private List<Role> userRoles;
-
-	public UserDTO(User user) {
-		this.idUser = user.getIdUser();
-		this.userUsername = user.getUserUsername();
-		this.userEmail = user.getUserEmail();
-		this.userFirstName = user.getUserFirstName();
-		this.userLastName = user.getUserLastName();
-		this.userAddress = user.getUserAddress();
-		this.userAbout = user.getUserAddress();
-		this.userDisplayName = user.getUserDisplayName();
-		this.userDateCreated = user.getUserDateCreated();
-		this.userRoles = user.getUserRoles();
-	}
 }
