@@ -10,5 +10,5 @@ import com.example.backend.entity.Media;
 @Repository
 public interface MediaRepository extends JpaRepository<Media, Long> {
 	Optional<Media> findByIdMedia(Long idMedia);
-	boolean deleteByIdMedia(Long idMedia);
+	void deleteByIdMedia(Long idMedia);
 }

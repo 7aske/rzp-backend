@@ -12,6 +12,6 @@ public interface ContactTypeRepository extends JpaRepository<ContactType, Long> 
 	Optional<ContactType> findByIdContactType(Long idContactType);
 	List<ContactType> findAllByContactTypeName(String contactTypeName);
 	List<ContactType> findAllByContactTypeValueType(String contactTypeValueType);
-	boolean deleteByContactTypeName(String contactTypeName);
-	boolean deleteByIdContactType(Long idContactType);
+	void deleteByContactTypeName(String contactTypeName);
+	void deleteByIdContactType(Long idContactType);
 }

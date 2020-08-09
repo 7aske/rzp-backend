@@ -14,6 +14,6 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
 	Optional<Contact> findByIdContact(Long idContact);
 	List<Contact> findAllByIdContactType(ContactType idContactType);
 	List<Contact> findAllByIdUser(User idUser);
-	boolean deleteAllByIdContactType(ContactType idContactType);
-	boolean deleteAllByIdUser(User idUser);
+	void deleteAllByIdContactType(ContactType idContactType);
+	void deleteAllByIdUser(User idUser);
 }
