@@ -8,7 +8,7 @@ public interface ContactTypeService {
 
 	List<ContactType> findAll();
 
-	boolean delete(ContactType contactType);
+	void delete(ContactType contactType) throws Exception;
 
 	ContactType save(ContactType contactType);
 
@@ -18,7 +18,7 @@ public interface ContactTypeService {
 
 	List<ContactType> findAllByContactTypeName(String contactTypeName);
 
-	boolean deleteById(Long idContactType);
+	void deleteById(Long idContactType) throws Exception;
 
-	boolean deleteAllByContactTypeName(String contactTypeName);
+	void deleteAllByContactTypeName(String contactTypeName) throws Exception;
 }

@@ -10,7 +10,7 @@ public interface UserService {
 
 	List<User> findAll();
 
-	boolean delete(User user);
+	void delete(User user) throws Exception;
 
 	User save(User user);
 
@@ -30,5 +30,5 @@ public interface UserService {
 
 	// List<GrantedAuthority> getAllRolesByUsername(String username);
 
-	boolean deleteById(Long idUser);
+	void deleteById(Long idUser) throws Exception;
 }

@@ -1,13 +1,14 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Role;
+
 import java.util.List;
 
 public interface RoleService {
 
 	List<Role> findAll();
 
-	boolean delete(Role role);
+	void delete(Role role) throws Exception;
 
 	Role save(Role role);
 
@@ -19,7 +20,7 @@ public interface RoleService {
 
 	List<Role> findAllByUserUsername(String userUsername);
 
-	boolean deleteById(Long idRole);
+	void deleteById(Long idRole) throws Exception;
 
-	boolean deleteByRoleName(String roleName);
+	void deleteByRoleName(String roleName) throws Exception;
 }

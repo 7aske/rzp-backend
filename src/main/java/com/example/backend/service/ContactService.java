@@ -10,7 +10,7 @@ public interface ContactService {
 
 	List<Contact> findAll();
 
-	boolean delete(Contact contact);
+	boolean delete(Contact contact) throws Exception;
 
 	Contact save(Contact contact);
 
@@ -24,9 +24,9 @@ public interface ContactService {
 
 	List<Contact> findAllByContactValue(String contactValue);
 
-	boolean deleteById(Long idContact);
+	void deleteById(Long idContact) throws Exception;
 
-	boolean deleteAllByIdContactType(ContactType idContactType);
+	void deleteAllByIdContactType(ContactType idContactType) throws Exception;
 
-	boolean deleteAllByIdUser(User idUser);
+	void deleteAllByIdUser(User idUser) throws Exception;
 }

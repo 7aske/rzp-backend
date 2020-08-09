@@ -9,7 +9,7 @@ public interface TagService {
 
 	List<Tag> findAll();
 
-	boolean delete(Tag tag) throws Exception;
+	void delete(Tag tag) throws Exception;
 
 	Tag save(Tag tag) throws TagServiceImpl.TagValidationException;
 
@@ -19,7 +19,7 @@ public interface TagService {
 
 	Tag findAllByTagName(String tagName);
 
-	boolean deleteById(Long idTag) throws Exception;
+	void deleteById(Long idTag) throws Exception;
 
-	boolean deleteAllByTagName(String tagName) throws Exception;
+	void deleteAllByTagName(String tagName) throws Exception;
 }

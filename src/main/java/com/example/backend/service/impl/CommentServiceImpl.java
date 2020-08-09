@@ -50,25 +50,23 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public boolean delete(Comment comment) {
+	public void delete(Comment comment) throws Exception {
 		commentRepository.delete(comment);
-		return !commentRepository.findById(comment.getIdComment()).isPresent();
 	}
 
 	@Override
-	public boolean deleteById(Long idComment) {
+	public void deleteById(Long idComment) throws Exception {
 		commentRepository.deleteById(idComment);
-		return !commentRepository.findById(idComment).isPresent();
 	}
 
 	@Override
-	public boolean deleteAllByIdUser(User idUser) {
-		return commentRepository.deleteAllByIdUser(idUser);
+	public void deleteAllByIdUser(User idUser) throws Exception {
+		commentRepository.deleteAllByIdUser(idUser);
 	}
 
 	@Override
-	public boolean deleteAllByIdPost(Post idPost) {
-		return commentRepository.deleteAllByIdPost(idPost);
+	public void deleteAllByIdPost(Post idPost) throws Exception {
+		commentRepository.deleteAllByIdPost(idPost);
 	}
 
 }

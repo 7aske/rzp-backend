@@ -11,7 +11,7 @@ public interface CommentService {
 
 	List<Comment> findAll();
 
-	boolean delete(Comment comment);
+	void delete(Comment comment) throws Exception;
 
 	Comment save(Comment comment);
 
@@ -23,10 +23,10 @@ public interface CommentService {
 
 	List<Comment> findAllByIdPost(Post idPost);
 
-	boolean deleteById(Long idComment);
+	void deleteById(Long idComment) throws Exception;
 
-	boolean deleteAllByIdUser(User idUser);
+	void deleteAllByIdUser(User idUser) throws Exception;
 
-	boolean deleteAllByIdPost(Post idPost);
+	void deleteAllByIdPost(Post idPost) throws Exception;
 
 }

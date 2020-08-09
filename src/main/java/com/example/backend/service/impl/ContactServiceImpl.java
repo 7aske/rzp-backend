@@ -55,24 +55,23 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	public boolean delete(Contact contact) {
+	public boolean delete(Contact contact) throws Exception {
 		contactRepository.delete(contact);
 		return !contactRepository.findById(contact.getIdContact()).isPresent();
 	}
 
 	@Override
-	public boolean deleteById(Long idContact) {
+	public void deleteById(Long idContact) throws Exception {
 		contactRepository.deleteById(idContact);
-		return !contactRepository.findById(idContact).isPresent();
 	}
 
 	@Override
-	public boolean deleteAllByIdContactType(ContactType idContactType) {
-		return contactRepository.deleteAllByIdContactType(idContactType);
+	public void deleteAllByIdContactType(ContactType idContactType) throws Exception {
+		contactRepository.deleteAllByIdContactType(idContactType);
 	}
 
 	@Override
-	public boolean deleteAllByIdUser(User idUser) {
-		return contactRepository.deleteAllByIdUser(idUser);
+	public void deleteAllByIdUser(User idUser) throws Exception {
+		contactRepository.deleteAllByIdUser(idUser);
 	}
 }

@@ -43,20 +43,18 @@ public class ContactTypeServiceImpl implements ContactTypeService {
 	}
 
 	@Override
-	public boolean delete(ContactType contactType) {
+	public void delete(ContactType contactType) throws Exception {
 		contactTypeRepository.delete(contactType);
-		return !contactTypeRepository.findById(contactType.getIdContactType()).isPresent();
 	}
 
 	@Override
-	public boolean deleteById(Long idContactType) {
+	public void deleteById(Long idContactType) throws Exception {
 		contactTypeRepository.deleteById(idContactType);
-		return !contactTypeRepository.findById(idContactType).isPresent();
 	}
 
 	@Override
-	public boolean deleteAllByContactTypeName(String contactTypeName) {
-		return false;
+	public void deleteAllByContactTypeName(String contactTypeName) throws Exception {
+		contactTypeRepository.deleteByContactTypeName(contactTypeName);
 	}
 
 }

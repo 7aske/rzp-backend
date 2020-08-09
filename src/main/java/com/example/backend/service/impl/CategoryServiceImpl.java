@@ -56,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public void delete(Category category) {
+	public void delete(Category category) throws Exception {
 		categoryRepository.delete(category);
 	}
 

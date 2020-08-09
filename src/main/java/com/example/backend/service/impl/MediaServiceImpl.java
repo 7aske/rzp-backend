@@ -38,15 +38,13 @@ public class MediaServiceImpl implements MediaService {
 	}
 
 	@Override
-	public boolean delete(Media media) {
+	public void delete(Media media) throws Exception {
 		mediaRepository.delete(media);
-		return !mediaRepository.findById(media.getIdMedia()).isPresent();
 	}
 
 	@Override
-	public boolean deleteById(Long idMedia) {
+	public void deleteById(Long idMedia) throws Exception {
 		mediaRepository.deleteById(idMedia);
-		return !mediaRepository.findById(idMedia).isPresent();
 	}
 
 }

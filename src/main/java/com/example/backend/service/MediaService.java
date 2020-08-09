@@ -1,13 +1,14 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Media;
+
 import java.util.List;
 
 public interface MediaService {
 
 	List<Media> findAll();
 
-	boolean delete(Media media);
+	void delete(Media media) throws Exception;
 
 	Media save(Media media);
 
@@ -15,5 +16,5 @@ public interface MediaService {
 
 	Media findById(Long idMedia);
 
-	boolean deleteById(Long idMedia);
+	void deleteById(Long idMedia) throws Exception;
 }

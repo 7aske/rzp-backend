@@ -1,9 +1,6 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.entity.Role;
-import com.example.backend.entity.UserRole;
 import com.example.backend.repository.RoleRepository;
-import com.example.backend.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.security.core.GrantedAuthority;
 // import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +9,6 @@ import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -83,15 +79,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean delete(User user) {
+	public void delete(User user) throws Exception {
 		userRepository.delete(user);
-		return !userRepository.findById(user.getIdUser()).isPresent();
 	}
 
 	@Override
-	public boolean deleteById(Long idUser) {
+	public void deleteById(Long idUser) throws Exception {
 		userRepository.deleteById(idUser);
-		return !userRepository.findById(idUser).isPresent();
 	}
 
 }

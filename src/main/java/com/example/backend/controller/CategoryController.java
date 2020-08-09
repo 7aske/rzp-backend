@@ -52,7 +52,7 @@ public class CategoryController {
 	@DeleteMapping("/delete")
 	public ResponseEntity<Object> delete(@RequestBody Category category) {
 		try {
-	        categoryService.delete(category);
+			categoryService.delete(category);
 			return ResponseEntity.ok(new ClientMessage("deleted"));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -55,20 +55,18 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public boolean delete(Tag tag) throws Exception {
+	public void delete(Tag tag) throws Exception {
 		tagRepository.delete(tag);
-		return !tagRepository.findById(tag.getIdTag()).isPresent();
 	}
 
 	@Override
-	public boolean deleteById(Long idTag) throws Exception {
+	public void deleteById(Long idTag) throws Exception {
 		tagRepository.deleteById(idTag);
-		return !tagRepository.findById(idTag).isPresent();
 	}
 
 	@Override
-	public boolean deleteAllByTagName(String tagName) throws Exception {
-		return tagRepository.deleteByTagName(tagName);
+	public void deleteAllByTagName(String tagName) throws Exception {
+		tagRepository.deleteByTagName(tagName);
 	}
 
 	private void validate(Tag tag) throws TagValidationException {

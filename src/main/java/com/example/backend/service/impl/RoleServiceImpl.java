@@ -48,20 +48,18 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public boolean delete(Role role) {
+	public void delete(Role role) throws Exception {
 		roleRepository.delete(role);
-		return !roleRepository.findById(role.getIdRole()).isPresent();
 	}
 
 	@Override
-	public boolean deleteById(Long idRole) {
+	public void deleteById(Long idRole) throws Exception {
 		roleRepository.deleteById(idRole);
-		return !roleRepository.findById(idRole).isPresent();
 	}
 
 	@Override
-	public boolean deleteByRoleName(String roleName) {
-		return false;
+	public void deleteByRoleName(String roleName) throws Exception {
+		roleRepository.deleteByRoleName(roleName);
 	}
 
 }
