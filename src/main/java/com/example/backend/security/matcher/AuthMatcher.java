@@ -2,11 +2,11 @@ package com.example.backend.security.matcher;
 
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.backend.security.JWTFacade;
-import com.example.backend.security.SecurityConstants;
+import com.example.backend.security.JWTUtils;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AuthMatcher {
@@ -18,28 +18,16 @@ public class AuthMatcher {
 
 	public boolean authorized(HttpServletRequest request) {
 		String path = request.getRequestURI().substring(request.getContextPath().length());
-
-		if (!hasPattern(path)) {
-			return true;
-		}
-
-		String authHeader = request.getHeader(SecurityConstants.HEADER_NAME);
-		if (authHeader == null) {
-			return false;
-		}
-		String token = authHeader.replace(SecurityConstants.TOKEN_PREFIX, "");
-
-		DecodedJWT decoded = JWTFacade.verifyToken(token);
-		if (decoded == null) {
-			return false;
-		}
-
-		List<String> roleList = decoded.getClaim("roles").asList(String.class);
-		System.out.println(roleList);
 		HttpMethod method = HttpMethod.resolve(request.getMethod());
 
+		DecodedJWT decoded = JWTUtils.getToken(request);
+		boolean isAuthenticated = decoded != null;
+
+		List<String> roleList = decoded != null ?  decoded.getClaim("roles").asList(String.class) : new ArrayList<>();
+		System.out.println(roleList);
+
 		for (AuthRule rule : rules) {
-			if (rule.match(path, roleList, method)){
+			if (rule.match(path, roleList, method, isAuthenticated)){
 				return true;
 			}
 		}

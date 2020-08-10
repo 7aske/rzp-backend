@@ -4,20 +4,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.AntPathMatcher;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class AuthRule {
+	private boolean requiresAuthorization;
 	private Set<HttpMethod> methods;
 	private Set<String> roles;
 	private String pattern;
 	private AntPathMatcher matcher;
 
-	public AuthRule(String pattern, Set<String> roles, Set<HttpMethod> methods) {
+	public AuthRule(String pattern, Set<String> roles, Set<HttpMethod> methods, boolean requiresAuthorizaion) {
 		this.pattern = pattern;
 		this.roles = roles;
 		this.methods = methods;
+		this.requiresAuthorization = requiresAuthorizaion;
 		this.matcher = new AntPathMatcher();
 	}
 
@@ -52,16 +53,23 @@ public class AuthRule {
 		return matcher.match(pattern, path);
 	}
 
-	public boolean match(String path, List<String> roles, HttpMethod method){
+	public boolean match(String path, List<String> roles, HttpMethod method, boolean authorized){
 		boolean hasRole = !Collections.disjoint(roles, this.roles) || this.roles.isEmpty();
-		boolean isMethod = this.methods.contains(method) || this.methods.isEmpty();
-		return match(path) && hasRole && isMethod;
+		boolean methodValid = this.methods.contains(method) || this.methods.isEmpty();
+		boolean matched = match(path);
+
+		if (!requiresAuthorization && matched){
+			return true;
+		}
+
+		return matched && hasRole && methodValid && authorized;
 	}
 
 	@Override
 	public String toString() {
 		return "AuthRule{" +
-				"methods=" + methods +
+				"requiresAuthorization=" + requiresAuthorization +
+				", methods=" + methods +
 				", roles=" + roles +
 				", pattern='" + pattern + '\'' +
 				", matcher=" + matcher +

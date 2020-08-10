@@ -19,10 +19,13 @@ public class AuthorizationFilter implements Filter {
 	private static final AuthMatcher matcher;
 
 	static {
-		matcher = new AuthMatcherBuilder()
-				.withPattern("/role/getAll").withRole("test")
-				.withPattern("/post/getAllPublished").withRole("admin")
-				.build();
+		matcher = new AuthMatcherBuilder().allow().withPattern("/**").build();
+		// matcher = new AuthMatcherBuilder()
+		// 		.authorize()
+		// 		.withPattern("/role/getAll").withRole("admin").and()
+		// 		.withPattern("/post/getAllPublished").withRole("admin").and()
+		// 		.allow().withPattern("/auth/*")
+		// 		.build();
 	}
 
 	@Override
