@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -27,6 +28,6 @@ public class UserDTO {
 	private String userAddress;
 	private String userAbout;
 	private String userDisplayName;
-	private LocalDate userDateCreated;
+	private Date userDateCreated;
 	private List<Role> userRoles;
 }

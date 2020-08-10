@@ -14,6 +14,7 @@ import com.example.backend.repository.CommentRepository;
 import com.example.backend.service.CommentService;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
 		Comment comment = new Comment();
 		comment.setIdComment(null);
 		comment.setCommentBody(commentDTO.getCommentBody());
-		comment.setCommentDatePosted(LocalDate.now());
+		comment.setCommentDatePosted(new Date());
 		comment.setIdUser(userRepository.findById(commentDTO.getIdUser().getIdUser()).orElse(null));
 		comment.setIdPost(postRepository.findById(commentDTO.getIdPost()).orElse(null));
 		return commentRepository.save(comment);

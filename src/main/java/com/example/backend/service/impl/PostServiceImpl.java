@@ -1,6 +1,7 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.adapter.PostAdapter;
+import com.example.backend.adapter.PostPreviewDTOAdapter;
 import com.example.backend.entity.*;
 import com.example.backend.entity.dto.*;
 import com.example.backend.repository.*;
@@ -30,22 +31,17 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public List<PostDTO> findAll(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
-		Pageable page = getPage(pageNumber, pageSize);
-		Page<Post> posts;
-
-		if (categoryName != null && published != null) {
-			posts = postRepository.findAllByIdCategoryCategoryNameAndPostPublishedOrderByPostDatePostedDesc(categoryName, published, page);
-		} else if (categoryName != null) {
-			posts = postRepository.findAllByIdCategoryCategoryNameOrderByPostDatePostedDesc(categoryName, page);
-		} else if (published != null) {
-			posts = postRepository.findAllByPostPublishedOrderByPostDatePostedDesc(published, page);
-		} else {
-			posts = postRepository.findAllByOrderByPostDatePostedDesc(page);
-		}
-
-		return posts
+		return getPostsByQuery(categoryName,pageNumber, pageSize, published)
 				.stream()
 				.map(PostAdapter::adapt)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PostPreviewDTO> findAllPreviews(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
+		return getPostsByQuery(categoryName,pageNumber, pageSize, published)
+				.stream()
+				.map(PostPreviewDTOAdapter::adapt)
 				.collect(Collectors.toList());
 	}
 
@@ -84,7 +80,7 @@ public class PostServiceImpl implements PostService {
 		post.setPostSlug(postDTO.getPostSlug());
 		post.setPostExcerpt(postDTO.getPostExcerpt());
 		post.setPostBody(postDTO.getPostBody());
-		post.setTagList(postDTO.getTagList());
+		post.setTagList(postDTO.getTags());
 
 		post.setIdCategory(category);
 		post.setIdUser(user);
@@ -114,7 +110,7 @@ public class PostServiceImpl implements PostService {
 		post.setPostSlug(postDTO.getPostSlug());
 		post.setPostExcerpt(postDTO.getPostExcerpt());
 		post.setPostBody(postDTO.getPostBody());
-		post.setTagList(postDTO.getTagList());
+		post.setTagList(postDTO.getTags());
 
 		post.setIdCategory(category);
 
@@ -129,6 +125,19 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public void deleteById(Long idPost) throws Exception {
 		postRepository.deleteById(idPost);
+	}
+
+	private Page<Post> getPostsByQuery(String categoryName, Integer pageNumber, Integer pageSize, Boolean published){
+		Pageable page = getPage(pageNumber, pageSize);
+		if (categoryName != null && published != null) {
+			return postRepository.findAllByIdCategoryCategoryNameAndPostPublishedOrderByPostDatePostedDesc(categoryName, published, page);
+		} else if (categoryName != null) {
+			return postRepository.findAllByIdCategoryCategoryNameOrderByPostDatePostedDesc(categoryName, page);
+		} else if (published != null) {
+			return postRepository.findAllByPostPublishedOrderByPostDatePostedDesc(published, page);
+		} else {
+			return postRepository.findAllByOrderByPostDatePostedDesc(page);
+		}
 	}
 
 	private Pageable getPage(Integer pageNumber, Integer pageSize) {

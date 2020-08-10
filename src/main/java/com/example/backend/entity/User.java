@@ -38,7 +38,7 @@ public class User implements Serializable {
 	@Column(name = "user_display_name")
 	private String userDisplayName;
 	@Column(name = "user_date_created")
-	private LocalDate userDateCreated;
+	private Date userDateCreated;
 	@ManyToMany
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name= "id_user"), inverseJoinColumns = @JoinColumn(name = "id_role"))
 	private List<Role> userRoles = new ArrayList<>();

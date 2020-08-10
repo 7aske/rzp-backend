@@ -1,9 +1,8 @@
 package com.example.backend.service;
 
-import com.example.backend.entity.Category;
 import com.example.backend.entity.Post;
-import com.example.backend.entity.User;
 import com.example.backend.entity.dto.PostDTO;
+import com.example.backend.entity.dto.PostPreviewDTO;
 import com.example.backend.service.impl.PostServiceImpl;
 
 import java.util.List;
@@ -11,6 +10,8 @@ import java.util.List;
 public interface PostService {
 
 	List<PostDTO> findAll(String category, Integer pageNumber, Integer count, Boolean published);
+
+	List<PostPreviewDTO> findAllPreviews(String category, Integer pageNumber, Integer count, Boolean published);
 
 	void delete(Post post) throws Exception;
 

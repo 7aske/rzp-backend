@@ -4,31 +4,27 @@ import com.example.backend.entity.Post;
 import com.example.backend.entity.dto.PostDTO;
 import com.example.backend.entity.dto.PostPreviewDTO;
 
-public class PostAdapter {
-	public static PostDTO adapt(Post post) {
+import java.util.ArrayList;
+
+public class PostPreviewDTOAdapter {
+	public static PostPreviewDTO adapt(Post post) {
 		if (post == null) {
 			return null;
 		}
 
-		PostDTO postDTO = new PostDTO();
+		PostPreviewDTO postDTO = new PostPreviewDTO();
 
 		postDTO.setIdPost(post.getIdPost());
 		postDTO.setIdUser(post.getIdUser().getIdUser());
-		postDTO.setIdCategory(post.getIdCategory().getIdCategory());
+		postDTO.setCategoryName(post.getIdCategory().getCategoryName());
 		postDTO.setPostDatePosted(post.getPostDatePosted());
-		postDTO.setPostPublished(post.getPostPublished());
 		postDTO.setPostViews(post.getPostViews());
 		postDTO.setPostAuthor(post.getIdUser().getUserDisplayName());
 
 		postDTO.setPostTitle(post.getPostTitle());
 		postDTO.setPostSlug(post.getPostSlug());
 		postDTO.setPostExcerpt(post.getPostExcerpt());
-		postDTO.setPostBody(post.getPostBody());
 		postDTO.setTags(post.getTagList());
 		return postDTO;
 	}
-
-
-
-
 }

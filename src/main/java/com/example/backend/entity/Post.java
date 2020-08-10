@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 import java.time.LocalDate;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -47,7 +48,7 @@ public class Post implements Serializable {
 	@Column(name = "post_slug")
 	private String postSlug;
 	@Column(name = "post_date_posted")
-	private LocalDate postDatePosted = LocalDate.now();
+	private Date postDatePosted = new Date();
 	@Column(name = "post_published")
 	private Boolean postPublished = true;
 	@Column(name = "post_views")

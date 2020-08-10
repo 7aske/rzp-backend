@@ -30,5 +30,5 @@ public class Comment implements Serializable {
 	@Column(name = "comment_body")
 	private String commentBody;
 	@Column(name = "comment_date_posted")
-	private LocalDate commentDatePosted;
+	private Date commentDatePosted;
 }

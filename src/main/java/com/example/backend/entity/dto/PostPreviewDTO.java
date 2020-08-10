@@ -10,20 +10,16 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class PostDTO {
+@Getter @Setter @NoArgsConstructor
+public class PostPreviewDTO {
 	private Long idPost;
 	private Long idUser;
 	private String postAuthor;
-	private Long idCategory;
-	private Boolean postPublished;
+	private String categoryName;
 	private Date postDatePosted;
 	private Long postViews;
 	private String postTitle;
 	private String postExcerpt;
-	private String postBody;
 	private String postSlug;
 	private List<Tag> tags;
 }
