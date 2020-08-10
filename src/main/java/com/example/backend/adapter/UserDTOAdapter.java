@@ -4,20 +4,15 @@ import com.example.backend.entity.User;
 import com.example.backend.entity.dto.UserCommentDTO;
 import com.example.backend.entity.dto.UserDTO;
 
-public class UserAdapter {
-	public static UserDTO adapt(User user) {
-		UserDTO userDTO = new UserDTO();
+public class UserDTOAdapter {
+	public static UserCommentDTO adapt(User user) {
+		UserCommentDTO userDTO = new UserCommentDTO();
 		userDTO.setIdUser(user.getIdUser());
 		userDTO.setUserUsername(user.getUserUsername());
 		userDTO.setUserEmail(user.getUserEmail());
 		userDTO.setUserFirstName(user.getUserFirstName());
 		userDTO.setUserLastName(user.getUserLastName());
-		userDTO.setUserAddress(user.getUserAddress());
-		userDTO.setUserAbout(user.getUserAddress());
 		userDTO.setUserDisplayName(user.getUserDisplayName());
-		userDTO.setUserDateCreated(user.getUserDateCreated());
-		userDTO.setUserRoles(user.getUserRoles());
 		return userDTO;
 	}
-
 }

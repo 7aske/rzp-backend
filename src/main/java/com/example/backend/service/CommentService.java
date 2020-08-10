@@ -3,6 +3,8 @@ package com.example.backend.service;
 import com.example.backend.entity.Comment;
 import com.example.backend.entity.Post;
 import com.example.backend.entity.User;
+import com.example.backend.entity.dto.CommentDTO;
+import com.example.backend.service.impl.CommentServiceImpl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,15 +15,17 @@ public interface CommentService {
 
 	void delete(Comment comment) throws Exception;
 
-	Comment save(Comment comment);
+	Comment save(CommentDTO comment) throws CommentServiceImpl.CommentValidationException;
 
 	Comment update(Comment comment);
 
-	Comment findById(Long idComment);
+	CommentDTO findById(Long idComment);
 
-	List<Comment> findAllByIdUser(User idUser);
+	List<CommentDTO> findAllByIdUser(User idUser);
 
-	List<Comment> findAllByIdPost(Post idPost);
+	List<CommentDTO> findAllByIdPost(Post idPost);
+
+	List<CommentDTO> findAllByIdPostIdPost(Long idPost);
 
 	void deleteById(Long idComment) throws Exception;
 

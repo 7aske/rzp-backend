@@ -1,10 +1,13 @@
 
 package com.example.backend.controller;
 
+import com.example.backend.adapter.CommentAdapter;
 import com.example.backend.entity.Comment;
+import com.example.backend.entity.dto.CommentDTO;
 import com.example.backend.entity.dto.http.ClientError;
 import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.service.CommentService;
+import com.example.backend.service.impl.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,25 +20,24 @@ public class CommentController {
 	@Autowired
 	private CommentService commentService;
 
-	@GetMapping("/getAll")
-	public ResponseEntity<List<Comment>> getAll() {
-		return ResponseEntity.ok(commentService.findAll());
-	}
-
 	@GetMapping("/getById/{idComment}")
-	public ResponseEntity<Comment> getById(@PathVariable Long idComment) {
+	public ResponseEntity<CommentDTO> getById(@PathVariable Long idComment) {
 		return ResponseEntity.ok(commentService.findById(idComment));
 	}
 
-
-	@PostMapping("/save")
-	public ResponseEntity<Comment> save(@RequestBody Comment comment) {
-		return ResponseEntity.ok(commentService.save(comment));
+	@GetMapping("/getAllByIdPost/{idPost}")
+	public ResponseEntity<List<CommentDTO>> getByIdPost(@PathVariable Long idPost) {
+		return ResponseEntity.ok(commentService.findAllByIdPostIdPost(idPost));
 	}
 
-	@PutMapping("/update")
-	public ResponseEntity<Comment> update(@RequestBody Comment comment) {
-		return ResponseEntity.ok(commentService.update(comment));
+	@PostMapping("/save")
+	public ResponseEntity<Object> save(@RequestBody CommentDTO comment) {
+		try {
+			return ResponseEntity.ok(CommentAdapter.adapt(commentService.save(comment)));
+		} catch (CommentServiceImpl.CommentValidationException e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 
 	@DeleteMapping("/delete")
