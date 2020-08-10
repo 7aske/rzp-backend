@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PostService {
 
-	List<PostDTO> findAll();
+	List<PostDTO> findAll(String category, Integer pageNumber, Integer count, Boolean published);
 
 	void delete(Post post) throws Exception;
 
@@ -22,17 +22,7 @@ public interface PostService {
 
 	PostDTO findByPostSlug(String postSlug);
 
-	List<PostDTO> findAllByIdUser(User idUser);
-
-	List<PostDTO> findAllByIdCategory(Category idCategory);
-
-	List<PostDTO> findAllByIdCategoryCategoryName(String categoryName);
-
-	List<PostDTO> findAllByPostPublished(Boolean postPublished);
-
-	List<PostDTO> findAllByPostPublishedTrue();
-
-	List<PostDTO> findAllDTOByPostPublishedTrueAndCategoryName(String categoryName);
+	List<PostDTO> findAllByIdUser(Long idUser, String category, Integer pageNumber, Integer count, Boolean published);
 
 	void deleteById(Long idPost) throws Exception;
 }

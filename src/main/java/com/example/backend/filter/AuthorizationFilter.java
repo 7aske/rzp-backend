@@ -20,11 +20,7 @@ public class AuthorizationFilter implements Filter {
 
 	static {
 		matcher = AuthMatcherBuilderFactory.getBuilder()
-				.authorize()
-				.withPattern("/role/getAll").withRole("admin").and()
-				.withPattern("/post/getAllPublished").withRole("admin").and()
-				.allow().withPattern("/auth/*")
-				.build();
+				.allow().withPattern("/**").build();
 	}
 
 	@Override

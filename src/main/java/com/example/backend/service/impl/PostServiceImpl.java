@@ -5,6 +5,9 @@ import com.example.backend.entity.*;
 import com.example.backend.entity.dto.*;
 import com.example.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.backend.service.PostService;
 
@@ -21,14 +24,26 @@ public class PostServiceImpl implements PostService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private LanguageRepository languageRepository;
-
-	@Autowired
 	private CategoryRepository categoryRepository;
 
+	private final Integer PAGE_SIZE = 5;
+
 	@Override
-	public List<PostDTO> findAll() {
-		return postRepository.findAll()
+	public List<PostDTO> findAll(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
+		Pageable page = getPage(pageNumber, pageSize);
+		Page<Post> posts;
+
+		if (categoryName != null && published != null) {
+			posts = postRepository.findAllByIdCategoryCategoryNameAndPostPublishedOrderByPostDatePostedDesc(categoryName, published, page);
+		} else if (categoryName != null) {
+			posts = postRepository.findAllByIdCategoryCategoryNameOrderByPostDatePostedDesc(categoryName, page);
+		} else if (published != null) {
+			posts = postRepository.findAllByPostPublishedOrderByPostDatePostedDesc(published, page);
+		} else {
+			posts = postRepository.findAllByOrderByPostDatePostedDesc(page);
+		}
+
+		return posts
 				.stream()
 				.map(PostAdapter::adapt)
 				.collect(Collectors.toList());
@@ -45,50 +60,10 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDTO> findAllByIdUser(User idUser) {
-		return postRepository.findAllByIdUserOrderByPostDatePostedDesc(idUser)
+	public List<PostDTO> findAllByIdUser(Long idUser, String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
+		return findAll(categoryName, pageNumber, pageSize, published)
 				.stream()
-				.map(PostAdapter::adapt)
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public List<PostDTO> findAllByIdCategory(Category idCategory) {
-		return postRepository.findAllByPostPublishedTrueAndIdCategoryOrderByPostDatePostedDesc(idCategory)
-				.stream()
-				.map(PostAdapter::adapt)
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public List<PostDTO> findAllByIdCategoryCategoryName(String categoryName) {
-		return postRepository.findAllByPostPublishedTrueAndIdCategoryCategoryNameOrderByPostDatePostedDesc(categoryName)
-				.stream()
-				.map(PostAdapter::adapt)
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public List<PostDTO> findAllByPostPublished(Boolean postPublished) {
-		return postRepository.findAllByPostPublishedOrderByPostDatePostedDesc(postPublished)
-				.stream()
-				.map(PostAdapter::adapt)
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public List<PostDTO> findAllByPostPublishedTrue() {
-		return postRepository.findAllByPostPublishedTrueOrderByPostDatePostedDesc()
-				.stream()
-				.map(PostAdapter::adapt)
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public List<PostDTO> findAllDTOByPostPublishedTrueAndCategoryName(String categoryName) {
-		return postRepository.findAllByPostPublishedTrueAndIdCategoryCategoryNameOrderByPostDatePostedDesc(categoryName)
-				.stream()
-				.map(PostAdapter::adapt)
+				.filter(p -> p.getIdUser().equals(idUser))
 				.collect(Collectors.toList());
 	}
 
@@ -147,13 +122,25 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void delete(Post post) throws Exception{
+	public void delete(Post post) throws Exception {
 		postRepository.delete(post);
 	}
 
 	@Override
 	public void deleteById(Long idPost) throws Exception {
 		postRepository.deleteById(idPost);
+	}
+
+	private Pageable getPage(Integer pageNumber, Integer pageSize) {
+		if (pageNumber == null) {
+			pageNumber = 0;
+		}
+
+		if (pageSize == null) {
+			pageSize = PAGE_SIZE;
+		}
+
+		return PageRequest.of(pageNumber, pageSize);
 	}
 
 	private void validatePost(PostDTO post) throws PostValidationException {

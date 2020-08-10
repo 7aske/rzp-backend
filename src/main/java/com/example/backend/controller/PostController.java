@@ -21,8 +21,24 @@ public class PostController {
 	private PostService postService;
 
 	@GetMapping("/getAll")
-	public ResponseEntity<List<PostDTO>> getAll() {
-		return ResponseEntity.ok(postService.findAll());
+	public ResponseEntity<List<PostDTO>> getAll(
+			@RequestParam(required = false) String category,
+			@RequestParam(required = false) Boolean published,
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer count) {
+
+		return ResponseEntity.ok(postService.findAll(category, page, count, published));
+	}
+
+	@GetMapping("/getAllByIdUser/{idUser}")
+	public ResponseEntity<List<PostDTO>> getAllByIdUser(
+			@PathVariable Long idUser,
+			@RequestParam(required = false) String category,
+			@RequestParam(required = false) Boolean published,
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer count) {
+
+		return ResponseEntity.ok(postService.findAllByIdUser(idUser, category, page, count, published));
 	}
 
 	@GetMapping("/getById/{idPost}")
@@ -33,17 +49,6 @@ public class PostController {
 		} else {
 			return ResponseEntity.notFound().build();
 		}
-	}
-
-	@GetMapping("/getAllPublished")
-	public ResponseEntity<List<PostDTO>> getAllPublished(@RequestParam(required = false) Integer count) {
-		return ResponseEntity.ok(postService.findAllByPostPublished(true));
-	}
-
-	@GetMapping("/getAllByCategoryName/{categoryName}")
-	public ResponseEntity<List<PostDTO>> getAllByCategoryName(@PathVariable String categoryName,
-	                                                          @RequestParam(required = false) Integer count) {
-		return ResponseEntity.ok(postService.findAllByIdCategoryCategoryName(categoryName));
 	}
 
 	@PostMapping("/save")
