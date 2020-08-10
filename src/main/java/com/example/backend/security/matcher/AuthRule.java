@@ -8,45 +8,18 @@ import java.util.List;
 import java.util.Set;
 
 public class AuthRule {
-	private boolean requiresAuthorization;
-	private Set<HttpMethod> methods;
-	private Set<String> roles;
-	private String pattern;
-	private AntPathMatcher matcher;
+	private final boolean requiresAuthorization;
+	private final Set<HttpMethod> methods;
+	private final Set<String> roles;
+	private final String pattern;
+	private final AntPathMatcher matcher;
 
-	public AuthRule(String pattern, Set<String> roles, Set<HttpMethod> methods, boolean requiresAuthorizaion) {
+	public AuthRule(String pattern, Set<String> roles, Set<HttpMethod> methods, boolean requiresAuthorization) {
 		this.pattern = pattern;
 		this.roles = roles;
 		this.methods = methods;
-		this.requiresAuthorization = requiresAuthorizaion;
+		this.requiresAuthorization = requiresAuthorization;
 		this.matcher = new AntPathMatcher();
-	}
-
-	public AuthRule() {
-	}
-
-	public Set<HttpMethod> getMethods() {
-		return methods;
-	}
-
-	public void setMethods(Set<HttpMethod> methods) {
-		this.methods = methods;
-	}
-
-	public Set<String> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<String> roles) {
-		this.roles = roles;
-	}
-
-	public String getPattern() {
-		return pattern;
-	}
-
-	public void setPattern(String pattern) {
-		this.pattern = pattern;
 	}
 
 	public boolean match(String path) {

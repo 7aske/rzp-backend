@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
 		if (SecurityUtils.getSha512(loginDTO.getPassword()).equals(user.getUserPassword())) {
 			HttpServletResponse servletResponse = (HttpServletResponse) ServletAttributes.getResponse();
 			List<String> roleNames = user.getUserRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
-			System.out.println(user.getUserRoles());
+
 			String token = JWTFacade.issueToken("login", user.getIdUser(), roleNames);
 			String headerValue = SecurityConstants.TOKEN_PREFIX + token;
 			Cookie authCookie = new Cookie(SecurityConstants.COOKIE_NAME, token);

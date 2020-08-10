@@ -8,7 +8,9 @@ import com.example.backend.service.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -28,14 +30,14 @@ public class MediaController {
 	}
 
 
-	@PostMapping("/save")
-	public ResponseEntity<Media> save(@RequestBody Media media) {
-		return ResponseEntity.ok(mediaService.save(media));
-	}
-
-	@PutMapping("/update")
-	public ResponseEntity<Media> update(@RequestBody Media media) {
-		return ResponseEntity.ok(mediaService.update(media));
+	@PostMapping("/upload")
+	public ResponseEntity<Object> upload(@RequestParam("file") MultipartFile file) {
+		try {
+			return ResponseEntity.ok(mediaService.upload(file));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
 	}
 
 	@DeleteMapping("/delete")

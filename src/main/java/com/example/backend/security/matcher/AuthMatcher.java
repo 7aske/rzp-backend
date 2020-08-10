@@ -24,7 +24,6 @@ public class AuthMatcher {
 		boolean isAuthenticated = decoded != null;
 
 		List<String> roleList = decoded != null ?  decoded.getClaim("roles").asList(String.class) : new ArrayList<>();
-		System.out.println(roleList);
 
 		for (AuthRule rule : rules) {
 			if (rule.match(path, roleList, method, isAuthenticated)){
@@ -37,7 +36,6 @@ public class AuthMatcher {
 
 	private boolean hasPattern(String pattern){
 		for (AuthRule rule : rules) {
-			System.out.println(rule.getPattern());
 			if (rule.match(pattern)) {
 				return true;
 			}

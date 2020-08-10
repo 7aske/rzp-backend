@@ -1,7 +1,9 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Media;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface MediaService {
@@ -11,6 +13,8 @@ public interface MediaService {
 	void delete(Media media) throws Exception;
 
 	Media save(Media media);
+
+	Media upload(MultipartFile file) throws IOException;
 
 	Media update(Media media);
 
