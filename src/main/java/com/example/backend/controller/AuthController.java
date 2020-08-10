@@ -24,9 +24,9 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<Object> login(@RequestBody LoginDTO loginDTO) {
 		try {
-			User user = authService.login(loginDTO);
+			String token = authService.login(loginDTO);
 
-			return ResponseEntity.ok(UserAdapter.adapt(user));
+			return ResponseEntity.ok(token);
 		} catch (AuthServiceImpl.LoginException e) {
 			e.printStackTrace();
 			return ResponseEntity
