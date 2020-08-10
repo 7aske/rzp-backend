@@ -15,12 +15,11 @@ import com.example.backend.entity.Post;
 public interface PostRepository extends JpaRepository<Post, Long> {
 	Optional<Post> findByIdPost(Long idPost);
 	Optional<Post> findByPostSlug(String postSlug);
-	Optional<Post> findByPostTitle(String postTitle);
-	List<Post> findAllByIdUser(User idUser);
-	List<Post> findAllByIdCategory(Category idCategory);
-	List<Post> findAllByIdCategoryCategoryName(String categoryName);
-	List<Post> findAllByPostPublishedTrueAndIdCategoryCategoryName(String categoryName);
-	List<Post> findAllByPostPublished(Boolean postPublished);
+	List<Post> findAllByIdUserOrderByPostDatePostedDesc(User idUser);
+	List<Post> findAllByPostPublishedTrueAndIdCategoryOrderByPostDatePostedDesc(Category idCategory);
+	List<Post> findAllByPostPublishedTrueAndIdCategoryCategoryNameOrderByPostDatePostedDesc(String categoryName);
+	List<Post> findAllByPostPublishedOrderByPostDatePostedDesc(Boolean postPublished);
+	List<Post> findAllByPostPublishedTrueOrderByPostDatePostedDesc();
 	void deleteAllByIdUser(User idUser);
 	void deleteAllByIdCategory(Category idCategory);
 	void deleteAllByPostPublished(Boolean postPublished);

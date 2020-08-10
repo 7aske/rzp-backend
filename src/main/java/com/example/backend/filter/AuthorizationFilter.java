@@ -4,6 +4,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.security.*;
 import com.example.backend.security.matcher.AuthMatcher;
 import com.example.backend.security.matcher.AuthMatcherBuilder;
+import com.example.backend.security.matcher.AuthMatcherBuilderFactory;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 @Component
 public class AuthorizationFilter implements Filter {
@@ -19,13 +19,12 @@ public class AuthorizationFilter implements Filter {
 	private static final AuthMatcher matcher;
 
 	static {
-		matcher = new AuthMatcherBuilder().allow().withPattern("/**").build();
-		// matcher = new AuthMatcherBuilder()
-		// 		.authorize()
-		// 		.withPattern("/role/getAll").withRole("admin").and()
-		// 		.withPattern("/post/getAllPublished").withRole("admin").and()
-		// 		.allow().withPattern("/auth/*")
-		// 		.build();
+		matcher = AuthMatcherBuilderFactory.getBuilder()
+				.authorize()
+				.withPattern("/role/getAll").withRole("admin").and()
+				.withPattern("/post/getAllPublished").withRole("admin").and()
+				.allow().withPattern("/auth/*")
+				.build();
 	}
 
 	@Override

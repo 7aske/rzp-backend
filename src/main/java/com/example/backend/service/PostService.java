@@ -10,38 +10,29 @@ import java.util.List;
 
 public interface PostService {
 
-	List<Post> findAll();
+	List<PostDTO> findAll();
 
 	void delete(Post post) throws Exception;
 
-	Post save(PostDTO post) throws PostServiceImpl.PostValidationException;
+	PostDTO save(PostDTO post) throws PostServiceImpl.PostValidationException;
 
-	Post update(PostDTO post) throws PostServiceImpl.PostValidationException;
+	PostDTO update(PostDTO post) throws PostServiceImpl.PostValidationException;
 
-	Post findById(Long idPost);
+	PostDTO findById(Long idPost);
 
-	Post findByPostSlug(String postSlug);
+	PostDTO findByPostSlug(String postSlug);
 
-	PostDTO findDTOByPostSlug(String postSlug);
+	List<PostDTO> findAllByIdUser(User idUser);
 
-	Post findAllByPostTitle(String postTitle);
+	List<PostDTO> findAllByIdCategory(Category idCategory);
 
-	List<Post> findAllByIdUser(User idUser);
+	List<PostDTO> findAllByIdCategoryCategoryName(String categoryName);
 
-	List<Post> findAllByIdCategory(Category idCategory);
+	List<PostDTO> findAllByPostPublished(Boolean postPublished);
 
-	List<Post> findAllByPostPublished(Boolean postPublished);
+	List<PostDTO> findAllByPostPublishedTrue();
 
 	List<PostDTO> findAllDTOByPostPublishedTrueAndCategoryName(String categoryName);
 
-	List<PostDTO> findAllDTOByPostPublished(Boolean postPublished);
-
 	void deleteById(Long idPost) throws Exception;
-
-	void deleteAllByIdUser(User idUser) throws Exception;
-
-	void deleteAllByIdCategory(Category idCategory) throws Exception;
-
-	void deleteAllByPostPublished(Boolean postPublished) throws Exception;
-
 }

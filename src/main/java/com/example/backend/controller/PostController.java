@@ -21,13 +21,13 @@ public class PostController {
 	private PostService postService;
 
 	@GetMapping("/getAll")
-	public ResponseEntity<List<Post>> getAll() {
+	public ResponseEntity<List<PostDTO>> getAll() {
 		return ResponseEntity.ok(postService.findAll());
 	}
 
 	@GetMapping("/getById/{idPost}")
-	public ResponseEntity<Post> getById(@PathVariable Long idPost) {
-		Post post = postService.findById(idPost);
+	public ResponseEntity<PostDTO> getById(@PathVariable Long idPost) {
+		PostDTO post = postService.findById(idPost);
 		if (post != null) {
 			return ResponseEntity.ok(post);
 		} else {
@@ -36,16 +36,14 @@ public class PostController {
 	}
 
 	@GetMapping("/getAllPublished")
-	public ResponseEntity<List<PostDTO>> getAllPublished(HttpServletRequest request) {
-		String locale = (String) request.getAttribute("locale");
-		return ResponseEntity.ok(postService.findAllDTOByPostPublished(true));
+	public ResponseEntity<List<PostDTO>> getAllPublished(@RequestParam(required = false) Integer count) {
+		return ResponseEntity.ok(postService.findAllByPostPublished(true));
 	}
 
-
-	@GetMapping("/getAllPublished/{categoryName}")
-	public ResponseEntity<List<PostDTO>> getAllPublishedByCategoryName(@RequestParam String categoryName, HttpServletRequest request) {
-		String locale = (String) request.getAttribute("locale");
-		return ResponseEntity.ok(postService.findAllDTOByPostPublished(true));
+	@GetMapping("/getAllByCategoryName/{categoryName}")
+	public ResponseEntity<List<PostDTO>> getAllByCategoryName(@PathVariable String categoryName,
+	                                                          @RequestParam(required = false) Integer count) {
+		return ResponseEntity.ok(postService.findAllByIdCategoryCategoryName(categoryName));
 	}
 
 	@PostMapping("/save")

@@ -2,14 +2,12 @@ package com.example.backend.service.impl;
 
 import com.example.backend.adapter.PostAdapter;
 import com.example.backend.entity.*;
-import com.example.backend.entity.data.Locale;
 import com.example.backend.entity.dto.*;
 import com.example.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.backend.service.PostService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,63 +27,73 @@ public class PostServiceImpl implements PostService {
 	private CategoryRepository categoryRepository;
 
 	@Override
-	public List<Post> findAll() {
-		return postRepository.findAll();
+	public List<PostDTO> findAll() {
+		return postRepository.findAll()
+				.stream()
+				.map(PostAdapter::adapt)
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public Post findById(Long idPost) {
-		return postRepository.findById(idPost).orElse(null);
+	public PostDTO findById(Long idPost) {
+		return PostAdapter.adapt(postRepository.findById(idPost).orElse(null));
 	}
 
 	@Override
-	public Post findByPostSlug(String postSlug) {
-		return postRepository.findByPostSlug(postSlug).orElse(null);
-	}
-
-	@Override
-	public PostDTO findDTOByPostSlug(String postSlug) {
+	public PostDTO findByPostSlug(String postSlug) {
 		return PostAdapter.adapt(postRepository.findByPostSlug(postSlug).orElse(null));
 	}
 
 	@Override
-	public List<Post> findAllByIdUser(User idUser) {
-		return postRepository.findAllByIdUser(idUser);
+	public List<PostDTO> findAllByIdUser(User idUser) {
+		return postRepository.findAllByIdUserOrderByPostDatePostedDesc(idUser)
+				.stream()
+				.map(PostAdapter::adapt)
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Post> findAllByIdCategory(Category idCategory) {
-		return postRepository.findAllByIdCategory(idCategory);
+	public List<PostDTO> findAllByIdCategory(Category idCategory) {
+		return postRepository.findAllByPostPublishedTrueAndIdCategoryOrderByPostDatePostedDesc(idCategory)
+				.stream()
+				.map(PostAdapter::adapt)
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public Post findAllByPostTitle(String postTitle) {
-		return postRepository.findByPostTitle(postTitle).orElse(null);
+	public List<PostDTO> findAllByIdCategoryCategoryName(String categoryName) {
+		return postRepository.findAllByPostPublishedTrueAndIdCategoryCategoryNameOrderByPostDatePostedDesc(categoryName)
+				.stream()
+				.map(PostAdapter::adapt)
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Post> findAllByPostPublished(Boolean postPublished) {
-		return postRepository.findAllByPostPublished(postPublished);
+	public List<PostDTO> findAllByPostPublished(Boolean postPublished) {
+		return postRepository.findAllByPostPublishedOrderByPostDatePostedDesc(postPublished)
+				.stream()
+				.map(PostAdapter::adapt)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PostDTO> findAllByPostPublishedTrue() {
+		return postRepository.findAllByPostPublishedTrueOrderByPostDatePostedDesc()
+				.stream()
+				.map(PostAdapter::adapt)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<PostDTO> findAllDTOByPostPublishedTrueAndCategoryName(String categoryName) {
-		return postRepository.findAllByPostPublishedTrueAndIdCategoryCategoryName(categoryName)
+		return postRepository.findAllByPostPublishedTrueAndIdCategoryCategoryNameOrderByPostDatePostedDesc(categoryName)
 				.stream()
 				.map(PostAdapter::adapt)
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<PostDTO> findAllDTOByPostPublished(Boolean postPublished) {
-		return postRepository.findAllByPostPublished(postPublished)
-				.stream()
-				.map(PostAdapter::adapt)
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public Post save(PostDTO postDTO) throws PostValidationException {
+	public PostDTO save(PostDTO postDTO) throws PostValidationException {
 		validatePost(postDTO);
 
 		boolean isSlugValid = !postRepository.findByPostSlug(postDTO.getPostSlug()).isPresent();
@@ -106,11 +114,11 @@ public class PostServiceImpl implements PostService {
 		post.setIdCategory(category);
 		post.setIdUser(user);
 
-		return postRepository.save(post);
+		return PostAdapter.adapt(postRepository.save(post));
 	}
 
 	@Override
-	public Post update(PostDTO postDTO) throws PostValidationException {
+	public PostDTO update(PostDTO postDTO) throws PostValidationException {
 		validatePost(postDTO);
 
 		Post post = postRepository.findByIdPost(postDTO.getIdPost())
@@ -135,7 +143,7 @@ public class PostServiceImpl implements PostService {
 
 		post.setIdCategory(category);
 
-		return postRepository.save(post);
+		return PostAdapter.adapt(postRepository.save(post));
 	}
 
 	@Override
@@ -146,21 +154,6 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public void deleteById(Long idPost) throws Exception {
 		postRepository.deleteById(idPost);
-	}
-
-	@Override
-	public void deleteAllByIdUser(User idUser) throws Exception {
-		postRepository.deleteAllByIdUser(idUser);
-	}
-
-	@Override
-	public void deleteAllByIdCategory(Category idCategory) throws Exception {
-		postRepository.deleteAllByIdCategory(idCategory);
-	}
-
-	@Override
-	public void deleteAllByPostPublished(Boolean postPublished) throws Exception {
-		postRepository.deleteAllByPostPublished(postPublished);
 	}
 
 	private void validatePost(PostDTO post) throws PostValidationException {

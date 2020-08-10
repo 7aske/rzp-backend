@@ -5,14 +5,14 @@ import org.springframework.web.HttpMediaTypeException;
 
 import java.util.*;
 
-public class AuthMatcherBuilder {
+public class AuthMatcherBuilder implements PatternBuilder, RuleBuilder {
 	private boolean requiresAuthorization;
 	private String currentPattern;
 	private final List<AuthRule> rules;
 	private final Set<String> currentRoles;
 	private final Set<HttpMethod> currentMethods;
 
-	public AuthMatcherBuilder() {
+	protected AuthMatcherBuilder() {
 		currentRoles = new HashSet<>();
 		currentMethods = new HashSet<>();
 		currentPattern = null;
@@ -20,43 +20,49 @@ public class AuthMatcherBuilder {
 		rules = new ArrayList<>();
 	}
 
-	public AuthMatcherBuilder authorize() {
+	public RuleBuilder authorize() {
 		this.requiresAuthorization = true;
 		return this;
 	}
 
-	public AuthMatcherBuilder allow(){
+	public RuleBuilder allow() {
 		this.requiresAuthorization = false;
 		return this;
 	}
 
-	public AuthMatcherBuilder withPattern(String pattern) {
+	public PatternBuilder withPattern(String pattern) {
 		this.currentPattern = pattern;
 		return this;
 	}
 
-	public AuthMatcherBuilder and(){
-		finalizeRule();
-		return this;
-	}
-
-	public AuthMatcherBuilder withPattern(String pattern, HttpMethod... methods) {
+	public PatternBuilder withPattern(String pattern, HttpMethod... methods) {
 		this.currentPattern = pattern;
 		currentMethods.addAll(Arrays.asList(methods));
 		return this;
 	}
 
-	public AuthMatcherBuilder withRole(String role) {
+	public RuleBuilder and() {
+		finalizeRule();
+		return this;
+	}
+
+
+	public PatternBuilder withRole(String role) {
 		currentRoles.add(role);
 		return this;
 	}
 
-	public AuthMatcherBuilder withRole(String... roles) {
+	public PatternBuilder withRole(String... roles) {
 		currentRoles.addAll(Arrays.asList(roles));
 		return this;
 	}
 
-	public AuthMatcherBuilder withAnyRole() {
+	public PatternBuilder withRole(Collection<String> roles) {
+		currentRoles.addAll(roles);
+		return this;
+	}
+
+	public PatternBuilder withAnyRole() {
 		currentRoles.clear();
 		return this;
 	}
