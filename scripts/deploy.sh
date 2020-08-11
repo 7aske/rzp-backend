@@ -18,5 +18,5 @@ fi
 
 #ssh "$ip" "mkdir -p $dest_dir" && \
 #rsync --progress -have ssh "$src_war" "$ip:$dest_dir/$ctx_path.war"
-#curl -v -u "$user:$pass" "http://$tomcat_ip:$tomcat_port/manager/text/undeploy?path=/$ctx_path"
+curl -v -u "$user:$pass" "http://$tomcat_ip:$tomcat_port/manager/text/undeploy?path=/$ctx_path"
 curl -v -u "$user:$pass" -T "$src_war" "http://$tomcat_ip:$tomcat_port/manager/text/deploy?path=/$ctx_path&update=true"
