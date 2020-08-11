@@ -2,6 +2,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.entity.User;
+import com.example.backend.entity.dto.UserDTO;
 import com.example.backend.entity.dto.http.ClientError;
 import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.service.UserService;
@@ -23,7 +24,7 @@ public class UserController {
 	}
 
 	@GetMapping("/getById/{idUser}")
-	public ResponseEntity<User> getById(@PathVariable Long idUser) {
+	public ResponseEntity<UserDTO> getById(@PathVariable Long idUser) {
 		return ResponseEntity.ok(userService.findById(idUser));
 	}
 

@@ -1,5 +1,8 @@
 package com.example.backend.service.impl;
 
+import com.example.backend.adapter.UserAdapter;
+import com.example.backend.adapter.UserDTOAdapter;
+import com.example.backend.entity.dto.UserDTO;
 import com.example.backend.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.security.core.GrantedAuthority;
@@ -26,12 +29,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findById(Long idUser) {
-		if (userRepository.findById(idUser).isPresent()) {
-			return userRepository.findById(idUser).get();
-		} else {
-			return null;
-		}
+	public UserDTO findById(Long idUser) {
+		return UserAdapter.adapt(userRepository.findById(idUser).orElse(null));
 	}
 
 	// @Override
@@ -44,8 +43,8 @@ public class UserServiceImpl implements UserService {
 	// }
 
 	@Override
-	public User findByUserUsername(String userUsername) {
-		return userRepository.findByUserUsername(userUsername).orElse(null);
+	public UserDTO findByUserUsername(String userUsername) {
+		return UserAdapter.adapt(userRepository.findByUserUsername(userUsername).orElse(null));
 	}
 
 	@Override

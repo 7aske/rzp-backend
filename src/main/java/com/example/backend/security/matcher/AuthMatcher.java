@@ -20,7 +20,13 @@ public class AuthMatcher {
 		String path = request.getRequestURI().substring(request.getContextPath().length());
 		HttpMethod method = HttpMethod.resolve(request.getMethod());
 
-		DecodedJWT decoded = JWTUtils.getToken(request);
+		DecodedJWT decoded = null;
+		try {
+			decoded = JWTUtils.getToken(request);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		boolean isAuthenticated = decoded != null;
 
 		List<String> roleList = decoded != null ?  decoded.getClaim("roles").asList(String.class) : new ArrayList<>();

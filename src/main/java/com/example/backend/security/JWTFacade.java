@@ -37,16 +37,11 @@ public class JWTFacade {
 		}
 	}
 
-	public static DecodedJWT verifyToken(String token) {
-		try {
-			return JWT.require(ALGORITHM)
-					.withIssuer(ISSUER)
-					.withClaim(CLAIM_NAME, CLAIM_VALUE)
-					.build()
-					.verify(token);
-		} catch (JWTVerificationException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public static DecodedJWT verifyToken(String token) throws Exception {
+		return JWT.require(ALGORITHM)
+				.withIssuer(ISSUER)
+				.withClaim(CLAIM_NAME, CLAIM_VALUE)
+				.build()
+				.verify(token);
 	}
 }

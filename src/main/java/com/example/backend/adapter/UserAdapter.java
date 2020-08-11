@@ -1,11 +1,18 @@
 package com.example.backend.adapter;
 
+import com.example.backend.entity.Role;
 import com.example.backend.entity.User;
 import com.example.backend.entity.dto.UserCommentDTO;
 import com.example.backend.entity.dto.UserDTO;
 
+import java.util.stream.Collectors;
+
 public class UserAdapter {
 	public static UserDTO adapt(User user) {
+		if (user == null) {
+			return null;
+		}
+
 		UserDTO userDTO = new UserDTO();
 		userDTO.setIdUser(user.getIdUser());
 		userDTO.setUserUsername(user.getUserUsername());
@@ -16,7 +23,7 @@ public class UserAdapter {
 		userDTO.setUserAbout(user.getUserAddress());
 		userDTO.setUserDisplayName(user.getUserDisplayName());
 		userDTO.setUserDateCreated(user.getUserDateCreated());
-		userDTO.setUserRoles(user.getUserRoles());
+		userDTO.setUserRoles(user.getUserRoles().stream().map(Role::getRoleName).collect(Collectors.toList()));
 		return userDTO;
 	}
 

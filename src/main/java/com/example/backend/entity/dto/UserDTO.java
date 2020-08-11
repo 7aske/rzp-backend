@@ -29,5 +29,5 @@ public class UserDTO {
 	private String userAbout;
 	private String userDisplayName;
 	private Date userDateCreated;
-	private List<Role> userRoles;
+	private List<String> userRoles;
 }

@@ -4,6 +4,7 @@ import com.example.backend.entity.Role;
 import com.example.backend.entity.User;
 import com.example.backend.entity.dto.LoginDTO;
 import com.example.backend.entity.dto.RegisterDTO;
+import com.example.backend.repository.UserRepository;
 import com.example.backend.security.JWTFacade;
 import com.example.backend.security.SecurityConstants;
 import com.example.backend.security.SecurityUtils;
@@ -25,11 +26,11 @@ import java.util.stream.Collectors;
 @Service
 public class AuthServiceImpl implements AuthService {
 	@Autowired
-	private UserService userService;
+	private UserRepository userRepository;
 
 	@Override
 	public String login(LoginDTO loginDTO) throws LoginException {
-		User user = userService.findByUserUsername(loginDTO.getUsername());
+		User user = userRepository.findByUserUsername(loginDTO.getUsername()).orElse(null);
 		if (user == null) {
 			throw new LoginException("auth.login.invalid-credentials");
 		}

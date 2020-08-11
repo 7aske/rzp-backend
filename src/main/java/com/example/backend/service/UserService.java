@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.User;
+import com.example.backend.entity.dto.UserDTO;
 // import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
@@ -16,9 +17,9 @@ public interface UserService {
 
 	User update(User user);
 
-	User findById(Long idUser);
+	UserDTO findById(Long idUser);
 
-	User findByUserUsername(String userUsername);
+	UserDTO findByUserUsername(String userUsername);
 
 	List<User> findAllByUserEmail(String userEmail);
 
