@@ -20,6 +20,7 @@ public class PostDTO {
 	private Long idCategory;
 	private Boolean postPublished;
 	private Date postDatePosted;
+	private Date postDateUpdated;
 	private Long postViews;
 	private String postTitle;
 	private String postExcerpt;

@@ -30,6 +30,14 @@ public class PostServiceImpl implements PostService {
 	private final Integer PAGE_SIZE = 5;
 
 	@Override
+	public Integer getPageCount(Integer size) {
+		if (size == null) {
+			size = PAGE_SIZE;
+		}
+		return (int)Math.ceil(postRepository.countPosts() / (double)size);
+	}
+
+	@Override
 	public List<PostDTO> findAll(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
 		return getPostsByQuery(categoryName,pageNumber, pageSize, published)
 				.stream()

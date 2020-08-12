@@ -24,18 +24,23 @@ public class PostController {
 	@GetMapping("/getAll")
 	public ResponseEntity<List<PostDTO>> getAll(
 			@RequestParam(required = false) String category,
-			@RequestParam(required = false, defaultValue = "true") Boolean published,
+			@RequestParam(required = false) Boolean published,
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer count) {
 
 		return ResponseEntity.ok(postService.findAll(category, page, count, published));
 	}
 
+	@GetMapping("/getPageCount")
+	public ResponseEntity<Integer> getPageCount(@RequestParam(required = false) Integer size) {
+		return ResponseEntity.ok(postService.getPageCount(size));
+	}
+
 
 	@GetMapping("/getAllPreview")
 	public ResponseEntity<List<PostPreviewDTO>> getAllPreviews(
 			@RequestParam(required = false) String category,
-			@RequestParam(required = false, defaultValue = "true") Boolean published,
+			@RequestParam(required = false) Boolean published,
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer count) {
 
@@ -46,7 +51,7 @@ public class PostController {
 	public ResponseEntity<List<PostDTO>> getAllByIdUser(
 			@PathVariable Long idUser,
 			@RequestParam(required = false) String category,
-			@RequestParam(required = false, defaultValue = "true") Boolean published,
+			@RequestParam(required = false) Boolean published,
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer count) {
 

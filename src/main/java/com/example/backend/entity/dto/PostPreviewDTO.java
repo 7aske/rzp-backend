@@ -17,9 +17,11 @@ public class PostPreviewDTO {
 	private String postAuthor;
 	private String categoryName;
 	private Date postDatePosted;
+	private Date postDateUpdated;
 	private Long postViews;
 	private String postTitle;
 	private String postExcerpt;
 	private String postSlug;
+	private Boolean postPublished;
 	private List<Tag> tags;
 }

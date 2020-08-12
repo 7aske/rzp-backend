@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface PostService {
 
+	Integer getPageCount(Integer size);
+
 	List<PostDTO> findAll(String category, Integer pageNumber, Integer count, Boolean published);
 
 	List<PostPreviewDTO> findAllPreviews(String category, Integer pageNumber, Integer count, Boolean published);

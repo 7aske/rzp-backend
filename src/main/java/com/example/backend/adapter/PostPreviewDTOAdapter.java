@@ -18,9 +18,11 @@ public class PostPreviewDTOAdapter {
 		postDTO.setIdUser(post.getIdUser().getIdUser());
 		postDTO.setCategoryName(post.getIdCategory().getCategoryName());
 		postDTO.setPostDatePosted(post.getPostDatePosted());
+		postDTO.setPostDateUpdated(post.getPostDateUpdated());
 		postDTO.setPostViews(post.getPostViews());
 		postDTO.setPostAuthor(post.getIdUser().getUserDisplayName());
 
+		postDTO.setPostPublished(post.getPostPublished());
 		postDTO.setPostTitle(post.getPostTitle());
 		postDTO.setPostSlug(post.getPostSlug());
 		postDTO.setPostExcerpt(post.getPostExcerpt());

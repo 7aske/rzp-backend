@@ -5,11 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import com.example.backend.entity.Tag;
 
 import javax.persistence.*;
 
-import java.time.LocalDate;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +45,8 @@ public class Post implements Serializable {
 	private String postBody;
 	@Column(name = "post_slug")
 	private String postSlug;
+	@Column(name = "post_date_updated")
+	private Date postDateUpdated = new Date();
 	@Column(name = "post_date_posted")
 	private Date postDatePosted = new Date();
 	@Column(name = "post_published")

@@ -16,6 +16,7 @@ public class PostAdapter {
 		postDTO.setIdUser(post.getIdUser().getIdUser());
 		postDTO.setIdCategory(post.getIdCategory().getIdCategory());
 		postDTO.setPostDatePosted(post.getPostDatePosted());
+		postDTO.setPostDateUpdated(post.getPostDateUpdated());
 		postDTO.setPostPublished(post.getPostPublished());
 		postDTO.setPostViews(post.getPostViews());
 		postDTO.setPostAuthor(post.getIdUser().getUserDisplayName());
