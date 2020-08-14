@@ -32,8 +32,8 @@ public class PostController {
 	}
 
 	@GetMapping("/getPageCount")
-	public ResponseEntity<Integer> getPageCount(@RequestParam(required = false) Integer size) {
-		return ResponseEntity.ok(postService.getPageCount(size));
+	public ResponseEntity<Integer> getPageCount(@RequestParam(required = false) Integer count) {
+		return ResponseEntity.ok(postService.getPageCount(count));
 	}
 
 

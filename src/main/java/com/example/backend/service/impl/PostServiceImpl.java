@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.backend.service.PostService;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-	private final Integer PAGE_SIZE = 5;
+	private final Integer PAGE_SIZE = 10;
 
 	@Override
 	public Integer getPageCount(Integer size) {
@@ -75,7 +76,7 @@ public class PostServiceImpl implements PostService {
 	public PostDTO save(PostDTO postDTO) throws PostValidationException {
 		validatePost(postDTO);
 
-		boolean isSlugValid = !postRepository.findByPostSlug(postDTO.getPostSlug()).isPresent();
+		boolean isSlugValid = !postRepository.findByPostSlug(postDTO.getPostSlug().toLowerCase()).isPresent();
 		if (!isSlugValid) {
 			throw new PostValidationException("post.save.slug-exists");
 		}
@@ -85,7 +86,7 @@ public class PostServiceImpl implements PostService {
 		User user = userRepository.findById(postDTO.getIdUser()).orElse(null);
 
 		post.setPostTitle(postDTO.getPostTitle());
-		post.setPostSlug(postDTO.getPostSlug());
+		post.setPostSlug(postDTO.getPostSlug().toLowerCase());
 		post.setPostExcerpt(postDTO.getPostExcerpt());
 		post.setPostBody(postDTO.getPostBody());
 		post.setTagList(postDTO.getTags());
@@ -113,6 +114,7 @@ public class PostServiceImpl implements PostService {
 
 		post.setIdCategory(category);
 		post.setPostPublished(postDTO.getPostPublished());
+		post.setPostDateUpdated(new Date());
 
 		post.setPostTitle(postDTO.getPostTitle());
 		post.setPostSlug(postDTO.getPostSlug());

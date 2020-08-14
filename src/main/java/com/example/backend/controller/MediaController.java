@@ -1,6 +1,7 @@
 
 package com.example.backend.controller;
 
+import com.example.backend.adapter.MediaAdapter;
 import com.example.backend.entity.Media;
 import com.example.backend.entity.dto.http.ClientError;
 import com.example.backend.entity.dto.http.ClientMessage;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,6 +36,16 @@ public class MediaController {
 	public ResponseEntity<Object> upload(@RequestParam("file") MultipartFile file) {
 		try {
 			return ResponseEntity.ok(mediaService.upload(file));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
+	}
+
+	@PostMapping("/mdeupload")
+	public ResponseEntity<Object> mdeUpload(@RequestParam("image") MultipartFile file, HttpServletRequest request) {
+		try {
+			return ResponseEntity.ok(MediaAdapter.adapt(mediaService.upload(file)));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
