@@ -34,46 +34,4 @@ public class TagController {
 	public ResponseEntity<Tag> getById(@PathVariable String tagName) {
 		return ResponseEntity.ok(tagService.findAllByTagName(tagName));
 	}
-
-	@PostMapping("/save")
-	public ResponseEntity<Object> save(@RequestBody Tag tag) {
-		try {
-			return ResponseEntity.ok(tagService.save(tag));
-		} catch (TagServiceImpl.TagValidationException e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
-
-	@PutMapping("/update")
-	public ResponseEntity<Object> update(@RequestBody Tag tag) {
-		try {
-			return ResponseEntity.ok(tagService.update(tag));
-		} catch (TagServiceImpl.TagValidationException e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
-
-	@DeleteMapping("/delete")
-	public ResponseEntity<Object> delete(@RequestBody Tag tag) {
-		try {
-			tagService.delete(tag);
-			return ResponseEntity.ok(new ClientMessage("deleted"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
-
-	@DeleteMapping("/deleteById/{idTag}")
-	public ResponseEntity<Object> deleteById(@PathVariable Long idTag) {
-		try {
-			tagService.deleteById(idTag);
-			return ResponseEntity.ok(new ClientMessage("deleted"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
 }

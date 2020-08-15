@@ -27,11 +27,12 @@ public class AuthRule {
 	}
 
 	public boolean match(String path, List<String> roles, HttpMethod method, boolean authorized){
+		System.out.println(path + roles + method + authorized);
 		boolean hasRole = !Collections.disjoint(roles, this.roles) || this.roles.isEmpty();
 		boolean methodValid = this.methods.contains(method) || this.methods.isEmpty();
 		boolean matched = match(path);
 
-		if (!requiresAuthorization && matched){
+		if (!requiresAuthorization && matched && methodValid){
 			return true;
 		}
 

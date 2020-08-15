@@ -27,47 +27,4 @@ public class CategoryController {
 	public ResponseEntity<Category> getById(@PathVariable Long idCategory) {
 		return ResponseEntity.ok(categoryService.findById(idCategory));
 	}
-
-
-	@PostMapping("/save")
-	public ResponseEntity<Object> save(@RequestBody Category category) {
-		try {
-			return ResponseEntity.ok(categoryService.save(category));
-		} catch (CategoryServiceImpl.CategoryValidationException e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
-
-	@PutMapping("/update")
-	public ResponseEntity<Object> update(@RequestBody Category category) {
-		try {
-			return ResponseEntity.ok(categoryService.update(category));
-		} catch (CategoryServiceImpl.CategoryValidationException e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
-
-	@DeleteMapping("/delete")
-	public ResponseEntity<Object> delete(@RequestBody Category category) {
-		try {
-			categoryService.delete(category);
-			return ResponseEntity.ok(new ClientMessage("deleted"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
-
-	@DeleteMapping("/deleteById/{idCategory}")
-	public ResponseEntity<Object> deleteById(@PathVariable Long idCategory) {
-		try {
-			categoryService.deleteById(idCategory);
-			return ResponseEntity.ok(new ClientMessage("deleted"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
 }

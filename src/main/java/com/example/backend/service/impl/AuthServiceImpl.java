@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public String login(LoginDTO loginDTO) throws LoginException {
-		User user = userRepository.findByUserUsername(loginDTO.getUsername()).orElse(null);
+		User user = userRepository.findByUserUsername(loginDTO.getUsername().toLowerCase()).orElse(null);
 		if (user == null) {
 			throw new LoginException("auth.login.invalid-credentials");
 		}

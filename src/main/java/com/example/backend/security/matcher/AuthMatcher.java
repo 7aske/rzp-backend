@@ -24,15 +24,15 @@ public class AuthMatcher {
 		try {
 			decoded = JWTUtils.getToken(request);
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.err.println(String.format("%s %s %s", path, method, e.getMessage()));
 		}
 
 		boolean isAuthenticated = decoded != null;
 
-		List<String> roleList = decoded != null ?  decoded.getClaim("roles").asList(String.class) : new ArrayList<>();
+		List<String> roleList = decoded != null ? decoded.getClaim("roles").asList(String.class) : new ArrayList<>();
 
 		for (AuthRule rule : rules) {
-			if (rule.match(path, roleList, method, isAuthenticated)){
+			if (rule.match(path, roleList, method, isAuthenticated)) {
 				return true;
 			}
 		}
@@ -40,7 +40,7 @@ public class AuthMatcher {
 		return false;
 	}
 
-	private boolean hasPattern(String pattern){
+	private boolean hasPattern(String pattern) {
 		for (AuthRule rule : rules) {
 			if (rule.match(pattern)) {
 				return true;

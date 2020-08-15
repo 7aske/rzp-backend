@@ -1,5 +1,5 @@
 
-package com.example.backend.controller;
+package com.example.backend.controller.admin;
 
 import com.example.backend.entity.ContactType;
 import com.example.backend.entity.dto.http.ClientError;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/contactType")
-public class ContactTypeController {
+@RequestMapping("/admin/contactType")
+public class AdminContactTypeController {
 	@Autowired
 	private ContactTypeService contactTypeService;
 

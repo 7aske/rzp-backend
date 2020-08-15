@@ -1,5 +1,5 @@
 
-package com.example.backend.controller;
+package com.example.backend.controller.admin;
 
 import com.example.backend.entity.Role;
 import com.example.backend.entity.Role;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/role")
-public class RoleController {
+@RequestMapping("/admin/role")
+public class AdminRoleController {
 	@Autowired
 	private RoleService roleService;
 

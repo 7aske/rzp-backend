@@ -5,6 +5,7 @@ import com.example.backend.security.*;
 import com.example.backend.security.matcher.AuthMatcher;
 import com.example.backend.security.matcher.AuthMatcherBuilder;
 import com.example.backend.security.matcher.AuthMatcherBuilderFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -20,7 +21,15 @@ public class AuthorizationFilter implements Filter {
 
 	static {
 		matcher = AuthMatcherBuilderFactory.getBuilder()
-				.allow().withPattern("/**").build();
+				.authorize().withPattern("/admin/**").withRole("admin").and()
+				.allow().withPattern("/**", HttpMethod.OPTIONS).and()
+				.allow().withPattern("/auth/*").and()
+				.allow().withPattern("/user/getById/*").and()
+				.allow().withPattern("/category/**").and()
+				.allow().withPattern("/post/**").and()
+				.allow().withPattern("/tag/**").and()
+				.allow().withPattern("/media/**")
+				.build();
 	}
 
 	@Override
