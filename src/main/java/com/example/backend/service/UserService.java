@@ -32,6 +32,8 @@ public interface UserService {
 
 	UserDTO updateProperty(Long idUser, String property, Object value) throws UserServiceImpl.UserValidationException;
 
+	UserDTO updatePassword(Long idUser, String password, String confirmPassword, String newPassword) throws UserServiceImpl.UserValidationException;
+
 	// List<GrantedAuthority> getAllRolesByUsername(String username);
 
 	void deleteById(Long idUser) throws Exception;

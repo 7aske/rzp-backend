@@ -5,10 +5,12 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.entity.User;
 import com.example.backend.entity.dto.UserDTO;
 import com.example.backend.entity.dto.UserPropertyUpdateDTO;
+import com.example.backend.entity.dto.UserUpdatePasswordDTO;
 import com.example.backend.entity.dto.http.ClientError;
 import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.security.JWTUtils;
 import com.example.backend.service.UserService;
+import com.sun.xml.internal.ws.resources.HttpserverMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +29,22 @@ public class UserUserController {
 		try {
 			DecodedJWT token = JWTUtils.getToken(request);
 			Long idUser = token.getClaim("idUser").asLong();
-			System.out.println(updateDTO);
 			UserDTO updated = userService.updateProperty(idUser, updateDTO.getProperty(), updateDTO.getValue());
+			return ResponseEntity.ok(updated);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
+		}
+	}
+
+	@PutMapping("/updatePassword")
+	public ResponseEntity<Object> updatePassword(@RequestBody UserUpdatePasswordDTO passwordDTO, HttpServletRequest request) {
+		try {
+			DecodedJWT token = JWTUtils.getToken(request);
+			Long idUser = token.getClaim("idUser").asLong();
+			UserDTO updated = userService.updatePassword(idUser,
+					passwordDTO.getPassword(),
+					passwordDTO.getConfirmPassword(),
+					passwordDTO.getNewPassword());
 			return ResponseEntity.ok(updated);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));

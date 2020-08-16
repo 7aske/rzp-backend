@@ -7,7 +7,8 @@ public class ValidationUtil {
 	public static final Pattern EMAIL_REGEX =
 			Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
-	private static final Pattern PASSWORD_REGEX = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{8,40})");
+	private static final Pattern PASSWORD_REGEX = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,40}$");
+	//(?=.*[@#$%^&+=]) for special characters
 
 	public static boolean validateEmail(String emailStr) {
 		Matcher matcher = EMAIL_REGEX.matcher(emailStr);

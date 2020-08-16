@@ -132,6 +132,22 @@ public class UserServiceImpl implements UserService {
 		return UserAdapter.adapt(userRepository.save(user));
 	}
 
+	@Override
+	public UserDTO updatePassword(Long idUser, String password, String confirmPassword, String newPassword) throws UserValidationException {
+		if (!password.equals(confirmPassword)){
+			throw new UserValidationException("user.update.password-not-matching");
+		}
+		User user = userRepository.findById(idUser).orElseThrow(() -> new UserValidationException("user.update.user-not-found"));
+
+		if (!user.getUserPassword().equals(SecurityUtils.getSha512(password))) {
+			throw new UserValidationException("auth.login.invalid-credentials");
+		}
+		validatePassword(newPassword);
+
+		user.setUserPassword(SecurityUtils.getSha512(newPassword));
+		return UserAdapter.adapt(userRepository.save(user));
+	}
+
 	void validateUsername(String value) throws UserValidationException {
 		if (value == null) {
 			throw new UserValidationException("user.update.username-invalid");
@@ -206,6 +222,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	void validatePassword(String value) throws UserValidationException {
+		System.out.println(value);
 		if (value == null || !ValidationUtil.validatePassword(value)) {
 			throw new UserValidationException("user.update.password-invalid");
 		}
