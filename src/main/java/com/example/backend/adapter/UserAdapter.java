@@ -20,7 +20,7 @@ public class UserAdapter {
 		userDTO.setUserFirstName(user.getUserFirstName());
 		userDTO.setUserLastName(user.getUserLastName());
 		userDTO.setUserAddress(user.getUserAddress());
-		userDTO.setUserAbout(user.getUserAddress());
+		userDTO.setUserAbout(user.getUserAbout());
 		userDTO.setUserDisplayName(user.getUserDisplayName());
 		userDTO.setUserDateCreated(user.getUserDateCreated());
 		userDTO.setUserRoles(user.getUserRoles().stream().map(Role::getRoleName).collect(Collectors.toList()));

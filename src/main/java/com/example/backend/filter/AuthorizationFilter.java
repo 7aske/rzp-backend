@@ -22,6 +22,7 @@ public class AuthorizationFilter implements Filter {
 	static {
 		matcher = AuthMatcherBuilderFactory.getBuilder()
 				.authorize().withPattern("/admin/**").withRole("admin").and()
+				.authorize().withPattern("/user/**").withRole("user").and()
 				.allow().withPattern("/**", HttpMethod.OPTIONS).and()
 				.allow().withPattern("/auth/*").and()
 				.allow().withPattern("/user/getById/*").and()

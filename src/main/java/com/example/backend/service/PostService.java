@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PostService {
 
-	Integer getPageCount(Integer size);
+	Integer getPageCount(Long idUser, String categoryName, Boolean published, Integer size);
 
 	List<PostDTO> findAll(String category, Integer pageNumber, Integer count, Boolean published);
 

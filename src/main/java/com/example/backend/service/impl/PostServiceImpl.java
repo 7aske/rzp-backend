@@ -5,6 +5,7 @@ import com.example.backend.adapter.PostPreviewDTOAdapter;
 import com.example.backend.entity.*;
 import com.example.backend.entity.dto.*;
 import com.example.backend.repository.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,16 +32,36 @@ public class PostServiceImpl implements PostService {
 	private final Integer PAGE_SIZE = 10;
 
 	@Override
-	public Integer getPageCount(Integer size) {
+	public Integer getPageCount(Long idUser, String categoryName, Boolean published, Integer size) {
 		if (size == null) {
 			size = PAGE_SIZE;
 		}
-		return (int)Math.ceil(postRepository.countPosts() / (double)size);
+		if (published != null) {
+			if (idUser != null && categoryName != null) {
+				return (int) Math.ceil(postRepository.countUserCategoryPostsPublished(idUser, categoryName, published) / (double) size);
+			} else if (idUser != null) {
+				return (int) Math.ceil(postRepository.countUserPostsPublished(idUser, published) / (double) size);
+			} else if (categoryName != null) {
+				return (int) Math.ceil(postRepository.countCategoryPostsPublished(categoryName, published) / (double) size);
+			} else {
+				return (int) Math.ceil(postRepository.countPostsPublished(published) / (double) size);
+			}
+		} else {
+			if (idUser != null && categoryName != null) {
+				return (int) Math.ceil(postRepository.countUserCategoryPosts(idUser, categoryName) / (double) size);
+			} else if (idUser != null) {
+				return (int) Math.ceil(postRepository.countUserPosts(idUser) / (double) size);
+			} else if (categoryName != null) {
+				return (int) Math.ceil(postRepository.countCategoryPosts(categoryName) / (double) size);
+			} else {
+				return (int) Math.ceil(postRepository.countPosts() / (double) size);
+			}
+		}
 	}
 
 	@Override
 	public List<PostDTO> findAll(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
-		return getPostsByQuery(categoryName,pageNumber, pageSize, published)
+		return getPostsByQuery(categoryName, pageNumber, pageSize, published)
 				.stream()
 				.map(PostAdapter::adapt)
 				.collect(Collectors.toList());
@@ -48,7 +69,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public List<PostPreviewDTO> findAllPreviews(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
-		return getPostsByQuery(categoryName,pageNumber, pageSize, published)
+		return getPostsByQuery(categoryName, pageNumber, pageSize, published)
 				.stream()
 				.map(PostPreviewDTOAdapter::adapt)
 				.collect(Collectors.toList());
@@ -137,7 +158,7 @@ public class PostServiceImpl implements PostService {
 		postRepository.deleteById(idPost);
 	}
 
-	private Page<Post> getPostsByQuery(String categoryName, Integer pageNumber, Integer pageSize, Boolean published){
+	private Page<Post> getPostsByQuery(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
 		Pageable page = getPage(pageNumber, pageSize);
 		if (categoryName != null && published != null) {
 			return postRepository.findAllByIdCategoryCategoryNameAndPostPublishedOrderByPostDatePostedDesc(categoryName, published, page);

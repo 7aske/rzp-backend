@@ -31,9 +31,14 @@ public class AdminPostController {
 	}
 
 	@GetMapping("/getPageCount")
-	public ResponseEntity<Integer> getPageCount(@RequestParam(required = false) Integer count) {
-		return ResponseEntity.ok(postService.getPageCount(count));
+	public ResponseEntity<Integer> getPageCount(
+			@RequestParam(required = false) Long idUser,
+			@RequestParam(required = false) String category,
+			@RequestParam(required = false) Boolean published,
+			@RequestParam(required = false) Integer count) {
+		return ResponseEntity.ok(postService.getPageCount(idUser, category, published, count));
 	}
+
 
 
 	@GetMapping("/getAllPreview")

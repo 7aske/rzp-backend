@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.entity.User;
 import com.example.backend.entity.dto.UserDTO;
+import com.example.backend.service.impl.UserServiceImpl;
 // import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
@@ -28,6 +29,8 @@ public interface UserService {
 	List<User> findAllByUserLastName(String userLastName);
 
 	List<User> findAllByUserDisplayName(String userDisplayName);
+
+	UserDTO updateProperty(Long idUser, String property, Object value) throws UserServiceImpl.UserValidationException;
 
 	// List<GrantedAuthority> getAllRolesByUsername(String username);
 
