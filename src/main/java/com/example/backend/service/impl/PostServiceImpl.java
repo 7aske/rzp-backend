@@ -5,7 +5,7 @@ import com.example.backend.adapter.PostPreviewDTOAdapter;
 import com.example.backend.entity.*;
 import com.example.backend.entity.dto.*;
 import com.example.backend.repository.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.example.backend.service.UserPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class PostServiceImpl implements PostService {
+public class PostServiceImpl implements PostService, UserPostService {
 
 	@Autowired
 	private PostRepository postRepository;
@@ -57,6 +57,60 @@ public class PostServiceImpl implements PostService {
 				return (int) Math.ceil(postRepository.countPosts() / (double) size);
 			}
 		}
+	}
+
+	@Override
+	public List<PostDTO> findAll(Long idUser, String category, Integer pageNumber, Integer count, Boolean published) {
+		return findAll(category, pageNumber, count, published)
+				.stream()
+				.filter(p -> p.getIdUser().equals(idUser))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PostPreviewDTO> findAllPreviews(Long idUser, String category, Integer pageNumber, Integer count, Boolean published) {
+		return findAllPreviews(category, pageNumber, count, published)
+				.stream()
+				.filter(p -> p.getIdUser().equals(idUser))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public void delete(Long idUser, Post post) throws Exception {
+		if (post.getIdUser().getIdUser().equals(idUser)) {
+			delete(post);
+			return;
+		}
+		throw new PostValidationException("post.delete.unauthorized");
+	}
+
+	@Override
+	public PostDTO save(Long idUser, PostDTO post) throws PostValidationException {
+		if (post.getIdUser().equals(idUser)) {
+			return save(post);
+		}
+		throw new PostValidationException("post.save.unauthorized");
+	}
+
+	@Override
+	public PostDTO update(Long idUser, PostDTO post) throws PostValidationException {
+		if (post.getIdUser().equals(idUser)) {
+			return update(post);
+		}
+		throw new PostValidationException("post.update.unauthorized");
+	}
+
+	@Override
+	public void deleteById(Long idUser, Long idPost) throws Exception {
+		Post post = postRepository.findByIdPost(idPost).orElse(null);
+		if (post == null) {
+			return;
+		}
+
+		if (post.getIdUser().getIdUser().equals(idUser)) {
+			delete(post);
+		}
+		throw new PostValidationException("post.delete.unauthorized");
 	}
 
 	@Override

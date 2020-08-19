@@ -15,6 +15,11 @@ public class JWTUtils {
 		return JWTFacade.verifyToken(token);
 	}
 
+	public static Long getIdUserFromRequest(HttpServletRequest request) throws Exception {
+		DecodedJWT decodedJWT = getToken(request);
+		return decodedJWT.getClaim("idUser").asLong();
+	}
+
 	public static class MissingHeaderException extends Exception {
 		public MissingHeaderException(String message) {
 			super(message);
