@@ -23,4 +23,5 @@ public class UserDTO {
 	private String userDisplayName;
 	private Date userDateCreated;
 	private List<String> userRoles;
+	private Boolean userActive;
 }

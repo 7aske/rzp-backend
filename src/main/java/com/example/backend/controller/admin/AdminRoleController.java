@@ -29,7 +29,7 @@ public class AdminRoleController {
 		return ResponseEntity.ok(roleService.findById(idRole));
 	}
 
-	@GetMapping("/getById/{roleName}")
+	@GetMapping("/getByRoleName/{roleName}")
 	public ResponseEntity<Role> getById(@PathVariable String roleName) {
 		return ResponseEntity.ok(roleService.findAllByRoleName(roleName));
 	}
@@ -54,17 +54,6 @@ public class AdminRoleController {
 		}
 	}
 
-	@DeleteMapping("/delete")
-	public ResponseEntity<Object> delete(@RequestBody Role role) {
-		try {
-			roleService.delete(role);
-			return ResponseEntity.ok(new ClientMessage("deleted"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
-
 	@DeleteMapping("/deleteById/{idRole}")
 	public ResponseEntity<Object> deleteById(@PathVariable Long idRole) {
 		try {
@@ -76,7 +65,7 @@ public class AdminRoleController {
 		}
 	}
 
-	@DeleteMapping("/deleteById/{roleName}")
+	@DeleteMapping("/deleteByRoleName/{roleName}")
 	public ResponseEntity<Object> deleteById(@PathVariable String roleName) {
 		try {
 			roleService.deleteByRoleName(roleName);

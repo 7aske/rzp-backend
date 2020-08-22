@@ -8,6 +8,7 @@ import com.example.backend.entity.dto.http.ClientError;
 import com.example.backend.security.JWTUtils;
 import com.example.backend.service.AuthService;
 import com.example.backend.service.impl.AuthServiceImpl;
+import com.example.backend.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

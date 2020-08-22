@@ -27,6 +27,7 @@ public class AuthorizationFilter implements Filter {
 				.allow().withPattern("/**", HttpMethod.OPTIONS).and()
 				.allow().withPattern("/auth/*").and()
 				.allow().withPattern("/user/getById/*").and()
+				.allow().withPattern("/user/register").and()
 				.allow().withPattern("/category/**").and()
 				.allow().withPattern("/post/**").and()
 				.allow().withPattern("/tag/**").and()

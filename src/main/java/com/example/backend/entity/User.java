@@ -1,14 +1,11 @@
 package com.example.backend.entity;
 
-import com.example.backend.entity.dto.UserDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
-import java.time.LocalDate;
 import java.io.Serializable;
 import java.util.*;
 
@@ -20,7 +17,6 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_user")
 	private Long idUser;
-
 	@Column(name = "user_username")
 	private String userUsername;
 	@Column(name = "user_email")
@@ -39,6 +35,8 @@ public class User implements Serializable {
 	private String userDisplayName;
 	@Column(name = "user_date_created")
 	private Date userDateCreated;
+	@Column(name = "user_active")
+	private Boolean userActive;
 	@ManyToMany
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name= "id_user"), inverseJoinColumns = @JoinColumn(name = "id_role"))
 	private List<Role> userRoles = new ArrayList<>();

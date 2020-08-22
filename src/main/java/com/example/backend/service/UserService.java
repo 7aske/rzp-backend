@@ -14,9 +14,9 @@ public interface UserService {
 
 	void delete(User user) throws Exception;
 
-	User save(User user);
+	UserDTO save(User user) throws UserServiceImpl.UserValidationException;
 
-	User update(User user);
+	UserDTO update(UserDTO user) throws UserServiceImpl.UserValidationException;
 
 	UserDTO findById(Long idUser);
 

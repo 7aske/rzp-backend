@@ -48,11 +48,4 @@ public class AuthMatcher {
 		}
 		return false;
 	}
-
-	@Override
-	public String toString() {
-		return "AuthMatcher{" +
-				"rules=" + rules +
-				'}';
-	}
 }

@@ -37,15 +37,4 @@ public class AuthRule {
 
 		return matched && hasRole && methodValid && authorized;
 	}
-
-	@Override
-	public String toString() {
-		return "AuthRule{" +
-				"requiresAuthorization=" + requiresAuthorization +
-				", methods=" + methods +
-				", roles=" + roles +
-				", pattern='" + pattern + '\'' +
-				", matcher=" + matcher +
-				'}';
-	}
 }

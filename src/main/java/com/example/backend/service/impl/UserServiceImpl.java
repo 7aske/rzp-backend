@@ -1,6 +1,7 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.adapter.UserAdapter;
+import com.example.backend.entity.Role;
 import com.example.backend.entity.data.UserProperty;
 import com.example.backend.entity.dto.UserDTO;
 import com.example.backend.repository.RoleRepository;
@@ -14,7 +15,9 @@ import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,15 +37,6 @@ public class UserServiceImpl implements UserService {
 	public UserDTO findById(Long idUser) {
 		return UserAdapter.adapt(userRepository.findById(idUser).orElse(null));
 	}
-
-	// @Override
-	// public List<GrantedAuthority> getAllRolesByUsername(String username) {
-	// 	List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
-	// 	for (Role role : roleRepository.findAllByUserUsername(username)) {
-	// 		grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName().toUpperCase()));
-	// 	}
-	// 	return grantedAuthorityList;
-	// }
 
 	@Override
 	public UserDTO findByUserUsername(String userUsername) {
@@ -70,13 +64,38 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User save(User user) {
-		return userRepository.save(user);
+	public UserDTO save(User user) throws UserValidationException {
+		validateUser(UserAdapter.adapt(user));
+		validateUsername(user.getUserUsername());
+		user.setUserUsername(user.getUserUsername().toLowerCase());
+
+		Role userRole = roleRepository.findByRoleName("user").orElse(null);
+		if (user.getUserRoles().size() == 0 || !user.getUserRoles().contains(userRole)){
+			List<Role> roles = user.getUserRoles();
+			roles.add(userRole);
+			user.setUserRoles(roles);
+		}
+
+		user.setUserPassword(SecurityUtils.getSha512(user.getUserPassword()));
+		return UserAdapter.adapt(userRepository.save(user));
 	}
 
 	@Override
-	public User update(User user) {
-		return userRepository.save(user);
+	public UserDTO update(UserDTO userDTO) throws UserValidationException {
+		User user = userRepository.findById(userDTO.getIdUser()).orElseThrow(() -> new UserValidationException("user.update.user-not-found"));
+		validateUser(userDTO);
+		user.setUserUsername(userDTO.getUserUsername().toLowerCase());
+		user.setUserDisplayName(userDTO.getUserDisplayName());
+		user.setUserFirstName(userDTO.getUserFirstName());
+		user.setUserLastName(userDTO.getUserLastName());
+		user.setUserAbout(userDTO.getUserAbout());
+		user.setUserEmail(userDTO.getUserEmail());
+		user.setUserAddress(userDTO.getUserAbout());
+		user.setUserRoles(userDTO.getUserRoles()
+				.stream()
+				.map(r -> roleRepository.findByRoleName(r).orElse(null))
+				.collect(Collectors.toList()));
+		return UserAdapter.adapt(userRepository.save(user));
 	}
 
 	@Override
@@ -134,7 +153,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO updatePassword(Long idUser, String password, String confirmPassword, String newPassword) throws UserValidationException {
-		if (!password.equals(confirmPassword)){
+		if (!password.equals(confirmPassword)) {
 			throw new UserValidationException("user.update.password-not-matching");
 		}
 		User user = userRepository.findById(idUser).orElseThrow(() -> new UserValidationException("user.update.user-not-found"));
@@ -146,6 +165,22 @@ public class UserServiceImpl implements UserService {
 
 		user.setUserPassword(SecurityUtils.getSha512(newPassword));
 		return UserAdapter.adapt(userRepository.save(user));
+	}
+
+	private void validateUser(UserDTO userDTO) throws UserValidationException {
+		validateDisplayName(userDTO.getUserDisplayName());
+		validateFirstName(userDTO.getUserFirstName());
+		validateLastName(userDTO.getUserLastName());
+		validateAbout(userDTO.getUserAbout());
+		validateEmail(userDTO.getUserEmail());
+		validateAddress(userDTO.getUserAddress());
+		validateRoles(userDTO.getUserRoles());
+	}
+
+	void validateRoles(List<String> roles) throws UserValidationException {
+		for (String userRole : roles) {
+			roleRepository.findByRoleName(userRole).orElseThrow(() -> new UserValidationException("user.update.role-not-found"));
+		}
 	}
 
 	void validateUsername(String value) throws UserValidationException {

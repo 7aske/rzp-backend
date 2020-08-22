@@ -1,7 +1,6 @@
 
 package com.example.backend.controller.user;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.entity.dto.UserDTO;
 import com.example.backend.entity.dto.UserPropertyUpdateDTO;
 import com.example.backend.entity.dto.UserUpdatePasswordDTO;

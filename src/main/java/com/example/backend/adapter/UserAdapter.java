@@ -24,6 +24,7 @@ public class UserAdapter {
 		userDTO.setUserDisplayName(user.getUserDisplayName());
 		userDTO.setUserDateCreated(user.getUserDateCreated());
 		userDTO.setUserRoles(user.getUserRoles().stream().map(Role::getRoleName).collect(Collectors.toList()));
+		userDTO.setUserActive(user.getUserActive());
 		return userDTO;
 	}
 

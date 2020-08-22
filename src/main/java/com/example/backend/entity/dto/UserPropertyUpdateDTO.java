@@ -9,4 +9,5 @@ import lombok.ToString;
 public class UserPropertyUpdateDTO {
 	private String property;
 	private String value;
+	private Long idUser;
 }
