@@ -1,15 +1,24 @@
 package com.example.backend.service.impl;
 
+import com.example.backend.entity.Post;
 import com.example.backend.entity.Tag;
+import com.example.backend.entity.dto.CategoryStatsDTO;
+import com.example.backend.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.backend.entity.Category;
 import com.example.backend.repository.CategoryRepository;
 import com.example.backend.service.CategoryService;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+
+	@Autowired
+	private PostRepository postRepository;
 
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -27,6 +36,22 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Category findByCategoryName(String categoryName) {
 		return categoryRepository.findByCategoryName(categoryName).orElse(null);
+	}
+
+	@Override
+	public CategoryStatsDTO getStats() {
+		CategoryStatsDTO categoryStatsDTO = new CategoryStatsDTO();
+		Map<String, Number> stats = new HashMap<>();
+
+		List<Category> categories = categoryRepository.findAll();
+		for (Category category : categories) {
+			Integer count = postRepository.countCategoryPosts(category.getCategoryName());
+			stats.put(category.getCategoryName(), count);
+		}
+
+		categoryStatsDTO.setStats(stats);
+
+		return categoryStatsDTO;
 	}
 
 	@Override

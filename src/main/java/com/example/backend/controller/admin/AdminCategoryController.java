@@ -23,6 +23,11 @@ public class AdminCategoryController {
 		return ResponseEntity.ok(categoryService.findAll());
 	}
 
+	@GetMapping("/getStats")
+	public ResponseEntity<Object> getStats(){
+		return ResponseEntity.ok(categoryService.getStats());
+	}
+
 	@PostMapping("/save")
 	public ResponseEntity<Object> save(@RequestBody Category category) {
 		try {

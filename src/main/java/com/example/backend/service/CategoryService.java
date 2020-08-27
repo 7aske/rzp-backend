@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Category;
+import com.example.backend.entity.dto.CategoryStatsDTO;
 import com.example.backend.service.impl.CategoryServiceImpl;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public interface CategoryService {
 	Category findById(Long idCategory);
 
 	Category findByCategoryName(String categoryName);
+
+	CategoryStatsDTO getStats();
 
 	void deleteById(Long idCategory) throws Exception;
 
