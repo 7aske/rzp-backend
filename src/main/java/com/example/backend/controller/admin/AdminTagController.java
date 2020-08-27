@@ -2,6 +2,7 @@
 package com.example.backend.controller.admin;
 
 import com.example.backend.entity.Tag;
+import com.example.backend.entity.dto.TagStatsDTO;
 import com.example.backend.entity.dto.http.ClientError;
 import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.service.TagService;
@@ -31,6 +32,11 @@ public class AdminTagController {
 	@GetMapping("/getByName/{tagName}")
 	public ResponseEntity<Tag> getById(@PathVariable String tagName) {
 		return ResponseEntity.ok(tagService.findAllByTagName(tagName));
+	}
+
+	@GetMapping("/getStats")
+	public ResponseEntity<TagStatsDTO> getStats(){
+		return ResponseEntity.ok(tagService.getStats());
 	}
 
 	@PostMapping("/save")

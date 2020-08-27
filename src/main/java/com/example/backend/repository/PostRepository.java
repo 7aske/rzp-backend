@@ -42,6 +42,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	@Query("select count(p) from Post p where p.idUser.idUser = :idUser and p.idCategory.categoryName = :categoryName order by p.postDatePosted desc")
 	Integer countUserCategoryPosts(Long idUser, String categoryName);
 
+	@Query("select count(p) from Post p join PostTag pt on pt.idPost = p.idPost join Tag t on t.idTag = pt.idTag where t.tagName = :tagName")
+	Integer countByTagName(String tagName);
+
 	Page<Post> findAllByOrderByPostDatePostedDesc(Pageable page);
 
 	Page<Post> findAllByIdUserOrderByPostDatePostedDesc(User idUser, Pageable pageable);
