@@ -1,18 +1,13 @@
 
 package com.example.backend.controller;
 
-import com.example.backend.entity.Post;
 import com.example.backend.entity.dto.PostDTO;
 import com.example.backend.entity.dto.PostPreviewDTO;
-import com.example.backend.entity.dto.http.ClientError;
-import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.service.PostService;
-import com.example.backend.service.impl.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -24,30 +19,33 @@ public class PostController {
 	@GetMapping("/getAll")
 	public ResponseEntity<List<PostDTO>> getAll(
 			@RequestParam(required = false) String category,
+			@RequestParam(required = false) String tag,
 			@RequestParam(required = false) Boolean published,
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer count) {
 
-		return ResponseEntity.ok(postService.findAll(category, page, count, published));
+		return ResponseEntity.ok(postService.findAll(category, tag, page, count, published));
 	}
 
 	@GetMapping("/getPageCount")
 	public ResponseEntity<Integer> getPageCount(
 			@RequestParam(required = false) Long idUser,
 			@RequestParam(required = false) String category,
+			@RequestParam(required = false) String tag,
 			@RequestParam(required = false) Boolean published,
 			@RequestParam(required = false) Integer count) {
-		return ResponseEntity.ok(postService.getPageCount(idUser, category, published, count));
+		return ResponseEntity.ok(postService.getPageCount(idUser, category, tag, published, count));
 	}
 
 	@GetMapping("/getAllPreview")
 	public ResponseEntity<List<PostPreviewDTO>> getAllPreviews(
 			@RequestParam(required = false) String category,
+			@RequestParam(required = false) String tag,
 			@RequestParam(required = false) Boolean published,
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer count) {
 
-		return ResponseEntity.ok(postService.findAllPreviews(category, page, count, published));
+		return ResponseEntity.ok(postService.findAllPreviews(category, tag, page, count, published));
 	}
 
 	@GetMapping("/getAllByIdUser/{idUser}")

@@ -24,6 +24,7 @@ public class AuthorPostController {
 	@GetMapping("/getAll")
 	public ResponseEntity<List<PostDTO>> getAll(
 			@RequestParam(required = false) String category,
+			@RequestParam(required = false) String tag,
 			@RequestParam(required = false) Boolean published,
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer count,
@@ -34,12 +35,13 @@ public class AuthorPostController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ResponseEntity.ok(postService.findAll(idUser, category, page, count, published));
+		return ResponseEntity.ok(postService.findAll(idUser, category, tag, page, count, published));
 	}
 
 	@GetMapping("/getPageCount")
 	public ResponseEntity<Integer> getPageCount(
 			@RequestParam(required = false) String category,
+			@RequestParam(required = false) String tag,
 			@RequestParam(required = false) Boolean published,
 			@RequestParam(required = false) Integer count,
 			HttpServletRequest request) {
@@ -49,13 +51,14 @@ public class AuthorPostController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ResponseEntity.ok(postService.getPageCount(idUser, category, published, count));
+		return ResponseEntity.ok(postService.getPageCount(idUser, category, tag, published, count));
 	}
 
 
 	@GetMapping("/getAllPreview")
 	public ResponseEntity<List<PostPreviewDTO>> getAllPreviews(
 			@RequestParam(required = false) String category,
+			@RequestParam(required = false) String tag,
 			@RequestParam(required = false) Boolean published,
 			@RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer count,
@@ -67,7 +70,7 @@ public class AuthorPostController {
 			e.printStackTrace();
 		}
 		System.out.println(idUser);
-		return ResponseEntity.ok(postService.findAllPreviews(idUser, category, page, count, published));
+		return ResponseEntity.ok(postService.findAllPreviews(idUser, category, tag, page, count, published));
 	}
 
 	@PostMapping("/save")

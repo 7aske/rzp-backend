@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface UserPostService {
 
-	Integer getPageCount(Long idUser, String categoryName, Boolean published, Integer size);
+	Integer getPageCount(Long idUser, String categoryName, String tagName, Boolean published, Integer size);
 
-	List<PostDTO> findAll(Long idUser, String category, Integer pageNumber, Integer count, Boolean published);
+	List<PostDTO> findAll(Long idUser, String categoryName, String tagName, Integer pageNumber, Integer count, Boolean published);
 
-	List<PostPreviewDTO> findAllPreviews(Long idUser, String category, Integer pageNumber, Integer count, Boolean published);
+	List<PostPreviewDTO> findAllPreviews(Long idUser, String categoryName, String tagName, Integer pageNumber, Integer count, Boolean published);
 
 	void delete(Long idUser, Post post) throws Exception;
 

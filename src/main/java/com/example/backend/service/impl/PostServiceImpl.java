@@ -32,10 +32,11 @@ public class PostServiceImpl implements PostService, UserPostService {
 	private final Integer PAGE_SIZE = 10;
 
 	@Override
-	public Integer getPageCount(Long idUser, String categoryName, Boolean published, Integer size) {
+	public Integer getPageCount(Long idUser, String categoryName, String tagName, Boolean published, Integer size) {
 		if (size == null) {
 			size = PAGE_SIZE;
 		}
+
 		if (published != null) {
 			if (idUser != null && categoryName != null) {
 				return (int) Math.ceil(postRepository.countUserCategoryPostsPublished(idUser, categoryName, published) / (double) size);
@@ -43,6 +44,8 @@ public class PostServiceImpl implements PostService, UserPostService {
 				return (int) Math.ceil(postRepository.countUserPostsPublished(idUser, published) / (double) size);
 			} else if (categoryName != null) {
 				return (int) Math.ceil(postRepository.countCategoryPostsPublished(categoryName, published) / (double) size);
+			} else if (tagName != null) {
+				return (int) Math.ceil(postRepository.countTagPostsPublished(tagName, published));
 			} else {
 				return (int) Math.ceil(postRepository.countPostsPublished(published) / (double) size);
 			}
@@ -53,6 +56,8 @@ public class PostServiceImpl implements PostService, UserPostService {
 				return (int) Math.ceil(postRepository.countUserPosts(idUser) / (double) size);
 			} else if (categoryName != null) {
 				return (int) Math.ceil(postRepository.countCategoryPosts(categoryName) / (double) size);
+			} else if (tagName != null) {
+				return (int) Math.ceil(postRepository.countTagPosts(tagName));
 			} else {
 				return (int) Math.ceil(postRepository.countPosts() / (double) size);
 			}
@@ -60,16 +65,16 @@ public class PostServiceImpl implements PostService, UserPostService {
 	}
 
 	@Override
-	public List<PostDTO> findAll(Long idUser, String category, Integer pageNumber, Integer count, Boolean published) {
-		return findAll(category, pageNumber, count, published)
+	public List<PostDTO> findAll(Long idUser, String categoryName, String tagName, Integer pageNumber, Integer count, Boolean published) {
+		return findAll(categoryName, tagName, pageNumber, count, published)
 				.stream()
 				.filter(p -> p.getIdUser().equals(idUser))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<PostPreviewDTO> findAllPreviews(Long idUser, String category, Integer pageNumber, Integer count, Boolean published) {
-		return findAllPreviews(category, pageNumber, count, published)
+	public List<PostPreviewDTO> findAllPreviews(Long idUser, String categoryName, String tagName, Integer pageNumber, Integer count, Boolean published) {
+		return findAllPreviews(categoryName, tagName, pageNumber, count, published)
 				.stream()
 				.filter(p -> p.getIdUser().equals(idUser))
 				.collect(Collectors.toList());
@@ -114,16 +119,16 @@ public class PostServiceImpl implements PostService, UserPostService {
 	}
 
 	@Override
-	public List<PostDTO> findAll(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
-		return getPostsByQuery(categoryName, pageNumber, pageSize, published)
+	public List<PostDTO> findAll(String categoryName, String tagName, Integer pageNumber, Integer pageSize, Boolean published) {
+		return getPostsByQuery(categoryName, tagName, pageNumber, pageSize, published)
 				.stream()
 				.map(PostAdapter::adapt)
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<PostPreviewDTO> findAllPreviews(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
-		return getPostsByQuery(categoryName, pageNumber, pageSize, published)
+	public List<PostPreviewDTO> findAllPreviews(String categoryName, String tagName, Integer pageNumber, Integer pageSize, Boolean published) {
+		return getPostsByQuery(categoryName, tagName, pageNumber, pageSize, published)
 				.stream()
 				.map(PostPreviewDTOAdapter::adapt)
 				.collect(Collectors.toList());
@@ -141,7 +146,7 @@ public class PostServiceImpl implements PostService, UserPostService {
 
 	@Override
 	public List<PostDTO> findAllByIdUser(Long idUser, String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
-		return findAll(categoryName, pageNumber, pageSize, published)
+		return findAll(categoryName, null, pageNumber, pageSize, published)
 				.stream()
 				.filter(p -> p.getIdUser().equals(idUser))
 				.collect(Collectors.toList());
@@ -212,12 +217,16 @@ public class PostServiceImpl implements PostService, UserPostService {
 		postRepository.deleteById(idPost);
 	}
 
-	private Page<Post> getPostsByQuery(String categoryName, Integer pageNumber, Integer pageSize, Boolean published) {
+	private Page<Post> getPostsByQuery(String categoryName, String tagName, Integer pageNumber, Integer pageSize, Boolean published) {
 		Pageable page = getPage(pageNumber, pageSize);
 		if (categoryName != null && published != null) {
 			return postRepository.findAllByIdCategoryCategoryNameAndPostPublishedOrderByPostDatePostedDesc(categoryName, published, page);
+		} else if (tagName != null && published != null) {
+			return postRepository.findAllByTagNameAndPostPublished(tagName, published, page);
 		} else if (categoryName != null) {
 			return postRepository.findAllByIdCategoryCategoryNameOrderByPostDatePostedDesc(categoryName, page);
+		} else if (tagName != null) {
+			return postRepository.findAllByTagName(tagName, page);
 		} else if (published != null) {
 			return postRepository.findAllByPostPublishedOrderByPostDatePostedDesc(published, page);
 		} else {

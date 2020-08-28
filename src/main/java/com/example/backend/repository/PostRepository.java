@@ -2,6 +2,7 @@ package com.example.backend.repository;
 
 import com.example.backend.entity.Category;
 import com.example.backend.entity.User;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -42,8 +43,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	@Query("select count(p) from Post p where p.idUser.idUser = :idUser and p.idCategory.categoryName = :categoryName order by p.postDatePosted desc")
 	Integer countUserCategoryPosts(Long idUser, String categoryName);
 
-	@Query("select count(p) from Post p join PostTag pt on pt.idPost = p.idPost join Tag t on t.idTag = pt.idTag where t.tagName = :tagName")
-	Integer countByTagName(String tagName);
+	@Query("select count(p) from Post p join PostTag pt on pt.idPost = p.idPost join Tag t on t.idTag = pt.idTag where t.tagName = :tagName order by p.postDatePosted desc")
+	Integer countTagPosts(String tagName);
+
+	@Query("select count(p) from Post p join PostTag pt on pt.idPost = p.idPost join Tag t on t.idTag = pt.idTag where t.tagName = :tagName and p.postPublished = :published order by p.postDatePosted desc")
+	Integer countTagPostsPublished(String tagName, Boolean published);
+
+	@Query("select p from Post p join PostTag pt on p.idPost = pt.idPost join Tag t on pt.idTag = t.idTag where t.tagName = :tagName order by p.postDatePosted desc")
+	Page<Post> findAllByTagName(String tagName, Pageable pageable);
+
+	@Query("select p from Post p join PostTag pt on p.idPost = pt.idPost join Tag t on pt.idTag = t.idTag where t.tagName = :tagName and p.postPublished = :published order by p.postDatePosted desc")
+	Page<Post> findAllByTagNameAndPostPublished(String tagName, Boolean published, Pageable pageable);
 
 	Page<Post> findAllByOrderByPostDatePostedDesc(Pageable page);
 

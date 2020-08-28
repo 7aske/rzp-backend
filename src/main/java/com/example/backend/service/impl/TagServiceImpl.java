@@ -32,7 +32,7 @@ public class TagServiceImpl implements TagService {
 		Map<String, Number> stats = new HashMap<>();
 		List<Tag> tags = tagRepository.findAll();
 		for (Tag tag : tags) {
-			Integer count = postRepository.countByTagName(tag.getTagName());
+			Integer count = postRepository.countTagPosts(tag.getTagName());
 			stats.put(tag.getTagName(), count);
 		}
 
