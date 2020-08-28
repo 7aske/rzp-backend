@@ -1,5 +1,5 @@
 
-package com.example.backend.controller;
+package com.example.backend.controller.admin;
 
 import com.example.backend.adapter.MediaAdapter;
 import com.example.backend.entity.Media;
@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/media")
-public class MediaController {
+@RequestMapping("/admin/media")
+public class AdminMediaController {
 	@Autowired
 	private MediaService mediaService;
 

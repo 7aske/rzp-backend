@@ -31,8 +31,7 @@ public class AuthorizationFilter implements Filter {
 				.allow().withPattern("/category/**").and()
 				.allow().withPattern("/post/**").and()
 				.allow().withPattern("/tag/**").and()
-				.allow().withPattern("/media/**").and()
-				.allow().withPattern("/**")
+				.allow().withPattern("/static/**")
 				.build();
 	}
 
