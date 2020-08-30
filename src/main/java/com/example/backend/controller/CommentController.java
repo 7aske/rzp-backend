@@ -29,36 +29,4 @@ public class CommentController {
 	public ResponseEntity<List<CommentDTO>> getByIdPost(@PathVariable Long idPost) {
 		return ResponseEntity.ok(commentService.findAllByIdPostIdPost(idPost));
 	}
-
-	@PostMapping("/save")
-	public ResponseEntity<Object> save(@RequestBody CommentDTO comment) {
-		try {
-			return ResponseEntity.ok(CommentAdapter.adapt(commentService.save(comment)));
-		} catch (CommentServiceImpl.CommentValidationException e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
-
-	@DeleteMapping("/delete")
-	public ResponseEntity<Object> delete(@RequestBody Comment comment) {
-		try {
-			commentService.delete(comment);
-			return ResponseEntity.ok(new ClientMessage("deleted"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
-
-	@DeleteMapping("/deleteById/{idComment}")
-	public ResponseEntity<Object> deleteById(@PathVariable Long idComment) {
-		try {
-			commentService.deleteById(idComment);
-			return ResponseEntity.ok(new ClientMessage("deleted"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
-	}
 }
