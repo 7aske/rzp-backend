@@ -8,6 +8,9 @@ import com.example.backend.repository.PostRepository;
 import com.example.backend.repository.UserRepository;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.backend.entity.Comment;
 import com.example.backend.repository.CommentRepository;
@@ -30,6 +33,8 @@ public class CommentServiceImpl implements CommentService {
 	@Autowired
 	private CommentRepository commentRepository;
 
+	private static final Integer PAGE_SIZE = 5;
+
 	@Override
 	public List<Comment> findAll() {
 		return commentRepository.findAll();
@@ -51,6 +56,15 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public List<CommentDTO> findAllByIdPostIdPost(Long idPost) {
 		return commentRepository.findAllByIdPostIdPost(idPost)
+				.stream()
+				.map(CommentAdapter::adapt)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<CommentDTO> findAllByIdPostIdPost(Long idPost, Integer pageNumber, Integer count) {
+		Pageable page = getPage(pageNumber, count);
+		return commentRepository.findAllByIdPostIdPost(idPost, page)
 				.stream()
 				.map(CommentAdapter::adapt)
 				.collect(Collectors.toList());
@@ -99,6 +113,18 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public void deleteAllByIdPost(Post idPost) throws Exception {
 		commentRepository.deleteAllByIdPost(idPost);
+	}
+
+	private Pageable getPage(Integer pageNumber, Integer pageSize) {
+		if (pageNumber == null) {
+			pageNumber = 0;
+		}
+
+		if (pageSize == null) {
+			pageSize = PAGE_SIZE;
+		}
+
+		return PageRequest.of(pageNumber, pageSize);
 	}
 
 	private void validate(CommentDTO commentDTO) throws CommentValidationException {

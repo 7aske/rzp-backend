@@ -27,6 +27,8 @@ public interface CommentService {
 
 	List<CommentDTO> findAllByIdPostIdPost(Long idPost);
 
+	List<CommentDTO> findAllByIdPostIdPost(Long idPost, Integer pageNumber, Integer count);
+
 	void deleteById(Long idComment) throws Exception;
 
 	void deleteAllByIdUser(User idUser) throws Exception;

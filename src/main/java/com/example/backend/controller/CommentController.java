@@ -26,7 +26,9 @@ public class CommentController {
 	}
 
 	@GetMapping("/getAllByIdPost/{idPost}")
-	public ResponseEntity<List<CommentDTO>> getByIdPost(@PathVariable Long idPost) {
-		return ResponseEntity.ok(commentService.findAllByIdPostIdPost(idPost));
+	public ResponseEntity<List<CommentDTO>> getByIdPost(@PathVariable Long idPost,
+	                                                    @RequestParam Integer page,
+	                                                    @RequestParam Integer count) {
+		return ResponseEntity.ok(commentService.findAllByIdPostIdPost(idPost, page, count));
 	}
 }
