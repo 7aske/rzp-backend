@@ -1,59 +1,42 @@
 package com.example.backend.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.core.convert.converter.ConverterRegistry;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.sql.DataSource;
-import java.util.Properties;
+import javax.annotation.PostConstruct;
 
 @Configuration
-@EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"com.example.backend.repository"},
-                entityManagerFactoryRef = "customEntityManager",
-                transactionManagerRef = "customTransactionManager")
+@EnableJpaAuditing
+@RequiredArgsConstructor
 public class Config {
+	private final ConverterRegistry converterRegistry;
 
-        @Primary
-        @Bean
-        public LocalContainerEntityManagerFactoryBean customEntityManager() {
-                LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-                em.setDataSource(customDatasource());
-                em.setJpaProperties(additionalJpaProperties());
-                em.setPackagesToScan("com.example.backend.entity");
-                em.setPersistenceUnitName("customEntityManager");
-                HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-                em.setJpaVendorAdapter(vendorAdapter);
-                return em;
-        }
+	// @PostConstruct
+	// public void init() {
+	// 	registerConverters();
+	// }
+	//
+	// private void registerConverters() {
+	// 	converterRegistry.addConverter(new RequestParamQueryConverter());
+	// }
 
-        @Primary
-        @Bean
-        @ConfigurationProperties("custom.datasource")
-        public DataSource customDatasource() {
-                return DataSourceBuilder.create().build();
-        }
+	@Bean(name = "passwordEncoder")
+	public static PasswordEncoder passwordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
 
-        private Properties additionalJpaProperties() {
-                Properties properties = new Properties();
-                properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-                return properties;
-        }
-
-        @Primary
-        @Bean
-        public PlatformTransactionManager customTransactionManager() {
-                JpaTransactionManager transactionManager = new JpaTransactionManager();
-                transactionManager.setEntityManagerFactory(customEntityManager().getObject());
-                return transactionManager;
-        }
-
+	@Bean(name = "errorMessages")
+	public static PropertiesFactoryBean errorMessages() {
+		PropertiesFactoryBean bean = new PropertiesFactoryBean();
+		bean.setLocation(new ClassPathResource("error-messages.properties"));
+		return bean;
+	}
 }

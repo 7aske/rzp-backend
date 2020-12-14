@@ -1,0 +1,18 @@
+{
+  "enums": [
+    {
+      "className": "ContactType",
+      "tables": ["contact"],
+      "column": "contact_type",
+      "values": [
+        {
+          "SALE": "prodaja"
+        },
+        {
+          "RENT": "izdavanje"
+        }
+      ],
+      "comment": "Contact type. Email, phone, address..."
+    }
+  ]
+}

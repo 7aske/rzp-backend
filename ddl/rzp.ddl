@@ -1,131 +1,172 @@
-create table category
+#create database if not exists `rzp-database`;
+#use `rzp-database`;
+#
+#create user if not exists 'rzp-root'@'localhost' identified by 'rzp-root';
+#grant all on `rzp-database`.* to 'rzp-root'@'localhost';
+
+set foreign_key_checks = 0;
+
+drop table if exists `category`;
+create table `category`
 (
-    id_category int auto_increment
-        primary key,
-    category_name varchar(64) not null
+    `category_id` int auto_increment primary key,
+    `name`        varchar(64) not null unique,
+
+    -- auditable
+    `created_at`  timestamp   default current_timestamp(),
+    `modified_by` varchar(32) default 'system',
+    `modified_at` timestamp   default current_timestamp()
+) comment 'Blog post category';
+
+drop table if exists `media`;
+create table `media`
+(
+    `media_id`    int auto_increment primary key,
+    `uri`         varchar(2048) not null unique,
+
+    -- auditable
+    `created_at`  timestamp   default current_timestamp(),
+    `modified_by` varchar(32) default 'system',
+    `modified_at` timestamp   default current_timestamp()
+) comment 'Uploaded image shown on the blog post';
+
+drop table if exists `role`;
+create table `role`
+(
+    `role_id`     int auto_increment primary key,
+    `name`        varchar(32) not null unique,
+
+    -- auditable
+    `created_at`  timestamp   default current_timestamp(),
+    `modified_by` varchar(32) default 'system',
+    `modified_at` timestamp   default current_timestamp()
+) comment 'User permissions';
+
+drop table if exists `tag`;
+create table `tag`
+(
+    `tag_id`      int auto_increment primary key,
+    `name`        varchar(32) not null unique,
+
+    -- auditable
+    `created_at`  timestamp   default current_timestamp(),
+    `modified_by` varchar(32) default 'system',
+    `modified_at` timestamp   default current_timestamp()
+) comment 'Blog post tag';
+
+drop table if exists `user`;
+create table `user`
+(
+    `user_id`      int auto_increment primary key,
+    `username`     varchar(32)  not null,
+    `password`     varchar(512) not null,
+    `email`        varchar(32)  not null,
+    `first_name`   varchar(32)  not null,
+    `last_name`    varchar(32)  not null,
+    `about`        text         null,
+    `display_name` varchar(32)  not null,
+
+    -- auditable
+    `created_at`   timestamp   default current_timestamp(),
+    `modified_by`  varchar(32) default 'system',
+    `modified_at`  timestamp   default current_timestamp()
+) comment 'Blog user or author';
+
+drop table if exists `contact`;
+create table `contact`
+(
+    `contact_id`   int auto_increment primary key,
+    `contact_type` varchar(32)  not null,
+    `user_fk`      int          not null,
+    `value`        varchar(128) not null,
+
+    -- auditable
+    `created_at`   timestamp   default current_timestamp(),
+    `modified_by`  varchar(32) default 'system',
+    `modified_at`  timestamp   default current_timestamp(),
+
+    constraint `fk_user_contact` foreign key (`user_fk`) references `user` (`user_id`)
+) comment 'User contact information entry';
+
+drop table if exists `post`;
+create table `post`
+(
+    `post_id`     int auto_increment primary key,
+    `user_fk`     int                                     null,
+    `category_fk` int                                     not null,
+    `title`       varchar(255)                            not null,
+    `excerpt`     text                                    not null,
+    `body`        text                                    not null,
+    `date_posted` timestamp   default current_timestamp() not null on update current_timestamp(),
+    `deleted`     tinyint(1)  default 0                   null,
+    `published`   tinyint(1)  default 0                   null,
+    `views`       bigint                                  null,
+    `slug`        varchar(64)                             not null,
+
+    -- auditable
+    `created_at`  timestamp   default current_timestamp(),
+    `modified_by` varchar(32) default 'system',
+    `modified_at` timestamp   default current_timestamp(),
+
+    constraint `fk_post_author` foreign key (`user_fk`) references `user` (`id_user`)
+        on update cascade on delete set null,
+    constraint `fk_post_category` foreign key (`category_fk`) references `category` (`id_category`)
+        on update cascade on delete restrict
+) comment 'Blog post';
+
+drop table if exists `comment`;
+create table `comment`
+(
+    `comment_id`  int auto_increment primary key,
+    `user_fk`     int  not null,
+    `post_fk`     int  null,
+    `body`        text not null,
+
+    -- auditable
+    `created_at`  timestamp   default current_timestamp(),
+    `modified_by` varchar(32) default 'system',
+    `modified_at` timestamp   default current_timestamp(),
+
+    constraint `fk_post_comment` foreign key (`post_fk`) references `post` (`post_id`)
+        on update cascade on delete cascade,
+    constraint `fk_user_comment` foreign key (`user_fk`) references `user` (`user_id`)
+        on update cascade on delete cascade
+) comment 'User comment on a post';
+
+drop table if exists `post_media`;
+create table `post_media`
+(
+    `media_fk` int not null,
+    `post_fk`  int not null,
+    primary key (`media_fk`, `post_fk`),
+    constraint `fk_post_media_media` foreign key (`media_fk`) references `media` (`media_id`)
+        on update cascade on delete cascade,
+    constraint `fk_post_media_post` foreign key (`post_fk`) references `post` (`post_id`)
+        on update cascade on delete cascade
 );
 
-create table contact_type
+drop table if exists `post_tag`;
+create table `post_tag`
 (
-    id_contact_type int auto_increment
-        primary key,
-    contact_type_name varchar(128) not null,
-    contact_type_value_type varchar(32) not null
+    `tag_fk`  int not null,
+    `post_fk` int not null,
+    primary key (`tag_fk`, `post_fk`),
+    constraint `fk_post_tag_tag` foreign key (`tag_fk`) references `tag` (`tag_id`)
+        on update cascade on delete cascade,
+    constraint `fk_post_tag_post` foreign key (`post_fk`) references `post` (`post_id`)
+        on update cascade on delete cascade
 );
 
-create table media
+drop table if exists `user_role`;
+create table `user_role`
 (
-    id_media int auto_increment
-        primary key,
-    media_filepath varchar(1024) not null
+    `role_fk` int not null,
+    `user_fk` int not null,
+    primary key (`role_fk`, `user_fk`),
+    constraint fk_user_role_role foreign key (`role_fk`) references `role` (`role_id`)
+        on update cascade on delete cascade,
+    constraint fk_user_role_user foreign key (`user_fk`) references `user` (`user_id`)
+        on update cascade on delete cascade
 );
 
-create table role
-(
-    id_role int auto_increment
-        primary key,
-    role_name varchar(32) not null
-);
-
-create table tag
-(
-    id_tag int auto_increment
-        primary key,
-    tag_name varchar(64) not null
-);
-
-create table user
-(
-    id_user int auto_increment
-        primary key,
-    user_username varchar(128) not null,
-    user_email varchar(128) not null,
-    user_password varchar(512) not null,
-    user_first_name varchar(128) not null,
-    user_last_name varchar(128) not null,
-    user_address varchar(128) null,
-    user_about text null,
-    user_display_name varchar(128) not null,
-    user_date_created datetime null
-);
-
-create table contact
-(
-    id_contact int auto_increment
-        primary key,
-    id_contact_type int null,
-    id_user int null,
-    contact_value varchar(128) not null,
-    constraint fk_contact_contact_type
-        foreign key (id_contact_type) references contact_type (id_contact_type),
-    constraint fk_user_contact
-        foreign key (id_user) references user (id_user)
-);
-
-create table post
-(
-    id_post int auto_increment
-        primary key,
-    id_user int null,
-    id_category int not null,
-    post_title varchar(255) not null,
-    post_excerpt text not null,
-    post_body text not null,
-    post_date_posted timestamp default current_timestamp() not null on update current_timestamp(),
-    post_deleted tinyint(1) default 0 null,
-    post_published tinyint(1) default 0 null,
-    post_views bigint null,
-    post_slug varchar(64) not null,
-    constraint fk_post_author2
-        foreign key (id_user) references user (id_user),
-    constraint fk_post_category2
-        foreign key (id_category) references category (id_category)
-);
-
-create table comment
-(
-    id_comment int auto_increment
-        primary key,
-    id_user int not null,
-    id_post int null,
-    comment_body text not null,
-    comment_date_posted timestamp default current_timestamp() not null on update current_timestamp(),
-    constraint fk_post_comment2
-        foreign key (id_post) references post (id_post),
-    constraint fk_user_comment2
-        foreign key (id_user) references user (id_user)
-);
-
-create table post_media
-(
-    id_media int not null,
-    id_post int not null,
-    primary key (id_media, id_post),
-    constraint fk_post_media
-        foreign key (id_media) references media (id_media),
-    constraint fk_post_media2
-        foreign key (id_post) references post (id_post)
-);
-
-create table post_tag
-(
-    id_tag int not null,
-    id_post int not null,
-    primary key (id_tag, id_post),
-    constraint fk_post_tag2
-        foreign key (id_tag) references tag (id_tag),
-    constraint fk_post_tag3
-        foreign key (id_post) references post (id_post)
-);
-
-create table user_role
-(
-    id_role int not null,
-    id_user int not null,
-    primary key (id_role, id_user),
-    constraint fk_user_role
-        foreign key (id_role) references role (id_role),
-    constraint fk_user_role2
-        foreign key (id_user) references user (id_user)
-);
-
+set foreign_key_checks = 1;

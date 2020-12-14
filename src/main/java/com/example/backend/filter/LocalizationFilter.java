@@ -19,7 +19,7 @@ public class LocalizationFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-
+		// ignored
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class LocalizationFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
-		Cookie localeCookie = getCookie(httpServletRequest.getCookies(), COOKIE_NAME);
+		Cookie localeCookie = getLocaleCookie(httpServletRequest.getCookies());
 		if (localeCookie == null) {
 			localeCookie = new Cookie(COOKIE_NAME, DEFAULT_LOCALE);
 			httpServletResponse.addCookie(localeCookie);
@@ -38,19 +38,18 @@ public class LocalizationFilter implements Filter {
 
 	@Override
 	public void destroy() {
-
+		// ignored
 	}
 
-	private Cookie getCookie(Cookie[] cookies, String name) {
-		if (cookies == null) {
-			return null;
-		}
+	private Cookie getLocaleCookie(Cookie[] cookies) {
+		if (cookies == null) return null;
 
 		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(name)) {
+			if (cookie.getName().equals(LocalizationFilter.COOKIE_NAME)) {
 				return cookie;
 			}
 		}
+
 		return null;
 	}
 }
