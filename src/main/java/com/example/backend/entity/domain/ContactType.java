@@ -5,8 +5,10 @@ package com.example.backend.entity.domain;
  * Contact type. Email, phone, address...
  */
 public enum ContactType {
-	SALE("prodaja"),
-	RENT("izdavanje");
+	ADDRESS("address"),
+	PHONE("phone"),
+	EMAIL("email"),
+	WEBSITE("website");
 
 	private final String name;
 

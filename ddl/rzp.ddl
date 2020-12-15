@@ -141,18 +141,6 @@ create table `comment`
         on update cascade on delete cascade
 ) comment 'User comment on a post';
 
-drop table if exists `post_media`;
-create table `post_media`
-(
-    `media_fk` int not null,
-    `post_fk`  int not null,
-    primary key (`media_fk`, `post_fk`),
-    constraint `fk_post_media_media` foreign key (`media_fk`) references `media` (`media_id`)
-        on update cascade on delete cascade,
-    constraint `fk_post_media_post` foreign key (`post_fk`) references `post` (`post_id`)
-        on update cascade on delete cascade
-);
-
 drop table if exists `post_tag`;
 create table `post_tag`
 (

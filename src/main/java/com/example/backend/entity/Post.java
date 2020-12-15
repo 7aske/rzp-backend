@@ -45,10 +45,6 @@ public class Post extends Auditable {
 	private String slug;
 	@ManyToMany
 	@JsonIgnore
-	@JoinTable(name = "post_media", joinColumns = @JoinColumn(name = "media_fk"), inverseJoinColumns = @JoinColumn(name = "post_fk"))
-	private List<Media> medias;
-	@ManyToMany
-	@JsonIgnore
 	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "tag_fk"), inverseJoinColumns = @JoinColumn(name = "post_fk"))
 	private List<Tag> tags;
 

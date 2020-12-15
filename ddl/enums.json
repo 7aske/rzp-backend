@@ -6,10 +6,16 @@
       "column": "contact_type",
       "values": [
         {
-          "SALE": "prodaja"
+          "ADDRESS": "address"
         },
         {
-          "RENT": "izdavanje"
+          "PHONE": "PHONE"
+        },
+        {
+          "EMAIL": "EMAIL"
+        },
+        {
+          "WEBSITE": "WEBSITE"
         }
       ],
       "comment": "Contact type. Email, phone, address..."

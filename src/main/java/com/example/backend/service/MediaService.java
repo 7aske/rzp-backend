@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.entity.Media;
 import com.example.backend.entity.Post;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,4 +20,5 @@ public interface MediaService {
 
 	List<Post> findAllPostsById(Integer mediaId);
 
+	Media upload(MultipartFile file);
 }
