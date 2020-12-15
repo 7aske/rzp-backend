@@ -1,11 +1,11 @@
 package com.example.backend.security;
 
 import com.example.backend.data.ErrorInfo;
+import com.example.backend.data.LoginResponse;
 import com.example.backend.entity.User;
 import com.example.backend.util.ObjectMapperUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +17,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 @RequiredArgsConstructor
@@ -37,10 +36,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
 		String token = jwtProvider.createToken(authResult.getName(), authResult.getAuthorities());
-		String output = SecurityConstants.TOKEN_PREFIX + token;
-		response.setContentType(MediaType.TEXT_PLAIN.toString());
-		response.setHeader(SecurityConstants.HEADER_STRING, output);
-		response.getWriter().write(output);
+		LoginResponse loginResponse = new LoginResponse(token);
+		ObjectMapperUtils.writeValue(response, loginResponse);
 	}
 
 	@Override
