@@ -1,31 +1,30 @@
 package com.example.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.List;
 
-import java.time.LocalDate;
-import java.io.Serializable;
-import java.util.*;
-
+/**
+ * Blog post tag
+ */
+@Data
 @Entity
 @Table(name = "tag")
-@Getter @Setter @NoArgsConstructor
-public class Tag implements Serializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class Tag extends Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_tag")
-	private Long idTag;
-
-	@Column(name = "tag_name")
-	private String tagName;
-
+	@EqualsAndHashCode.Include
+	@Column(name = "tag_id")
+	private Integer id;
+	@Column(name = "name")
+	private String name;
+	@ManyToMany
 	@JsonIgnore
-	@ToString.Exclude
-	@ManyToMany(mappedBy = "tagList")
-	private List<Post> postList;
+	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_fk"), inverseJoinColumns = @JoinColumn(name = "tag_fk"))
+	private List<Post> posts;
+
 }

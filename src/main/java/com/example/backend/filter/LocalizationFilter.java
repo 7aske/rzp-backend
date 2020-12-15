@@ -1,7 +1,7 @@
 package com.example.backend.filter;
 
 
-import com.example.backend.entity.data.Locale;
+import com.example.backend.data.Locale;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 

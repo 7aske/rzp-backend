@@ -1,32 +1,31 @@
 package com.example.backend.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.backend.entity.domain.ContactType;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
-import java.time.LocalDate;
-import java.io.Serializable;
-import java.util.*;
-
+/**
+ * User contact information entry
+ */
+@Data
 @Entity
 @Table(name = "contact")
-@Getter @Setter @NoArgsConstructor
-public class Contact implements Serializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class Contact extends Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_contact")
-	private Long idContact;
-
-	@JoinColumn(name = "id_contact_type", referencedColumnName = "id_contact_type")
+	@EqualsAndHashCode.Include
+	@Column(name = "contact_id")
+	private Integer id;
+	@JoinColumn(name = "user_fk", referencedColumnName = "user_id")
 	@ManyToOne
-	private ContactType idContactType;
+	private User user;
+	@Column(name = "value")
+	private String value;
+	@Column(name = "contact_type")
+	@Enumerated(EnumType.STRING)
+	private ContactType contactType;
 
-	@JoinColumn(name = "id_user", referencedColumnName = "id_user")
-	@ManyToOne
-	private User idUser;
-
-	@Column(name = "contact_value")
-	private String contactValue;
 }

@@ -1,34 +1,49 @@
-
 package com.example.backend.controller;
 
-import com.example.backend.adapter.CommentAdapter;
 import com.example.backend.entity.Comment;
-import com.example.backend.entity.dto.CommentDTO;
-import com.example.backend.entity.dto.http.ClientError;
-import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.service.CommentService;
-import com.example.backend.service.impl.CommentServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/comments")
+@RequiredArgsConstructor
 public class CommentController {
-	@Autowired
-	private CommentService commentService;
+	private final CommentService commentService;
 
-	@GetMapping("/getById/{idComment}")
-	public ResponseEntity<CommentDTO> getById(@PathVariable Long idComment) {
-		return ResponseEntity.ok(commentService.findById(idComment));
+	@GetMapping
+	public ResponseEntity<List<Comment>> getAll() {
+		return ResponseEntity.ok(commentService.findAll());
 	}
 
-	@GetMapping("/getAllByIdPost/{idPost}")
-	public ResponseEntity<List<CommentDTO>> getByIdPost(@PathVariable Long idPost,
-	                                                    @RequestParam Integer page,
-	                                                    @RequestParam Integer count) {
-		return ResponseEntity.ok(commentService.findAllByIdPostIdPost(idPost, page, count));
+	@GetMapping("/{commentId}")
+	public ResponseEntity<Comment> getById(@PathVariable Integer commentId) {
+		return ResponseEntity.ok(commentService.findById(commentId));
 	}
+
+	@PostMapping
+	public ResponseEntity<Comment> save(@RequestBody Comment comment) {
+		return ResponseEntity.ok(commentService.save(comment));
+	}
+
+	@PutMapping
+	public ResponseEntity<Comment> update(@RequestBody Comment comment) {
+		return ResponseEntity.ok(commentService.update(comment));
+	}
+
+	@PutMapping("/{commentId}")
+	public ResponseEntity<Comment> updateById(@RequestBody Comment comment, @PathVariable Integer commentId) {
+		comment.setId(commentId);
+		return ResponseEntity.ok(commentService.update(comment));
+	}
+
+	@DeleteMapping("/{commentId}")
+	public void deleteById(@PathVariable Integer commentId) {
+		commentService.deleteById(commentId);
+	}
+
 }
+

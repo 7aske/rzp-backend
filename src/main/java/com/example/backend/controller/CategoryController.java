@@ -1,30 +1,49 @@
-
 package com.example.backend.controller;
 
 import com.example.backend.entity.Category;
-import com.example.backend.entity.dto.http.ClientError;
-import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.service.CategoryService;
-import com.example.backend.service.impl.CategoryServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
+@RequiredArgsConstructor
 public class CategoryController {
-	@Autowired
-	private CategoryService categoryService;
+	private final CategoryService categoryService;
 
-	@GetMapping("/getAll")
+	@GetMapping
 	public ResponseEntity<List<Category>> getAll() {
 		return ResponseEntity.ok(categoryService.findAll());
 	}
 
-	@GetMapping("/getById/{idCategory}")
-	public ResponseEntity<Category> getById(@PathVariable Long idCategory) {
-		return ResponseEntity.ok(categoryService.findById(idCategory));
+	@GetMapping("/{categoryId}")
+	public ResponseEntity<Category> getById(@PathVariable Integer categoryId) {
+		return ResponseEntity.ok(categoryService.findById(categoryId));
 	}
+
+	@PostMapping
+	public ResponseEntity<Category> save(@RequestBody Category category) {
+		return ResponseEntity.ok(categoryService.save(category));
+	}
+
+	@PutMapping
+	public ResponseEntity<Category> update(@RequestBody Category category) {
+		return ResponseEntity.ok(categoryService.update(category));
+	}
+
+	@PutMapping("/{categoryId}")
+	public ResponseEntity<Category> updateById(@RequestBody Category category, @PathVariable Integer categoryId) {
+		category.setId(categoryId);
+		return ResponseEntity.ok(categoryService.update(category));
+	}
+
+	@DeleteMapping("/{categoryId}")
+	public void deleteById(@PathVariable Integer categoryId) {
+		categoryService.deleteById(categoryId);
+	}
+
 }
+

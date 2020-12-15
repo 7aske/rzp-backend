@@ -22,6 +22,7 @@ public class IOUtils {
 			// ignored
 		}
 	}
+
 	public static void createDirectoriesNoExcept(String path) {
 		createDirectoriesNoExcept(Paths.get(path));
 	}

@@ -1,82 +1,61 @@
-
 package com.example.backend.controller;
 
-import com.example.backend.entity.dto.PostDTO;
-import com.example.backend.entity.dto.PostPreviewDTO;
+import com.example.backend.entity.Media;
+import com.example.backend.entity.Post;
+import com.example.backend.entity.Tag;
 import com.example.backend.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
+@RequiredArgsConstructor
 public class PostController {
-	@Autowired
-	private PostService postService;
+	private final PostService postService;
 
-	@GetMapping("/getAll")
-	public ResponseEntity<List<PostDTO>> getAll(
-			@RequestParam(required = false) String category,
-			@RequestParam(required = false) String tag,
-			@RequestParam(required = false) Boolean published,
-			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer count) {
-
-		return ResponseEntity.ok(postService.findAll(category, tag, page, count, published));
+	@GetMapping
+	public ResponseEntity<List<Post>> getAll() {
+		return ResponseEntity.ok(postService.findAll());
 	}
 
-	@GetMapping("/getPageCount")
-	public ResponseEntity<Integer> getPageCount(
-			@RequestParam(required = false) Long idUser,
-			@RequestParam(required = false) String category,
-			@RequestParam(required = false) String tag,
-			@RequestParam(required = false) Boolean published,
-			@RequestParam(required = false) Integer count) {
-		return ResponseEntity.ok(postService.getPageCount(idUser, category, tag, published, count));
+	@GetMapping("/{postId}")
+	public ResponseEntity<Post> getById(@PathVariable Integer postId) {
+		return ResponseEntity.ok(postService.findById(postId));
 	}
 
-	@GetMapping("/getAllPreview")
-	public ResponseEntity<List<PostPreviewDTO>> getAllPreviews(
-			@RequestParam(required = false) String category,
-			@RequestParam(required = false) String tag,
-			@RequestParam(required = false) Boolean published,
-			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer count) {
-
-		return ResponseEntity.ok(postService.findAllPreviews(category, tag, page, count, published));
+	@PostMapping
+	public ResponseEntity<Post> save(@RequestBody Post post) {
+		return ResponseEntity.ok(postService.save(post));
 	}
 
-	@GetMapping("/getAllByIdUser/{idUser}")
-	public ResponseEntity<List<PostDTO>> getAllByIdUser(
-			@PathVariable Long idUser,
-			@RequestParam(required = false) String category,
-			@RequestParam(required = false) Boolean published,
-			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer count) {
-
-		return ResponseEntity.ok(postService.findAllByIdUser(idUser, category, page, count, published));
+	@PutMapping
+	public ResponseEntity<Post> update(@RequestBody Post post) {
+		return ResponseEntity.ok(postService.update(post));
 	}
 
-	@GetMapping("/getById/{idPost}")
-	public ResponseEntity<PostDTO> getById(@PathVariable Long idPost) {
-		PostDTO post = postService.findById(idPost);
-		if (post != null) {
-			return ResponseEntity.ok(post);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+	@PutMapping("/{postId}")
+	public ResponseEntity<Post> updateById(@RequestBody Post post, @PathVariable Integer postId) {
+		post.setId(postId);
+		return ResponseEntity.ok(postService.update(post));
 	}
 
-
-	@GetMapping("/getByPostSlug/{postSlug}")
-	public ResponseEntity<PostDTO> getByPostSlug(@PathVariable String postSlug) {
-		PostDTO post = postService.findByPostSlug(postSlug);
-		if (post != null) {
-			return ResponseEntity.ok(post);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+	@DeleteMapping("/{postId}")
+	public void deleteById(@PathVariable Integer postId) {
+		postService.deleteById(postId);
 	}
+
+	@GetMapping("/{postId}/medias")
+	public ResponseEntity<List<Media>> getAllMedias(@PathVariable Integer postId) {
+		return ResponseEntity.ok(postService.findAllMediasById(postId));
+	}
+
+	@GetMapping("/{postId}/tags")
+	public ResponseEntity<List<Tag>> getAllTags(@PathVariable Integer postId) {
+		return ResponseEntity.ok(postService.findAllTagsById(postId));
+	}
+
 }
+

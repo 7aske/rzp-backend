@@ -23,9 +23,9 @@ import java.util.Properties;
 @Primary
 public class AuthenticationManagerImpl implements AuthenticationManager {
 	private final UserRepository userRepository;
+	private final Environment env;
 	@Resource(name = "errorMessages")
 	private Properties errors;
-	private final Environment env;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) {
@@ -34,16 +34,16 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 		Optional<User> userOptional = userRepository.findByUsername(username);
 
 		if (!userOptional.isPresent())
-			throw new UsernameNotFoundException(errors.getProperty("auth.userNotFound"));
+			throw new UsernameNotFoundException(errors.getProperty("auth.login.user-not-found"));
 
 		User user = userOptional.get();
 
-		if (Arrays.asList(env.getActiveProfiles()).contains("dev")){
+		if (Arrays.asList(env.getActiveProfiles()).contains("dev")) {
 			return new UsernamePasswordAuthenticationToken(username, password, user.getRoles());
 		}
 
 		if (!HashUtils.getSha512(password).equals(user.getPassword()))
-			throw new BadCredentialsException(errors.getProperty("auth.invalidCredentials"));
+			throw new BadCredentialsException(errors.getProperty("auth.login.invalid-credentials"));
 
 		return new UsernamePasswordAuthenticationToken(username, password, user.getRoles());
 	}

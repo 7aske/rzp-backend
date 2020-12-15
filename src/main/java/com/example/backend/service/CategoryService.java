@@ -1,8 +1,6 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Category;
-import com.example.backend.entity.dto.CategoryStatsDTO;
-import com.example.backend.service.impl.CategoryServiceImpl;
 
 import java.util.List;
 
@@ -10,19 +8,12 @@ public interface CategoryService {
 
 	List<Category> findAll();
 
-	void delete(Category category) throws Exception;
+	Category save(Category category);
 
-	Category save(Category category) throws CategoryServiceImpl.CategoryValidationException;
+	Category update(Category category);
 
-	Category update(Category category) throws CategoryServiceImpl.CategoryValidationException;
+	Category findById(Integer categoryId);
 
-	Category findById(Long idCategory);
+	void deleteById(Integer categoryId);
 
-	Category findByCategoryName(String categoryName);
-
-	CategoryStatsDTO getStats();
-
-	void deleteById(Long idCategory) throws Exception;
-
-	void deleteAllByCategoryName(String categoryName) throws Exception;
 }

@@ -1,24 +1,24 @@
 package com.example.backend.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
-import java.time.LocalDate;
-import java.io.Serializable;
-import java.util.*;
-
+/**
+ * Blog post category
+ */
+@Data
 @Entity
 @Table(name = "category")
-@Getter @Setter @NoArgsConstructor
-public class Category implements Serializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class Category extends Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_category")
-	private Long idCategory;
+	@EqualsAndHashCode.Include
+	@Column(name = "category_id")
+	private Integer id;
+	@Column(name = "name")
+	private String name;
 
-	@Column(name = "category_name")
-	private String categoryName;
 }

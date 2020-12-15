@@ -1,56 +1,55 @@
 package com.example.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-
-import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Blog post
+ */
+@Data
 @Entity
 @Table(name = "post")
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
-public class Post implements Serializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class Post extends Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_post")
-	private Long idPost;
-
-	@JoinColumn(name = "id_user", referencedColumnName = "id_user")
+	@EqualsAndHashCode.Include
+	@Column(name = "post_id")
+	private Integer id;
+	@JoinColumn(name = "user_fk", referencedColumnName = "user_id")
 	@ManyToOne
+	private User user;
+	@JoinColumn(name = "category_fk", referencedColumnName = "category_id")
+	@ManyToOne
+	private Category category;
+	@Column(name = "title")
+	private String title;
+	@Column(name = "excerpt")
+	private String excerpt;
+	@Column(name = "body")
+	private String body;
+	@Column(name = "date_posted")
+	private LocalDateTime datePosted;
+	@Column(name = "deleted")
+	private boolean deleted;
+	@Column(name = "published")
+	private boolean published;
+	@Column(name = "views")
+	private Integer views;
+	@Column(name = "slug")
+	private String slug;
+	@ManyToMany
 	@JsonIgnore
-	private User idUser;
+	@JoinTable(name = "post_media", joinColumns = @JoinColumn(name = "media_fk"), inverseJoinColumns = @JoinColumn(name = "post_fk"))
+	private List<Media> medias;
+	@ManyToMany
+	@JsonIgnore
+	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "tag_fk"), inverseJoinColumns = @JoinColumn(name = "post_fk"))
+	private List<Tag> tags;
 
-	@JoinColumn(name = "id_category", referencedColumnName = "id_category")
-	@ManyToOne
-	private Category idCategory;
-
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "id_post"), inverseJoinColumns = @JoinColumn(name = "id_tag"))
-	private List<Tag> tagList;
-
-	@Column(name = "post_title")
-	private String postTitle;
-	@Column(name = "post_excerpt")
-	private String postExcerpt;
-	@Column(name = "post_body")
-	private String postBody;
-	@Column(name = "post_slug")
-	private String postSlug;
-	@Column(name = "post_date_updated")
-	private Date postDateUpdated = new Date();
-	@Column(name = "post_date_posted")
-	private Date postDatePosted = new Date();
-	@Column(name = "post_published")
-	private Boolean postPublished = true;
-	@Column(name = "post_views")
-	private Long postViews = 0L;
 }

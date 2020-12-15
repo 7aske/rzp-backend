@@ -1,34 +1,30 @@
 package com.example.backend.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
-import java.time.LocalDate;
-import java.io.Serializable;
-import java.util.*;
-
+/**
+ * User comment on a post
+ */
+@Data
 @Entity
 @Table(name = "comment")
-@Getter @Setter @NoArgsConstructor
-public class Comment implements Serializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class Comment extends Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_comment")
-	private Long idComment;
-
-	@JoinColumn(name = "id_user", referencedColumnName = "id_user")
+	@EqualsAndHashCode.Include
+	@Column(name = "comment_id")
+	private Integer id;
+	@JoinColumn(name = "user_fk", referencedColumnName = "user_id")
 	@ManyToOne
-	private User idUser;
-
-	@JoinColumn(name = "id_post", referencedColumnName = "id_post")
+	private User user;
+	@JoinColumn(name = "post_fk", referencedColumnName = "post_id")
 	@ManyToOne
-	private Post idPost;
+	private Post post;
+	@Column(name = "body")
+	private String body;
 
-	@Column(name = "comment_body")
-	private String commentBody;
-	@Column(name = "comment_date_posted")
-	private Date commentDatePosted;
 }

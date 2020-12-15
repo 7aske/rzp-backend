@@ -1,7 +1,6 @@
 package com.example.backend.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +9,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.annotation.PostConstruct;
 
 @Configuration
 @EnableJpaAuditing
@@ -36,7 +33,7 @@ public class Config {
 	@Bean(name = "errorMessages")
 	public static PropertiesFactoryBean errorMessages() {
 		PropertiesFactoryBean bean = new PropertiesFactoryBean();
-		bean.setLocation(new ClassPathResource("error-messages.properties"));
+		bean.setLocation(new ClassPathResource("errors.properties"));
 		return bean;
 	}
 }

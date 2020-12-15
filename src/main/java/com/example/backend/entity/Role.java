@@ -1,25 +1,35 @@
 package com.example.backend.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.List;
 
-import java.time.LocalDate;
-import java.io.Serializable;
-import java.util.*;
-
+/**
+ * User permissions
+ */
+@Data
 @Entity
 @Table(name = "role")
-@Getter @Setter @NoArgsConstructor @ToString
-public class Role implements Serializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class Role extends Auditable implements GrantedAuthority {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_role")
-	private Long idRole;
+	@EqualsAndHashCode.Include
+	@Column(name = "role_id")
+	private Integer id;
+	@Column(name = "name")
+	private String name;
+	@ManyToMany
+	@JsonIgnore
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_fk"), inverseJoinColumns = @JoinColumn(name = "role_fk"))
+	private List<User> users;
 
-	@Column(name = "role_name")
-	private String roleName;
+	@Override
+	public String getAuthority() {
+		return String.format("ROLE_%s", name);
+	}
 }

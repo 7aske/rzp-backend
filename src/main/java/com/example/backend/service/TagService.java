@@ -1,8 +1,7 @@
 package com.example.backend.service;
 
+import com.example.backend.entity.Post;
 import com.example.backend.entity.Tag;
-import com.example.backend.entity.dto.TagStatsDTO;
-import com.example.backend.service.impl.TagServiceImpl;
 
 import java.util.List;
 
@@ -10,19 +9,14 @@ public interface TagService {
 
 	List<Tag> findAll();
 
-	TagStatsDTO getStats();
+	Tag save(Tag tag);
 
-	void delete(Tag tag) throws Exception;
+	Tag update(Tag tag);
 
-	Tag save(Tag tag) throws TagServiceImpl.TagValidationException;
+	Tag findById(Integer tagId);
 
-	Tag update(Tag tag) throws TagServiceImpl.TagValidationException;
+	void deleteById(Integer tagId);
 
-	Tag findById(Long idTag);
+	List<Post> findAllPostsById(Integer tagId);
 
-	Tag findAllByTagName(String tagName);
-
-	void deleteById(Long idTag) throws Exception;
-
-	void deleteAllByTagName(String tagName) throws Exception;
 }

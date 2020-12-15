@@ -1,43 +1,69 @@
 package com.example.backend.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
 
-import java.io.Serializable;
-import java.util.*;
-
+/**
+ * Blog user or author
+ */
+@Data
 @Entity
 @Table(name = "user")
-@Getter @Setter @NoArgsConstructor
-public class User implements Serializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class User extends Auditable implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_user")
-	private Long idUser;
-	@Column(name = "user_username")
-	private String userUsername;
-	@Column(name = "user_email")
-	private String userEmail;
-	@Column(name = "user_password")
-	private String userPassword;
-	@Column(name = "user_first_name")
-	private String userFirstName;
-	@Column(name = "user_last_name")
-	private String userLastName;
-	@Column(name = "user_address")
-	private String userAddress;
-	@Column(name = "user_about")
-	private String userAbout;
-	@Column(name = "user_display_name")
-	private String userDisplayName;
-	@Column(name = "user_date_created")
-	private Date userDateCreated;
-	@Column(name = "user_active")
-	private Boolean userActive;
-	@ManyToMany
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name= "id_user"), inverseJoinColumns = @JoinColumn(name = "id_role"))
-	private List<Role> userRoles = new ArrayList<>();
+	@EqualsAndHashCode.Include
+	@Column(name = "user_id")
+	private Integer id;
+	@Column(name = "username")
+	private String username;
+	@Column(name = "password")
+	private String password;
+	@Column(name = "email")
+	private String email;
+	@Column(name = "first_name")
+	private String firstName;
+	@Column(name = "last_name")
+	private String lastName;
+	@Column(name = "about")
+	private String about;
+	@Column(name = "display_name")
+	private String displayName;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JsonIgnore
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "role_fk"), inverseJoinColumns = @JoinColumn(name = "user_fk"))
+	private List<Role> roles;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return getRecordStatus() == 1;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return getRecordStatus() == 1;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return getRecordStatus() == 1;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return getRecordStatus() == 1;
+	}
 }

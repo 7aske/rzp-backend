@@ -12,7 +12,8 @@ public class MapUtils {
 	/**
 	 * Converts(zips) two arrays into a map with first array argument representing map keys
 	 * and second argument representing map values.
-	 * @param keysArray Map keys array.
+	 *
+	 * @param keysArray   Map keys array.
 	 * @param valuesArray Map values array.
 	 * @return Converted map.
 	 */

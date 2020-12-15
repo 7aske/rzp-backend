@@ -1,31 +1,25 @@
 package com.example.backend.service;
 
+import com.example.backend.entity.Media;
 import com.example.backend.entity.Post;
-import com.example.backend.entity.dto.PostDTO;
-import com.example.backend.entity.dto.PostPreviewDTO;
-import com.example.backend.service.impl.PostServiceImpl;
+import com.example.backend.entity.Tag;
 
 import java.util.List;
 
 public interface PostService {
 
-	Integer getPageCount(Long idUser, String categoryName, String tagName, Boolean published, Integer size);
+	List<Post> findAll();
 
-	List<PostDTO> findAll(String categoryName, String tagName, Integer pageNumber, Integer count, Boolean published);
+	Post save(Post post);
 
-	List<PostPreviewDTO> findAllPreviews(String categoryName, String tagName, Integer pageNumber, Integer count, Boolean published);
+	Post update(Post post);
 
-	void delete(Post post) throws Exception;
+	Post findById(Integer postId);
 
-	PostDTO save(PostDTO post) throws PostServiceImpl.PostValidationException;
+	void deleteById(Integer postId);
 
-	PostDTO update(PostDTO post) throws PostServiceImpl.PostValidationException;
+	List<Media> findAllMediasById(Integer postId);
 
-	PostDTO findById(Long idPost);
+	List<Tag> findAllTagsById(Integer postId);
 
-	PostDTO findByPostSlug(String postSlug);
-
-	List<PostDTO> findAllByIdUser(Long idUser, String category, Integer pageNumber, Integer count, Boolean published);
-
-	void deleteById(Long idPost) throws Exception;
 }

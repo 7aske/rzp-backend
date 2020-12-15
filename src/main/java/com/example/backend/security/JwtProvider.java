@@ -1,31 +1,27 @@
 package com.example.backend.security;
 
 import com.example.backend.entity.User;
-import com.example.backend.entity.domain.RoleType;
 import com.example.backend.service.UserService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
 public class JwtProvider {
 
+	private final UserService userService;
 	@Value("${jwt.secret-key:secret}")
 	private String secretKey;
 	@Value("${jwt.expire-length:7200000}")
 	private long validityInMilliseconds;
-
-	private final UserService userService;
 
 	public JwtProvider(UserService userService) {
 		this.userService = userService;
@@ -46,7 +42,7 @@ public class JwtProvider {
 
 	public Authentication getAuthentication(String token) {
 		User user = this.userService.findByUsername(getUsername(token));
-		return new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(new SimpleGrantedAuthority(RoleType.ROLE_ADMIN.toString())));
+		return new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getRoles());
 	}
 
 	public String getUsername(String token) {

@@ -1,19 +1,22 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.entity.ContactType;
-import com.example.backend.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.example.backend.entity.Contact;
 import com.example.backend.repository.ContactRepository;
 import com.example.backend.service.ContactService;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.NoSuchElementException;
 
+@Data
 @Service
+@RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class ContactServiceImpl implements ContactService {
-
-	@Autowired
-	private ContactRepository contactRepository;
+	private final ContactRepository contactRepository;
 
 	@Override
 	public List<Contact> findAll() {
@@ -21,27 +24,9 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	public Contact findById(Long idContact) {
-		if (contactRepository.findById(idContact).isPresent()) {
-			return contactRepository.findById(idContact).get();
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public List<Contact> findAllByIdContactType(ContactType idContactType) {
-		return null;
-	}
-
-	@Override
-	public List<Contact> findAllByIdUser(User idUser) {
-		return null;
-	}
-
-	@Override
-	public List<Contact> findAllByContactValue(String contactValue) {
-		return null;
+	public Contact findById(Integer contactId) {
+		return contactRepository.findById(contactId)
+				.orElseThrow(() -> new NoSuchElementException("ContactService.notFound"));
 	}
 
 	@Override
@@ -55,23 +40,9 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	public boolean delete(Contact contact) throws Exception {
-		contactRepository.delete(contact);
-		return !contactRepository.findById(contact.getIdContact()).isPresent();
+	public void deleteById(Integer contactId) {
+		contactRepository.deleteById(contactId);
 	}
 
-	@Override
-	public void deleteById(Long idContact) throws Exception {
-		contactRepository.deleteById(idContact);
-	}
 
-	@Override
-	public void deleteAllByIdContactType(ContactType idContactType) throws Exception {
-		contactRepository.deleteAllByIdContactType(idContactType);
-	}
-
-	@Override
-	public void deleteAllByIdUser(User idUser) throws Exception {
-		contactRepository.deleteAllByIdUser(idUser);
-	}
 }

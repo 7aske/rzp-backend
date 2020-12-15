@@ -19,7 +19,7 @@ public class ValidationUtil {
 		return matcher.find();
 	}
 
-	public static boolean validatePassword(String passwordStr){
+	public static boolean validatePassword(String passwordStr) {
 		Matcher matcher = PASSWORD_REGEX.matcher(passwordStr);
 		return matcher.matches();
 	}
@@ -148,4 +148,4 @@ public class ValidationUtil {
 	// 	if (!categoryRepository.findByIdCategory(post.getIdCategory()).isPresent()) {
 	// 		throw new PostServiceImpl.PostValidationException("post.save.category-not-found");
 	// 	}
-	}
+}

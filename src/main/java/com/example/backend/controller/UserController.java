@@ -1,41 +1,55 @@
-
 package com.example.backend.controller;
 
+import com.example.backend.entity.Role;
 import com.example.backend.entity.User;
-import com.example.backend.entity.dto.UserDTO;
-import com.example.backend.entity.dto.http.ClientError;
-import com.example.backend.entity.dto.http.ClientMessage;
 import com.example.backend.service.UserService;
-import com.example.backend.service.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@GetMapping("/getAll")
+	@GetMapping
 	public ResponseEntity<List<User>> getAll() {
 		return ResponseEntity.ok(userService.findAll());
 	}
 
-	@GetMapping("/getById/{idUser}")
-	public ResponseEntity<UserDTO> getById(@PathVariable Long idUser) {
-		return ResponseEntity.ok(userService.findById(idUser));
+	@GetMapping("/{userId}")
+	public ResponseEntity<User> getById(@PathVariable Integer userId) {
+		return ResponseEntity.ok(userService.findById(userId));
 	}
 
-	@PostMapping("/register")
-	public ResponseEntity<Object> register(@RequestBody User user){
-		try {
-			return ResponseEntity.ok(userService.save(user));
-		} catch (UserServiceImpl.UserValidationException e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(new ClientError(e.getMessage()));
-		}
+	@PostMapping
+	public ResponseEntity<User> save(@RequestBody User user) {
+		return ResponseEntity.ok(userService.save(user));
 	}
+
+	@PutMapping
+	public ResponseEntity<User> update(@RequestBody User user) {
+		return ResponseEntity.ok(userService.update(user));
+	}
+
+	@PutMapping("/{userId}")
+	public ResponseEntity<User> updateById(@RequestBody User user, @PathVariable Integer userId) {
+		user.setId(userId);
+		return ResponseEntity.ok(userService.update(user));
+	}
+
+	@DeleteMapping("/{userId}")
+	public void deleteById(@PathVariable Integer userId) {
+		userService.deleteById(userId);
+	}
+
+	@GetMapping("/{userId}/roles")
+	public ResponseEntity<List<Role>> getAllRoles(@PathVariable Integer userId) {
+		return ResponseEntity.ok(userService.findAllRolesById(userId));
+	}
+
 }
+

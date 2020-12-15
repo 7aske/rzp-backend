@@ -1,24 +1,30 @@
 package com.example.backend.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.List;
 
-import java.time.LocalDate;
-import java.io.Serializable;
-import java.util.*;
-
+/**
+ * Uploaded image shown on the blog post
+ */
+@Data
 @Entity
 @Table(name = "media")
-@Getter @Setter @NoArgsConstructor
-public class Media implements Serializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class Media extends Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_media")
-	private Long idMedia;
+	@EqualsAndHashCode.Include
+	@Column(name = "media_id")
+	private Integer id;
+	@Column(name = "uri")
+	private String uri;
+	@ManyToMany
+	@JsonIgnore
+	@JoinTable(name = "post_media", joinColumns = @JoinColumn(name = "post_fk"), inverseJoinColumns = @JoinColumn(name = "media_fk"))
+	private List<Post> posts;
 
-	@Column(name = "media_filepath")
-	private String mediaFilepath;
 }
