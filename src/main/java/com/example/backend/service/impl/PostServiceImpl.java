@@ -47,11 +47,6 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<Media> findAllMediasById(Integer postId) {
-		return findById(postId).getMedias();
-	}
-
-	@Override
 	public List<Tag> findAllTagsById(Integer postId) {
 		return findById(postId).getTags();
 	}

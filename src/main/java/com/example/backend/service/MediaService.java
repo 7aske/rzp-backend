@@ -18,7 +18,5 @@ public interface MediaService {
 
 	void deleteById(Integer mediaId);
 
-	List<Post> findAllPostsById(Integer mediaId);
-
 	Media upload(MultipartFile file);
 }

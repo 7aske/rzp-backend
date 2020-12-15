@@ -18,8 +18,6 @@ public interface PostService {
 
 	void deleteById(Integer postId);
 
-	List<Media> findAllMediasById(Integer postId);
-
 	List<Tag> findAllTagsById(Integer postId);
 
 }

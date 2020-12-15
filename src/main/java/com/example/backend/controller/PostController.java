@@ -47,11 +47,6 @@ public class PostController {
 		postService.deleteById(postId);
 	}
 
-	@GetMapping("/{postId}/medias")
-	public ResponseEntity<List<Media>> getAllMedias(@PathVariable Integer postId) {
-		return ResponseEntity.ok(postService.findAllMediasById(postId));
-	}
-
 	@GetMapping("/{postId}/tags")
 	public ResponseEntity<List<Tag>> getAllTags(@PathVariable Integer postId) {
 		return ResponseEntity.ok(postService.findAllTagsById(postId));

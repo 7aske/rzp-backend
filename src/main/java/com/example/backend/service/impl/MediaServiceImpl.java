@@ -67,11 +67,6 @@ public class MediaServiceImpl implements MediaService {
 	}
 
 	@Override
-	public List<Post> findAllPostsById(Integer mediaId) {
-		return findById(mediaId).getPosts();
-	}
-
-	@Override
 	public Media upload(MultipartFile file) {
 		if (file.isEmpty()) throw new MediaUploadException("media.upload.file-empty");
 
