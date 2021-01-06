@@ -1,6 +1,5 @@
 package com.example.backend.data.search;
 
-import com.sun.org.apache.xpath.internal.axes.PredicatedNodeTest;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
