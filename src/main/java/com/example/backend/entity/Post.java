@@ -1,6 +1,5 @@
 package com.example.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -44,8 +43,7 @@ public class Post extends Auditable {
 	@Column(name = "slug")
 	private String slug;
 	@ManyToMany
-	@JsonIgnore
-	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "tag_fk"), inverseJoinColumns = @JoinColumn(name = "post_fk"))
+	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_fk"), inverseJoinColumns = @JoinColumn(name = "tag_fk"))
 	private List<Tag> tags;
 
 }

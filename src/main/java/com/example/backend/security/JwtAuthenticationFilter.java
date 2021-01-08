@@ -17,6 +17,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.UnknownServiceException;
 import java.util.Properties;
 
 @RequiredArgsConstructor
@@ -43,6 +44,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException ex) throws IOException {
 		ErrorInfo errorInfo = new ErrorInfo(HttpStatus.UNAUTHORIZED, request, ex.getMessage());
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		ObjectMapperUtils.writeValue(response, errorInfo);
 	}
 

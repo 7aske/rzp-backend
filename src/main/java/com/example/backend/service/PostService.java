@@ -1,6 +1,5 @@
 package com.example.backend.service;
 
-import com.example.backend.entity.Media;
 import com.example.backend.entity.Post;
 import com.example.backend.entity.Tag;
 
@@ -15,6 +14,8 @@ public interface PostService {
 	Post update(Post post);
 
 	Post findById(Integer postId);
+
+	Post findBySlug(String slug);
 
 	void deleteById(Integer postId);
 

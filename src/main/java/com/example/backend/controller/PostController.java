@@ -22,8 +22,12 @@ public class PostController {
 	}
 
 	@GetMapping("/{postId}")
-	public ResponseEntity<Post> getById(@PathVariable Integer postId) {
-		return ResponseEntity.ok(postService.findById(postId));
+	public ResponseEntity<Post> getById(@PathVariable String postId) {
+		try {
+			return ResponseEntity.ok(postService.findById(Integer.parseInt(postId)));
+		} catch (NumberFormatException ignored) {
+			return ResponseEntity.ok(postService.findBySlug(postId));
+		}
 	}
 
 	@PostMapping

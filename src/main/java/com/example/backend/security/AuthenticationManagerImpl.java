@@ -30,7 +30,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 	@Override
 	public Authentication authenticate(Authentication authentication) {
 		String username = authentication.getName();
-		String password = authentication.getCredentials().toString();
+		Object password = authentication.getCredentials();
 		Optional<User> userOptional = userRepository.findByUsername(username);
 
 		if (!userOptional.isPresent())
@@ -42,7 +42,10 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 			return new UsernamePasswordAuthenticationToken(username, password, user.getRoles());
 		}
 
-		if (!HashUtils.getSha512(password).equals(user.getPassword()))
+		if (password == null)
+			throw new BadCredentialsException(errors.getProperty("auth.login.invalid-credentials"));
+
+		if (!HashUtils.getSha512(password.toString()).equals(user.getPassword()))
 			throw new BadCredentialsException(errors.getProperty("auth.login.invalid-credentials"));
 
 		return new UsernamePasswordAuthenticationToken(username, password, user.getRoles());

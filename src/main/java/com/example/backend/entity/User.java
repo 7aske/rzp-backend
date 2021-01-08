@@ -1,6 +1,8 @@
 package com.example.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +27,7 @@ public class User extends Auditable implements UserDetails {
 	private Integer id;
 	@Column(name = "username")
 	private String username;
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Column(name = "password")
 	private String password;
 	@Column(name = "email")
@@ -43,26 +46,31 @@ public class User extends Auditable implements UserDetails {
 	private List<Role> roles;
 
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonExpired() {
 		return getRecordStatus() == 1;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonLocked() {
 		return getRecordStatus() == 1;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isCredentialsNonExpired() {
 		return getRecordStatus() == 1;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isEnabled() {
 		return getRecordStatus() == 1;
 	}

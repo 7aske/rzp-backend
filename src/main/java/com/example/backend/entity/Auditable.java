@@ -23,10 +23,8 @@ import java.time.LocalDateTime;
 public abstract class Auditable implements Serializable {
 
 	@CreatedDate
-	@JsonIgnore
 	private LocalDateTime createdDate;
 	@LastModifiedDate
-	@JsonIgnore
 	private LocalDateTime lastModifiedDate;
 	@LastModifiedBy
 	@JsonIgnore

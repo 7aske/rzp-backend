@@ -27,7 +27,6 @@ public class ErrorController {
 
 	@ExceptionHandler({
 			NoSuchElementException.class,
-			UsernameNotFoundException.class
 	})
 	protected ResponseEntity<ErrorInfo> handleNotFound(RuntimeException ex, HttpServletRequest request) {
 		HttpStatus status = HttpStatus.NOT_FOUND;
@@ -47,7 +46,8 @@ public class ErrorController {
 
 
 	@ExceptionHandler({
-			HttpUnauthorizedException.class
+			HttpUnauthorizedException.class,
+			UsernameNotFoundException.class
 	})
 	protected ResponseEntity<ErrorInfo> handleUnauthorized(RuntimeException ex, HttpServletRequest request) {
 		HttpStatus status = HttpStatus.UNAUTHORIZED;
@@ -55,7 +55,7 @@ public class ErrorController {
 	}
 
 	@ExceptionHandler({
-			AccessDeniedException.class
+			AccessDeniedException.class,
 	})
 	protected ResponseEntity<ErrorInfo> handleForbidden(RuntimeException ex, HttpServletRequest request) {
 		HttpStatus status = HttpStatus.FORBIDDEN;

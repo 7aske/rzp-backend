@@ -21,8 +21,12 @@ public class UserController {
 	}
 
 	@GetMapping("/{userId}")
-	public ResponseEntity<User> getById(@PathVariable Integer userId) {
-		return ResponseEntity.ok(userService.findById(userId));
+	public ResponseEntity<User> getById(@PathVariable String userId) {
+		try {
+			return ResponseEntity.ok(userService.findById(Integer.parseInt(userId)));
+		} catch (NumberFormatException e) {
+			return ResponseEntity.ok(userService.findByUsername(userId));
+		}
 	}
 
 	@PostMapping

@@ -32,6 +32,12 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	public Post findBySlug(String slug) {
+		return postRepository.findBySlug(slug)
+				.orElseThrow(() -> new NoSuchElementException("PostService.notFound"));
+	}
+
+	@Override
 	public Post save(Post post) {
 		return postRepository.save(post);
 	}
