@@ -31,12 +31,8 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 	public Authentication authenticate(Authentication authentication) {
 		String username = authentication.getName();
 		Object password = authentication.getCredentials();
-		Optional<User> userOptional = userRepository.findByUsername(username);
-
-		if (!userOptional.isPresent())
-			throw new UsernameNotFoundException(errors.getProperty("auth.login.user-not-found"));
-
-		User user = userOptional.get();
+		User user = userRepository.findByUsername(username)
+				.orElseThrow(()->new UsernameNotFoundException(errors.getProperty("auth.login.user-not-found")));
 
 		if (Arrays.asList(env.getActiveProfiles()).contains("dev")) {
 			return new UsernamePasswordAuthenticationToken(username, password, user.getRoles());

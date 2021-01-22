@@ -29,8 +29,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
 		User user = ObjectMapperUtils.readValue(request, User.class);
+
 		if (user == null)
 			throw new UsernameNotFoundException(errorMessages.getProperty("auth.login.invalid-credentials"));
+
 		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), null));
 	}
 
@@ -38,14 +40,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
 		String token = jwtProvider.createToken(authResult.getName(), authResult.getAuthorities());
 		LoginResponse loginResponse = new LoginResponse(token);
-		ObjectMapperUtils.writeValue(response, loginResponse);
+		ObjectMapperUtils.writeValue(response, loginResponse, HttpStatus.OK.value());
 	}
 
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException ex) throws IOException {
 		ErrorInfo errorInfo = new ErrorInfo(HttpStatus.UNAUTHORIZED, request, ex.getMessage());
-		response.setStatus(HttpStatus.UNAUTHORIZED.value());
-		ObjectMapperUtils.writeValue(response, errorInfo);
+		ObjectMapperUtils.writeValue(response, errorInfo, HttpStatus.UNAUTHORIZED.value());
 	}
 
 }

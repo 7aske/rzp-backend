@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
+	// TODO
 	private final JwtProvider jwtProvider;
 
 	@PostMapping("/validate")

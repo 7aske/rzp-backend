@@ -12,11 +12,13 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.backend.security.SecurityConstants.*;
 
 @Component
 public class JwtProvider {
-
 	private final UserService userService;
 	@Value("${jwt.secret-key:secret}")
 	private String secretKey;
@@ -28,16 +30,25 @@ public class JwtProvider {
 	}
 
 	public String createToken(String username, Collection<? extends GrantedAuthority> authorities) {
-		Claims claims = Jwts.claims().setSubject(username);
-		claims.put("roles", authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + validityInMilliseconds);
+
+		Claims claims = Jwts.claims();
+		claims.put(CLAIM_ROLES_KEY, getAuthoritiesAsStringList(authorities));
+
 		return Jwts.builder()
-				.setClaims(claims)
+				.setSubject(username)
 				.setIssuedAt(now)
 				.setExpiration(validity)
-				.signWith(SignatureAlgorithm.HS256, secretKey)
+				.setClaims(claims)
+				.signWith(SignatureAlgorithm.HS512, secretKey)
 				.compact();
+	}
+
+	private static List<String> getAuthoritiesAsStringList(Collection<? extends GrantedAuthority> authorities){
+		return authorities.stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toList());
 	}
 
 	public Authentication getAuthentication(String token) {
@@ -46,23 +57,27 @@ public class JwtProvider {
 	}
 
 	public String getUsername(String token) {
-		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+		return getClaims(token).getSubject();
+	}
+
+	private Claims getClaims(String token){
+		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 	}
 
 	public String resolveToken(HttpServletRequest req) {
-		String bearerToken = req.getHeader(SecurityConstants.HEADER_STRING);
+		String bearerToken = req.getHeader(HEADER_STRING);
 
-		if (bearerToken == null || !bearerToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+		if (bearerToken == null || !bearerToken.startsWith(TOKEN_PREFIX)) {
 			return null;
 		}
 
-		return bearerToken.substring(SecurityConstants.TOKEN_PREFIX.length());
+		return bearerToken.substring(TOKEN_PREFIX.length());
 	}
 
 	public boolean validateToken(String token) {
 		try {
-			Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-			return !claims.getBody().getExpiration().before(new Date());
+			Claims claims = getClaims(token);
+			return !claims.getExpiration().before(new Date());
 		} catch (JwtException | IllegalArgumentException e) {
 			return false;
 		}
