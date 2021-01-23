@@ -29,6 +29,7 @@ public class Role extends Auditable implements GrantedAuthority {
 	private List<User> users;
 
 	@Override
+	@JsonIgnore
 	public String getAuthority() {
 		return String.format("ROLE_%s", name);
 	}

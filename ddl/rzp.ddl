@@ -103,7 +103,6 @@ create table `post`
     `title`              varchar(255)                            not null,
     `excerpt`            text                                    not null,
     `body`               text                                    not null,
-    `date_posted`        timestamp   default current_timestamp() not null on update current_timestamp(),
     `deleted`            tinyint(1)  default 0                   null,
     `published`          tinyint(1)  default 0                   null,
     `views`              bigint                                  null,

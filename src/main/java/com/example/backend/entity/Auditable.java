@@ -29,7 +29,6 @@ public abstract class Auditable implements Serializable {
 	@LastModifiedBy
 	@JsonIgnore
 	private String lastModifiedBy;
-	@JsonIgnore
 	private Integer recordStatus = 1;
 
 }

@@ -15,7 +15,7 @@ public class AuthController {
 	// TODO
 	private final JwtProvider jwtProvider;
 
-	@PostMapping("/validate")
+	@PostMapping("/verify")
 	public ResponseEntity<?> validate() {
 		return ResponseEntity.ok().build();
 	}

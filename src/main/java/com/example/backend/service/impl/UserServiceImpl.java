@@ -7,6 +7,9 @@ import com.example.backend.service.UserService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findAll() {
 		return userRepository.findAll();
+	}
+
+	@Override
+	public List<User> findAll(Specification<User> specification, Pageable pageable) {
+		return userRepository.findAll(specification, pageable).getContent();
+	}
+
+	@Override
+	public Page<User> findAllPage(Specification<User> specification, Pageable pageable) {
+		return userRepository.findAll(specification, pageable);
 	}
 
 	@Override

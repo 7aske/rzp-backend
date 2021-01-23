@@ -4,6 +4,10 @@ import com.example.backend.entity.Role;
 import com.example.backend.entity.User;
 import com.example.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +20,11 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<List<User>> getAll() {
-		return ResponseEntity.ok(userService.findAll());
+	public ResponseEntity<Page<User>> getAll(
+			@RequestParam(required = false, name = "q") Specification<User> query,
+			@RequestParam(required = false, name = "page", defaultValue = "0,10") Pageable pageable
+	) {
+		return ResponseEntity.ok(userService.findAllPage(query, pageable));
 	}
 
 	@GetMapping("/{userId}")

@@ -1,20 +1,20 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Blog post
+ * Blog post preview
  */
 @Data
 @Entity
 @Table(name = "post")
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
-public class Post extends Auditable {
+public class PostPreview extends Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
@@ -30,12 +30,12 @@ public class Post extends Auditable {
 	private String title;
 	@Column(name = "excerpt")
 	private String excerpt;
-	@Column(name = "body")
-	private String body;
 	@Column(name = "deleted")
-	private Boolean deleted;
+	@JsonIgnore
+	private boolean deleted;
 	@Column(name = "published")
-	private Boolean published;
+	@JsonIgnore
+	private boolean published;
 	@Column(name = "views")
 	private Integer views;
 	@Column(name = "slug")
@@ -43,5 +43,4 @@ public class Post extends Auditable {
 	@ManyToMany
 	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_fk"), inverseJoinColumns = @JoinColumn(name = "tag_fk"))
 	private List<Tag> tags;
-
 }

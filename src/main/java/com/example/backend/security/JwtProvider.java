@@ -35,6 +35,7 @@ public class JwtProvider {
 
 		Claims claims = Jwts.claims();
 		claims.put(CLAIM_ROLES_KEY, getAuthoritiesAsStringList(authorities));
+		claims.put("user", username);
 
 		return Jwts.builder()
 				.setSubject(username)

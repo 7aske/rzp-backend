@@ -1,6 +1,8 @@
 package com.example.backend.data.search;
 
 
+import lombok.val;
+
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,34 +49,34 @@ public class PredicateBuilder<T> {
 
 			switch (cr.getOp()){
 				case GT:
-					predicates.add(builder.greaterThan(join.get(base), cr.getValue()));
+					predicates.add(builder.greaterThan(join.get(base).as(String.class), cr.getValue()));
 					break;
 				case LT:
-					predicates.add(builder.lessThan(join.get(base), cr.getValue()));
+					predicates.add(builder.lessThan(join.get(base).as(String.class), cr.getValue()));
 					break;
 				case GTE:
-					predicates.add(builder.greaterThanOrEqualTo(join.get(base), cr.getValue()));
+					predicates.add(builder.greaterThanOrEqualTo(join.get(base).as(String.class), cr.getValue()));
 					break;
 				case LTE:
-					predicates.add(builder.lessThanOrEqualTo(join.get(base), cr.getValue()));
+					predicates.add(builder.lessThanOrEqualTo(join.get(base).as(String.class), cr.getValue()));
 					break;
 				case NE:
-					predicates.add(builder.notEqual(join.get(base), cr.getValue()));
+					predicates.add(builder.notEqual(join.get(base).as(String.class), cr.getValue()));
 					break;
 				case EQ:
-					predicates.add(builder.equal(join.get(base), cr.getValue()));
+					predicates.add(builder.equal(join.get(base).as(String.class), cr.getValue()));
 					break;
 				case MATCH:
-					predicates.add(builder.like(builder.lower(join.get(base)), "%" + cr.getValue().toLowerCase() + "%"));
+					predicates.add(builder.like(builder.lower(join.get(base).as(String.class)), "%" + cr.getValue().toLowerCase() + "%"));
 					break;
 				case START:
-					predicates.add(builder.like(builder.lower(join.get(base)), "%" + cr.getValue().toLowerCase()));
+					predicates.add(builder.like(builder.lower(join.get(base).as(String.class)), "%" + cr.getValue().toLowerCase()));
 					break;
 				case END:
-					predicates.add(builder.like(builder.lower(join.get(base)), cr.getValue().toLowerCase() + "%"));
+					predicates.add(builder.like(builder.lower(join.get(base).as(String.class)), cr.getValue().toLowerCase() + "%"));
 					break;
 				case IN:
-					predicates.add(builder.in(join.get(base)).value(cr.getValue()));
+					predicates.add(builder.in(join.get(base).as(String.class)).value(cr.getValue()));
 					break;
 				case NOT_IN:
 					predicates.add(builder.not(join.get(base)).in(cr.getValue()));
