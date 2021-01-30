@@ -22,9 +22,7 @@ public class Tag extends Auditable {
 	private Integer id;
 	@Column(name = "name")
 	private String name;
-	@ManyToMany
+	@ManyToMany(mappedBy = "tags")
 	@JsonIgnore
-	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_fk"), inverseJoinColumns = @JoinColumn(name = "tag_fk"))
-	private List<Post> posts;
-
+	private List<PostPreview> posts;
 }

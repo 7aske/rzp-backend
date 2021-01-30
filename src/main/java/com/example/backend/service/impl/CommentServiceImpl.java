@@ -43,6 +43,4 @@ public class CommentServiceImpl implements CommentService {
 	public void deleteById(Integer commentId) {
 		commentRepository.deleteById(commentId);
 	}
-
-
 }

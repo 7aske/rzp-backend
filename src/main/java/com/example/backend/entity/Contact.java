@@ -27,5 +27,4 @@ public class Contact extends Auditable {
 	@Column(name = "contact_type")
 	@Enumerated(EnumType.STRING)
 	private ContactType contactType;
-
 }

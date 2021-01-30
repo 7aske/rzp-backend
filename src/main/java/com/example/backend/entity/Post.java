@@ -43,5 +43,4 @@ public class Post extends Auditable {
 	@ManyToMany
 	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_fk"), inverseJoinColumns = @JoinColumn(name = "tag_fk"))
 	private List<Tag> tags;
-
 }

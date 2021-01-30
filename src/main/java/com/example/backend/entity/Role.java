@@ -23,9 +23,8 @@ public class Role extends Auditable implements GrantedAuthority {
 	private Integer id;
 	@Column(name = "name")
 	private String name;
-	@ManyToMany
+	@ManyToMany(mappedBy = "roles")
 	@JsonIgnore
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_fk"), inverseJoinColumns = @JoinColumn(name = "role_fk"))
 	private List<User> users;
 
 	@Override

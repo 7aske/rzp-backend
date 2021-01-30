@@ -1,6 +1,7 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.entity.Post;
+import com.example.backend.entity.PostPreview;
 import com.example.backend.entity.Tag;
 import com.example.backend.repository.TagRepository;
 import com.example.backend.service.TagService;
@@ -46,9 +47,7 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public List<Post> findAllPostsById(Integer tagId) {
+	public List<PostPreview> findAllPostsById(Integer tagId) {
 		return findById(tagId).getPosts();
 	}
-
-
 }

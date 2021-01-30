@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Post;
+import com.example.backend.entity.PostPreview;
 import com.example.backend.entity.Tag;
 
 import java.util.List;
@@ -17,6 +18,6 @@ public interface TagService {
 
 	void deleteById(Integer tagId);
 
-	List<Post> findAllPostsById(Integer tagId);
+	List<PostPreview> findAllPostsById(Integer tagId);
 
 }

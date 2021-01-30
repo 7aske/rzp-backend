@@ -70,6 +70,4 @@ public class PostServiceImpl implements PostService {
 	public List<Tag> findAllTagsById(Integer postId) {
 		return findById(postId).getTags();
 	}
-
-
 }

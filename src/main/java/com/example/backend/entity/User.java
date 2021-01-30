@@ -42,7 +42,7 @@ public class User extends Auditable implements UserDetails {
 	private String displayName;
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JsonIgnore
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "role_fk"), inverseJoinColumns = @JoinColumn(name = "user_fk"))
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_fk"), inverseJoinColumns = @JoinColumn(name = "role_fk"))
 	private List<Role> roles;
 
 	@Override

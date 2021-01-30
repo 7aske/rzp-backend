@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.entity.Post;
+import com.example.backend.entity.PostPreview;
 import com.example.backend.entity.Tag;
 import com.example.backend.service.TagService;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class TagController {
 	}
 
 	@GetMapping("/{tagId}/posts")
-	public ResponseEntity<List<Post>> getAllPosts(@PathVariable Integer tagId) {
+	public ResponseEntity<List<PostPreview>> getAllPosts(@PathVariable Integer tagId) {
 		return ResponseEntity.ok(tagService.findAllPostsById(tagId));
 	}
 

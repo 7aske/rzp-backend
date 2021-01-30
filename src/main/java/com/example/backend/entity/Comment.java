@@ -26,5 +26,4 @@ public class Comment extends Auditable {
 	private Post post;
 	@Column(name = "body")
 	private String body;
-
 }
