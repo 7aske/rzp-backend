@@ -1,9 +1,3 @@
-#create database if not exists `rzp-database`;
-#use `rzp-database`;
-#
-#create user if not exists 'rzp-root'@'localhost' identified by 'rzp-root';
-#grant all on `rzp-database`.* to 'rzp-root'@'localhost';
-
 set foreign_key_checks = 0;
 
 drop table if exists `category`;
@@ -23,7 +17,7 @@ drop table if exists `media`;
 create table `media`
 (
     `media_id`           int auto_increment primary key,
-    `uri`                varchar(2048) not null unique,
+    `uri`                varchar(1024) not null,
 
     -- auditable
     `created_date`       timestamp   default current_timestamp(),
@@ -98,15 +92,17 @@ drop table if exists `post`;
 create table `post`
 (
     `post_id`            int auto_increment primary key,
-    `user_fk`            int                                     null,
-    `category_fk`        int                                     not null,
-    `title`              varchar(255)                            not null,
-    `excerpt`            text                                    not null,
-    `body`               text                                    not null,
-    `deleted`            tinyint(1)  default 0                   null,
-    `published`          tinyint(1)  default 0                   null,
-    `views`              bigint                                  null,
-    `slug`               varchar(64)                             not null,
+    `user_fk`            int                   null,
+    `category_fk`        int                   not null,
+    `title`              varchar(255)          not null,
+    `excerpt`            text                  not null,
+    `body`               text                  not null,
+    `deleted`            tinyint(1)  default 0 null,
+    `published`          tinyint(1)  default 0 null,
+    `views`              bigint                null,
+    `slug`               varchar(64)           not null,
+    `date_posted`        date        default current_date(),
+
 
     -- auditable
     `created_date`       timestamp   default current_timestamp(),

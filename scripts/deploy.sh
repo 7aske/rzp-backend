@@ -1,17 +1,45 @@
 #!/usr/bin/env bash
 
-read -r -p "tomcat user: " user
-read -r -s -p "tomcat pass: " pass
-
-ctx_path="rzp-blog"
-src_war="$(pwd)/target/$ctx_path.war"
-
-tomcat_ip="127.0.0.1"
-tomcat_port="8181"
-
-if [ ! -e "$src_war" ]; then
-   ./scripts/build.sh
+if [ ! -e pom.xml ] || [ ! -e .git ]; then
+	echo "$0: run script from repository root"
+	exit 2
 fi
 
-curl -v -u "$user:$pass" "http://$tomcat_ip:$tomcat_port/manager/text/undeploy?path=/$ctx_path"
-curl -v -u "$user:$pass" -T "$src_war" "http://$tomcat_ip:$tomcat_port/manager/text/deploy?path=/$ctx_path&update=true"
+# load user specific deploy config
+[ -e "./scripts/deploy.conf" ] && . "./scripts/deploy.conf"
+
+version="$(xpath -q -e '/project/version/text()' ./pom.xml)"
+artifactId="$(xpath -q -e '/project/artifactId/text()' ./pom.xml)"
+package="$(xpath -q -e '/project/package/text()' ./pom.xml)"
+
+PROFILE="${1:-"staging"}"
+WAR="${WAR:-"target/$artifactId-$version.$package"}"
+STAGING_USER="${STAGING_USER:-"root"}"
+STAGING_HOST="${STAGING_HOST:-"7aske.xyz"}"
+STAGING_PORT="${STAGING_PORT:-"2203"}"
+PROD_HOST="${PROD_HOST:-"digitize.rs"}"
+PROD_PORT="${PROD_PORT:-"22"}"
+
+deploy_staging() {
+	echo "deploying $PROFILE -> $STAGING_HOST:$STAGING_PORT"
+	mvn -P staging -D maven.test.skip=true clean install &&
+		scp -P "$STAGING_PORT" target/backend-0.0.1.war "$STAGING_USER@$STAGING_HOST:/var/lib/tomcat9/webapps/reboot.war"
+}
+
+deploy_prod() {
+	echo "deploying $PROFILE -> $PROD_HOST:$PROD_PORT"
+	mvn -D maven.test.skip=true clean install &&
+		scp -P "$STAGING_PORT" target/backend-0.0.1.war "root@$PROD_HOST:/var/lib/tomcat9/webapps/reboot.war"
+}
+
+usage() {
+	echo "./deploy.sh [staging|prod]"
+	exit 2
+}
+
+case "$PROFILE" in
+	staging) deploy_staging ;;
+	prod)    deploy_prod ;;
+    *)       usage ;;
+esac
+

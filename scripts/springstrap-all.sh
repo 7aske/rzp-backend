@@ -7,5 +7,4 @@ springstrap ddl/rzp.ddl \
 	-d "$artifactId.$package" \
 	-slawprA \
 	-o ./ \
-	--ignore=user,role \
-	--tables="$*"
+	--ignore=user,role
