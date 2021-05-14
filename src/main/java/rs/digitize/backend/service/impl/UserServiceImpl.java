@@ -1,16 +1,16 @@
 package rs.digitize.backend.service.impl;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
 import rs.digitize.backend.repository.UserRepository;
 import rs.digitize.backend.service.UserService;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,13 +28,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> findAll(Specification<User> specification, Pageable pageable) {
-		return userRepository.findAll(specification, pageable).getContent();
-	}
-
-	@Override
-	public Page<User> findAllPage(Specification<User> specification, Pageable pageable) {
-		return userRepository.findAll(specification, pageable);
+	public List<User> findAll(Specification<User> specification, Sort sort, Pageable pageable) {
+		if (pageable != null)
+			return userRepository.findAll(specification, pageable).toList();
+		return userRepository.findAll(specification, sort == null ? Sort.unsorted() : sort);
 	}
 
 	@Override

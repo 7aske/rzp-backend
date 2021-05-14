@@ -1,10 +1,10 @@
 package rs.digitize.backend.controller;
 
+import org.springframework.data.domain.Sort;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
 import rs.digitize.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,10 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<Page<User>> getAll(
-			@RequestParam(required = false, name = "q") Specification<User> query,
-			@RequestParam(required = false, name = "page", defaultValue = "0,10") Pageable pageable
-	) {
-		return ResponseEntity.ok(userService.findAllPage(query, pageable));
+	public ResponseEntity<List<User>> getAllPosts(@RequestParam(name = "q", required = false) Specification<User> specification,
+	                                              @RequestParam(name = "page", required = false) Pageable pageable,
+	                                              @RequestParam(name = "sort", required = false) Sort sort) {
+		return ResponseEntity.ok(userService.findAll(specification, sort, pageable));
 	}
 
 	@GetMapping("/{userId}")

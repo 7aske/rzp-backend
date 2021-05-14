@@ -1,8 +1,8 @@
 package rs.digitize.backend.service;
 
+import org.springframework.data.domain.Sort;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -12,9 +12,7 @@ public interface UserService {
 
 	List<User> findAll();
 
-	List<User> findAll(Specification<User> specification, Pageable pageable);
-
-	Page<User> findAllPage(Specification<User> specification, Pageable pageable);
+	List<User> findAll(Specification<User> specification, Sort sort, Pageable pageable);
 
 	User save(User user);
 
