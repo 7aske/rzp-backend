@@ -4,6 +4,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import rs.digitize.backend.bean.converter.PageableConverter;
 import rs.digitize.backend.bean.filter.PostCountFilter;
+import rs.digitize.backend.bean.filter.UserCountFilter;
 import rs.digitize.backend.search.GenericSpecificationConverter;
 import rs.digitize.backend.bean.converter.SortConverter;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,14 @@ public class Config {
 		FilterRegistrationBean<PostCountFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new PostCountFilter());
 		registrationBean.addUrlPatterns("/posts");
-		registrationBean.setOrder(1);
+		return registrationBean;
+	}
+
+	@Bean
+	public FilterRegistrationBean<UserCountFilter> userCountFilterFilterRegistrationBean() {
+		FilterRegistrationBean<UserCountFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new UserCountFilter());
+		registrationBean.addUrlPatterns("/users");
 		return registrationBean;
 	}
 }
