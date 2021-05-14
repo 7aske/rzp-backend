@@ -1,5 +1,6 @@
 package rs.digitize.backend.service.impl;
 
+import org.springframework.data.domain.Sort;
 import rs.digitize.backend.entity.PostPreview;
 import rs.digitize.backend.repository.PostPreviewRepository;
 import rs.digitize.backend.service.PostPreviewService;
@@ -23,8 +24,10 @@ public class PostPreviewServiceImpl implements PostPreviewService {
 	}
 
 	@Override
-	public List<PostPreview> findAll(Specification<PostPreview> specification, Pageable pageable) {
-		return postPreviewRepository.findAll(specification, pageable).getContent();
+	public List<PostPreview> findAll(Specification<PostPreview> specification, Sort sort, Pageable pageable) {
+		if (pageable != null)
+			return postPreviewRepository.findAll(specification, pageable).toList();
+		return postPreviewRepository.findAll(specification, sort == null ? Sort.unsorted() : sort);
 	}
 
 	@Override

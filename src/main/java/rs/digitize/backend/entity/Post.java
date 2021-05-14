@@ -43,8 +43,6 @@ public class Post extends Auditable {
 	@Column(name = "date_posted")
 	private LocalDate datePosted;
 	@ManyToMany
-	@JsonIgnore
 	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_fk"), inverseJoinColumns = @JoinColumn(name = "tag_fk"))
 	private List<Tag> tags;
-	
 }

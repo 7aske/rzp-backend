@@ -76,6 +76,8 @@ public class JwtProvider {
 	}
 
 	public boolean validateToken(String token) {
+		if (token == null || token.isEmpty())
+			return false;
 		try {
 			Claims claims = getClaims(token);
 			return !claims.getExpiration().before(new Date());

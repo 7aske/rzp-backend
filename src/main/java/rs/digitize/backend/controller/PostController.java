@@ -28,10 +28,14 @@ public class PostController {
 		return ResponseEntity.ok(postService.findAll(specification, sort, pageable));
 	}
 
-	@GetMapping("/{postId}")
+	@GetMapping("/{identifier}")
 	@ApiOperation(value = "", nickname = "getPostById")
-	public ResponseEntity<Post> getPostById(@PathVariable Integer postId) {
-		return ResponseEntity.ok(postService.findById(postId));
+	public ResponseEntity<Post> getPostById(@PathVariable String identifier) {
+		try {
+			return ResponseEntity.ok(postService.findById(Integer.parseInt(identifier)));
+		} catch (NumberFormatException ignored) {
+			return ResponseEntity.ok(postService.findBySlug(identifier));
+		}
 	}
 
 	@PostMapping

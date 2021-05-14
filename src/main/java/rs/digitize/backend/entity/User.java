@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.*;
+
 /**
  * Blog user or author
  */
@@ -26,7 +28,7 @@ public class User extends Auditable implements UserDetails {
 	private Integer id;
 	@Column(name = "username")
 	private String username;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@JsonProperty(access = WRITE_ONLY)
 	@Column(name = "password")
 	private String password;
 	@Column(name = "email")
@@ -40,7 +42,7 @@ public class User extends Auditable implements UserDetails {
 	@Column(name = "display_name")
 	private String displayName;
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JsonIgnore
+	@JsonProperty(access = WRITE_ONLY)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_fk"), inverseJoinColumns = @JoinColumn(name = "role_fk"))
 	private List<Role> roles;
 

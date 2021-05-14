@@ -1,5 +1,6 @@
 package rs.digitize.backend.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Sort;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
@@ -19,13 +20,15 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<List<User>> getAllPosts(@RequestParam(name = "q", required = false) Specification<User> specification,
+	@ApiOperation(value = "", nickname = "getAllUsers")
+	public ResponseEntity<List<User>> getAllUsers(@RequestParam(name = "q", required = false) Specification<User> specification,
 	                                              @RequestParam(name = "page", required = false) Pageable pageable,
 	                                              @RequestParam(name = "sort", required = false) Sort sort) {
 		return ResponseEntity.ok(userService.findAll(specification, sort, pageable));
 	}
 
 	@GetMapping("/{userId}")
+	@ApiOperation(value = "", nickname = "getUserById")
 	public ResponseEntity<User> getById(@PathVariable String userId) {
 		try {
 			return ResponseEntity.ok(userService.findById(Integer.parseInt(userId)));
@@ -35,27 +38,25 @@ public class UserController {
 	}
 
 	@PostMapping
+	@ApiOperation(value = "", nickname = "saveUser")
 	public ResponseEntity<User> save(@RequestBody User user) {
 		return ResponseEntity.ok(userService.save(user));
 	}
 
 	@PutMapping
+	@ApiOperation(value = "", nickname = "updateUser")
 	public ResponseEntity<User> update(@RequestBody User user) {
 		return ResponseEntity.ok(userService.update(user));
 	}
 
-	@PutMapping("/{userId}")
-	public ResponseEntity<User> updateById(@RequestBody User user, @PathVariable Integer userId) {
-		user.setId(userId);
-		return ResponseEntity.ok(userService.update(user));
-	}
-
 	@DeleteMapping("/{userId}")
+	@ApiOperation(value = "", nickname = "deleteUserById")
 	public void deleteById(@PathVariable Integer userId) {
 		userService.deleteById(userId);
 	}
 
 	@GetMapping("/{userId}/roles")
+	@ApiOperation(value = "", nickname = "getAllUserRoles")
 	public ResponseEntity<List<Role>> getAllRoles(@PathVariable Integer userId) {
 		return ResponseEntity.ok(userService.findAllRolesById(userId));
 	}

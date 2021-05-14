@@ -1,7 +1,5 @@
 package rs.digitize.backend.security;
 
-import rs.digitize.backend.repository.UserRepository;
-import com.google.common.collect.ImmutableList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,9 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import rs.digitize.backend.repository.UserRepository;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 @Configuration
@@ -84,17 +84,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		configuration.setAllowedOrigins(ImmutableList.of("*"));
-		configuration.setAllowedMethods(ImmutableList.of(
+		configuration.setAllowedOrigins(List.of("*"));
+		configuration.setAllowedMethods(List.of(
 				HttpMethod.GET.name(),
 				HttpMethod.DELETE.name(),
 				HttpMethod.PUT.name(),
 				HttpMethod.POST.name(),
 				HttpMethod.OPTIONS.name()));
-		configuration.setAllowedHeaders(ImmutableList.of(
+		List<String> headers = List.of(
 				HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,
 				HttpHeaders.AUTHORIZATION,
-				HttpHeaders.CONTENT_TYPE));
+				HttpHeaders.CONTENT_TYPE,
+				"X-Data-Count");
+
+		configuration.setAllowedHeaders(headers);
+		configuration.setExposedHeaders(headers);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
