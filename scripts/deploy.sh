@@ -10,10 +10,10 @@ fi
 
 version="$(xpath -q -e '/project/version/text()' ./pom.xml)"
 artifactId="$(xpath -q -e '/project/artifactId/text()' ./pom.xml)"
-package="$(xpath -q -e '/project/package/text()' ./pom.xml)"
+extension="$(xpath -q -e '/project/packaging/text()' ./pom.xml)"
 
 PROFILE="${1:-"staging"}"
-WAR="${WAR:-"target/$artifactId-$version.$package"}"
+WAR="${WAR:-"target/$artifactId-$version.$extension"}"
 STAGING_USER="${STAGING_USER:-"root"}"
 STAGING_HOST="${STAGING_HOST:-"7aske.xyz"}"
 STAGING_PORT="${STAGING_PORT:-"2203"}"
