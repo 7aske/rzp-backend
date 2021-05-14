@@ -1,16 +1,14 @@
 package rs.digitize.backend.service.impl;
 
-import rs.digitize.backend.entity.PostPreview;
-import rs.digitize.backend.entity.Tag;
-import rs.digitize.backend.repository.TagRepository;
-import rs.digitize.backend.service.TagService;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.NoSuchElementException;
+import lombok.*;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import rs.digitize.backend.entity.*;
+import rs.digitize.backend.repository.TagRepository;
+import rs.digitize.backend.service.TagService;
 
 @Data
 @Service
@@ -20,8 +18,8 @@ public class TagServiceImpl implements TagService {
 	private final TagRepository tagRepository;
 
 	@Override
-	public List<Tag> findAll() {
-		return tagRepository.findAll();
+	public List<Tag> findAll(Specification<Tag> specification, Sort sort) {
+		return tagRepository.findAll(specification, sort == null ? Sort.unsorted() : sort);
 	}
 
 	@Override
@@ -46,7 +44,30 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public List<PostPreview> findAllPostsById(Integer tagId) {
+	public List<Post> findAllPostsById(Integer tagId) {
 		return findById(tagId).getPosts();
 	}
+
+	@Override
+	public List<Post> addPostsById(Integer tagId, List<Post> posts) {
+		Tag tag = findById(tagId);
+		tag.getPosts().addAll(posts);
+		return tagRepository.save(tag).getPosts();
+	}
+
+	@Override
+	public List<Post> setPostsById(Integer tagId, List<Post> posts) {
+		Tag tag = findById(tagId);
+		tag.setPosts(posts);
+		return tagRepository.save(tag).getPosts();
+	}
+
+	@Override
+	public List<Post> deletePostsById(Integer tagId, List<Post> posts) {
+		Tag tag = findById(tagId);
+		tag.getPosts().removeAll(posts);
+		return tagRepository.save(tag).getPosts();
+	}
+
+
 }

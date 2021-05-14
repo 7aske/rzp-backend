@@ -1,5 +1,7 @@
 package rs.digitize.backend.service.impl;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import rs.digitize.backend.entity.Media;
 import rs.digitize.backend.exception.io.MediaUploadException;
 import rs.digitize.backend.repository.MediaRepository;
@@ -38,6 +40,11 @@ public class MediaServiceImpl implements MediaService {
 	@Override
 	public List<Media> findAll() {
 		return mediaRepository.findAll();
+	}
+
+	@Override
+	public List<Media> findAll(Specification<Media> specification, Sort sort) {
+		return mediaRepository.findAll(specification, sort == null ? Sort.unsorted() : sort);
 	}
 
 	@Override

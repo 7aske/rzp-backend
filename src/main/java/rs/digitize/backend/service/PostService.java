@@ -1,12 +1,12 @@
 package rs.digitize.backend.service;
 
-import rs.digitize.backend.entity.Post;
-import rs.digitize.backend.entity.Tag;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.util.List;
+import rs.digitize.backend.entity.*;
 
 public interface PostService {
 
@@ -27,5 +27,11 @@ public interface PostService {
 	void deleteById(Integer postId);
 
 	List<Tag> findAllTagsById(Integer postId);
+
+	List<Tag> addTagsById(Integer postId, List<Tag> tags);
+
+	List<Tag> setTagsById(Integer postId, List<Tag> tags);
+
+	List<Tag> deleteTagsById(Integer postId, List<Tag> tags);
 
 }

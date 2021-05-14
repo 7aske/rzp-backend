@@ -1,12 +1,14 @@
 package rs.digitize.backend.service;
 
-import rs.digitize.backend.entity.Comment;
-
+import java.util.Collection;
 import java.util.List;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import rs.digitize.backend.entity.*;
 
 public interface CommentService {
 
-	List<Comment> findAll();
+	List<Comment> findAll(Specification<Comment> specification, Sort sort);
 
 	Comment save(Comment comment);
 

@@ -1,15 +1,17 @@
 package rs.digitize.backend.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.*;
+import java.util.*;
 import javax.persistence.*;
+import lombok.*;
 
 /**
  * User comment on a post
  */
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "comment")
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Comment extends Auditable {
@@ -26,4 +28,5 @@ public class Comment extends Auditable {
 	private Post post;
 	@Column(name = "body")
 	private String body;
+	
 }

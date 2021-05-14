@@ -1,12 +1,15 @@
 package rs.digitize.backend.controller;
 
-import rs.digitize.backend.entity.Comment;
-import rs.digitize.backend.service.CommentService;
-import lombok.RequiredArgsConstructor;
+import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import lombok.*;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import rs.digitize.backend.entity.*;
+import rs.digitize.backend.service.*;
 
 @RestController
 @RequestMapping("/comments")
@@ -15,33 +18,32 @@ public class CommentController {
 	private final CommentService commentService;
 
 	@GetMapping
-	public ResponseEntity<List<Comment>> getAll() {
-		return ResponseEntity.ok(commentService.findAll());
+	@ApiOperation(value = "", nickname = "getAllComments")
+	public ResponseEntity<List<Comment>> getAllComments(@RequestParam(name = "q", required = false) Specification<Comment> specification, @RequestParam(name = "sort", required = false) Sort sort) {
+		return ResponseEntity.ok(commentService.findAll(specification, sort));
 	}
 
 	@GetMapping("/{commentId}")
-	public ResponseEntity<Comment> getById(@PathVariable Integer commentId) {
+	@ApiOperation(value = "", nickname = "getCommentById")
+	public ResponseEntity<Comment> getCommentById(@PathVariable Integer commentId) {
 		return ResponseEntity.ok(commentService.findById(commentId));
 	}
 
 	@PostMapping
-	public ResponseEntity<Comment> save(@RequestBody Comment comment) {
-		return ResponseEntity.ok(commentService.save(comment));
+	@ApiOperation(value = "", nickname = "saveComment")
+	public ResponseEntity<Comment> saveComment(@RequestBody Comment comment) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment));
 	}
 
 	@PutMapping
-	public ResponseEntity<Comment> update(@RequestBody Comment comment) {
-		return ResponseEntity.ok(commentService.update(comment));
-	}
-
-	@PutMapping("/{commentId}")
-	public ResponseEntity<Comment> updateById(@RequestBody Comment comment, @PathVariable Integer commentId) {
-		comment.setId(commentId);
+	@ApiOperation(value = "", nickname = "updateComment")
+	public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) {
 		return ResponseEntity.ok(commentService.update(comment));
 	}
 
 	@DeleteMapping("/{commentId}")
-	public void deleteById(@PathVariable Integer commentId) {
+	@ApiOperation(value = "", nickname = "deleteCommentById")
+	public void deleteCommentById(@PathVariable Integer commentId) {
 		commentService.deleteById(commentId);
 	}
 

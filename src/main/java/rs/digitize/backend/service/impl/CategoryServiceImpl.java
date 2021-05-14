@@ -1,15 +1,14 @@
 package rs.digitize.backend.service.impl;
 
-import rs.digitize.backend.entity.Category;
-import rs.digitize.backend.repository.CategoryRepository;
-import rs.digitize.backend.service.CategoryService;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.NoSuchElementException;
+import lombok.*;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import rs.digitize.backend.entity.*;
+import rs.digitize.backend.repository.CategoryRepository;
+import rs.digitize.backend.service.CategoryService;
 
 @Data
 @Service
@@ -19,8 +18,8 @@ public class CategoryServiceImpl implements CategoryService {
 	private final CategoryRepository categoryRepository;
 
 	@Override
-	public List<Category> findAll() {
-		return categoryRepository.findAll();
+	public List<Category> findAll(Specification<Category> specification, Sort sort) {
+		return categoryRepository.findAll(specification, sort == null ? Sort.unsorted() : sort);
 	}
 
 	@Override
@@ -43,4 +42,6 @@ public class CategoryServiceImpl implements CategoryService {
 	public void deleteById(Integer categoryId) {
 		categoryRepository.deleteById(categoryId);
 	}
+
+
 }

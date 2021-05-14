@@ -1,10 +1,10 @@
 package rs.digitize.backend.repository;
 
-import rs.digitize.backend.entity.Contact;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
+import rs.digitize.backend.entity.Contact;
 
 @Repository
-public interface ContactRepository extends JpaRepository<Contact, Integer> {
+public interface ContactRepository extends JpaRepository<Contact, Integer>, JpaSpecificationExecutor<Contact> {
 
 }

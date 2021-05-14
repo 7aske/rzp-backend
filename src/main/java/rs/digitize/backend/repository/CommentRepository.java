@@ -1,10 +1,10 @@
 package rs.digitize.backend.repository;
 
-import rs.digitize.backend.entity.Comment;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
+import rs.digitize.backend.entity.Comment;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Integer> {
+public interface CommentRepository extends JpaRepository<Comment, Integer>, JpaSpecificationExecutor<Comment> {
 
 }

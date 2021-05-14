@@ -1,13 +1,15 @@
 package rs.digitize.backend.controller;
 
-import rs.digitize.backend.entity.Contact;
-import rs.digitize.backend.entity.domain.ContactType;
-import rs.digitize.backend.service.ContactService;
-import lombok.RequiredArgsConstructor;
+import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import lombok.*;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import rs.digitize.backend.entity.*;
+import rs.digitize.backend.service.*;
 
 @RestController
 @RequestMapping("/contacts")
@@ -16,39 +18,33 @@ public class ContactController {
 	private final ContactService contactService;
 
 	@GetMapping
-	public ResponseEntity<List<Contact>> getAll() {
-		return ResponseEntity.ok(contactService.findAll());
+	@ApiOperation(value = "", nickname = "getAllContacts")
+	public ResponseEntity<List<Contact>> getAllContacts(@RequestParam(name = "q", required = false) Specification<Contact> specification, @RequestParam(name = "sort", required = false) Sort sort) {
+		return ResponseEntity.ok(contactService.findAll(specification, sort));
 	}
 
 	@GetMapping("/{contactId}")
-	public ResponseEntity<Contact> getById(@PathVariable Integer contactId) {
+	@ApiOperation(value = "", nickname = "getContactById")
+	public ResponseEntity<Contact> getContactById(@PathVariable Integer contactId) {
 		return ResponseEntity.ok(contactService.findById(contactId));
 	}
 
 	@PostMapping
-	public ResponseEntity<Contact> save(@RequestBody Contact contact) {
-		return ResponseEntity.ok(contactService.save(contact));
+	@ApiOperation(value = "", nickname = "saveContact")
+	public ResponseEntity<Contact> saveContact(@RequestBody Contact contact) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(contactService.save(contact));
 	}
 
 	@PutMapping
-	public ResponseEntity<Contact> update(@RequestBody Contact contact) {
-		return ResponseEntity.ok(contactService.update(contact));
-	}
-
-	@PutMapping("/{contactId}")
-	public ResponseEntity<Contact> updateById(@RequestBody Contact contact, @PathVariable Integer contactId) {
-		contact.setId(contactId);
+	@ApiOperation(value = "", nickname = "updateContact")
+	public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
 		return ResponseEntity.ok(contactService.update(contact));
 	}
 
 	@DeleteMapping("/{contactId}")
-	public void deleteById(@PathVariable Integer contactId) {
+	@ApiOperation(value = "", nickname = "deleteContactById")
+	public void deleteContactById(@PathVariable Integer contactId) {
 		contactService.deleteById(contactId);
-	}
-
-	@GetMapping("/contactTypes")
-	public ResponseEntity<Object[]> getContactType() {
-		return ResponseEntity.ok(ContactType.values());
 	}
 
 }

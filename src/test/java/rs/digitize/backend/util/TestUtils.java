@@ -1,6 +1,5 @@
 package rs.digitize.backend.util;
 
-import com.example.backend.entity.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import rs.digitize.backend.entity.*;

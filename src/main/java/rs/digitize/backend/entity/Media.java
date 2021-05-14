@@ -1,15 +1,17 @@
 package rs.digitize.backend.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.*;
+import java.util.*;
 import javax.persistence.*;
+import lombok.*;
 
 /**
  * Uploaded image shown on the blog post
  */
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "media")
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Media extends Auditable {
@@ -20,4 +22,5 @@ public class Media extends Auditable {
 	private Integer id;
 	@Column(name = "uri")
 	private String uri;
+	
 }

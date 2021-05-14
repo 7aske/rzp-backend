@@ -1,6 +1,9 @@
 package rs.digitize.backend.config;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.cache.annotation.EnableCaching;
 import rs.digitize.backend.bean.converter.PageableConverter;
+import rs.digitize.backend.bean.filter.PostCountFilter;
 import rs.digitize.backend.search.GenericSpecificationConverter;
 import rs.digitize.backend.bean.converter.SortConverter;
 import lombok.RequiredArgsConstructor;
@@ -42,5 +45,14 @@ public class Config {
 		PropertiesFactoryBean bean = new PropertiesFactoryBean();
 		bean.setLocation(new ClassPathResource("errors.properties"));
 		return bean;
+	}
+
+	@Bean
+	public FilterRegistrationBean<PostCountFilter> postCountFilterFilterRegistrationBean() {
+		FilterRegistrationBean<PostCountFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new PostCountFilter());
+		registrationBean.addUrlPatterns("/posts");
+		registrationBean.setOrder(1);
+		return registrationBean;
 	}
 }

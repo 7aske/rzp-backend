@@ -54,7 +54,12 @@ public class PageableConverter implements Converter<String, Pageable> {
 	private Integer parsePageNumber(String[] attrs) {
 		if (attrs.length == 0)
 			return 0;
-		return Integer.parseInt(attrs[0]);
+
+		try {
+			return Integer.parseInt(attrs[0]);
+		} catch (NumberFormatException ignored) {
+			return 0;
+		}
 	}
 
 	private Integer parsePageSize(String[] attrs) {

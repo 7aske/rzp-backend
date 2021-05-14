@@ -1,15 +1,17 @@
 package rs.digitize.backend.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.*;
+import java.util.*;
 import javax.persistence.*;
+import lombok.*;
 
 /**
  * Blog post category
  */
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "category")
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Category extends Auditable {
@@ -20,4 +22,5 @@ public class Category extends Auditable {
 	private Integer id;
 	@Column(name = "name")
 	private String name;
+	
 }

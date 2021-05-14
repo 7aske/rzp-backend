@@ -1,13 +1,14 @@
 package rs.digitize.backend.service;
 
-import rs.digitize.backend.entity.PostPreview;
-import rs.digitize.backend.entity.Tag;
-
+import java.util.Collection;
 import java.util.List;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import rs.digitize.backend.entity.*;
 
 public interface TagService {
 
-	List<Tag> findAll();
+	List<Tag> findAll(Specification<Tag> specification, Sort sort);
 
 	Tag save(Tag tag);
 
@@ -17,6 +18,12 @@ public interface TagService {
 
 	void deleteById(Integer tagId);
 
-	List<PostPreview> findAllPostsById(Integer tagId);
+	List<Post> findAllPostsById(Integer tagId);
+
+	List<Post> addPostsById(Integer tagId, List<Post> posts);
+
+	List<Post> setPostsById(Integer tagId, List<Post> posts);
+
+	List<Post> deletePostsById(Integer tagId, List<Post> posts);
 
 }

@@ -1,12 +1,14 @@
 package rs.digitize.backend.service;
 
-import rs.digitize.backend.entity.Category;
-
+import java.util.Collection;
 import java.util.List;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import rs.digitize.backend.entity.*;
 
 public interface CategoryService {
 
-	List<Category> findAll();
+	List<Category> findAll(Specification<Category> specification, Sort sort);
 
 	Category save(Category category);
 

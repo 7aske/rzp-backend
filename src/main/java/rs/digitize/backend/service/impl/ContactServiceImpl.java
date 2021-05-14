@@ -1,15 +1,14 @@
 package rs.digitize.backend.service.impl;
 
-import rs.digitize.backend.entity.Contact;
-import rs.digitize.backend.repository.ContactRepository;
-import rs.digitize.backend.service.ContactService;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.NoSuchElementException;
+import lombok.*;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import rs.digitize.backend.entity.*;
+import rs.digitize.backend.repository.ContactRepository;
+import rs.digitize.backend.service.ContactService;
 
 @Data
 @Service
@@ -19,8 +18,8 @@ public class ContactServiceImpl implements ContactService {
 	private final ContactRepository contactRepository;
 
 	@Override
-	public List<Contact> findAll() {
-		return contactRepository.findAll();
+	public List<Contact> findAll(Specification<Contact> specification, Sort sort) {
+		return contactRepository.findAll(specification, sort == null ? Sort.unsorted() : sort);
 	}
 
 	@Override
@@ -43,4 +42,6 @@ public class ContactServiceImpl implements ContactService {
 	public void deleteById(Integer contactId) {
 		contactRepository.deleteById(contactId);
 	}
+
+
 }

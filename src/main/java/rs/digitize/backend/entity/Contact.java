@@ -1,16 +1,17 @@
 package rs.digitize.backend.entity;
 
-import rs.digitize.backend.entity.domain.ContactType;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.*;
+import java.util.*;
 import javax.persistence.*;
+import lombok.*;
 
 /**
  * User contact information entry
  */
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "contact")
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Contact extends Auditable {
@@ -19,12 +20,12 @@ public class Contact extends Auditable {
 	@EqualsAndHashCode.Include
 	@Column(name = "contact_id")
 	private Integer id;
+	@Column(name = "contact_type")
+	private String contactType;
 	@JoinColumn(name = "user_fk", referencedColumnName = "user_id")
 	@ManyToOne
 	private User user;
 	@Column(name = "value")
 	private String value;
-	@Column(name = "contact_type")
-	@Enumerated(EnumType.STRING)
-	private ContactType contactType;
+	
 }

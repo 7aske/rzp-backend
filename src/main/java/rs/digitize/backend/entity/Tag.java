@@ -1,17 +1,17 @@
 package rs.digitize.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
+import java.time.*;
+import java.util.*;
 import javax.persistence.*;
-import java.util.List;
+import lombok.*;
 
 /**
  * Blog post tag
  */
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "tag")
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Tag extends Auditable {
@@ -22,7 +22,9 @@ public class Tag extends Auditable {
 	private Integer id;
 	@Column(name = "name")
 	private String name;
-	@ManyToMany(mappedBy = "tags")
+	@ManyToMany
 	@JsonIgnore
-	private List<PostPreview> posts;
+	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "tag_fk"), inverseJoinColumns = @JoinColumn(name = "post_fk"))
+	private List<Post> posts;
+	
 }

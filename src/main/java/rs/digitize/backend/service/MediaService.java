@@ -1,5 +1,7 @@
 package rs.digitize.backend.service;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import rs.digitize.backend.entity.Media;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,6 +10,8 @@ import java.util.List;
 public interface MediaService {
 
 	List<Media> findAll();
+
+	List<Media> findAll(Specification<Media> specification, Sort sort);
 
 	Media save(Media media);
 

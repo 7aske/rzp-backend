@@ -1,17 +1,18 @@
 package rs.digitize.backend.controller;
 
-import rs.digitize.backend.data.ValueContainer;
-import rs.digitize.backend.bean.converter.PageableConverter;
-import rs.digitize.backend.entity.Post;
-import rs.digitize.backend.entity.Tag;
-import rs.digitize.backend.service.PostService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import io.swagger.annotations.ApiOperation;
 
 import java.util.List;
+import lombok.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import rs.digitize.backend.entity.*;
+import rs.digitize.backend.service.*;
+
 
 @RestController
 @RequestMapping("/posts")
@@ -20,59 +21,59 @@ public class PostController {
 	private final PostService postService;
 
 	@GetMapping
-	public ResponseEntity<List<Post>> getAll(
-			@RequestParam(required = false, name="q") Specification<Post> query,
-			@RequestParam(required = false, name = "page") Pageable pageable
-	) {
-		return ResponseEntity.ok(postService.findAll());
+	@ApiOperation(value = "", nickname = "getAllPosts")
+	public ResponseEntity<List<Post>> getAllPosts(@RequestParam(name = "q", required = false) Specification<Post> specification,
+	                                              @RequestParam(name = "page", required = false) Pageable pageable,
+	                                              @RequestParam(name = "sort", required = false) Sort sort) {
+		return ResponseEntity.ok(postService.findAll(specification, sort, pageable));
 	}
 
 	@GetMapping("/{postId}")
-	public ResponseEntity<Post> getById(@PathVariable String postId) {
-		try {
-			return ResponseEntity.ok(postService.findById(Integer.parseInt(postId)));
-		} catch (NumberFormatException ignored) {
-			return ResponseEntity.ok(postService.findBySlug(postId));
-		}
-	}
-
-	@GetMapping("/pages")
-	public ResponseEntity<ValueContainer<Long>> getPageCount(
-		@RequestParam(required = false, name="q") Specification<Post> query,
-		@RequestParam(required = false, name = "page") Pageable pageable
-	){
-		long rowCount = postService.count(query);
-		int pageSize = pageable == null ? PageableConverter.DEFAULT_PAGE_SIZE : pageable.getPageSize();
-		long pages = rowCount / pageSize;
-		if (pages == 0) pages = 1;
-		return ResponseEntity.ok(ValueContainer.of(pages));
+	@ApiOperation(value = "", nickname = "getPostById")
+	public ResponseEntity<Post> getPostById(@PathVariable Integer postId) {
+		return ResponseEntity.ok(postService.findById(postId));
 	}
 
 	@PostMapping
-	public ResponseEntity<Post> save(@RequestBody Post post) {
-		return ResponseEntity.ok(postService.save(post));
+	@ApiOperation(value = "", nickname = "savePost")
+	public ResponseEntity<Post> savePost(@RequestBody Post post) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(post));
 	}
 
 	@PutMapping
-	public ResponseEntity<Post> update(@RequestBody Post post) {
-		return ResponseEntity.ok(postService.update(post));
-	}
-
-	@PutMapping("/{postId}")
-	public ResponseEntity<Post> updateById(@RequestBody Post post, @PathVariable Integer postId) {
-		post.setId(postId);
+	@ApiOperation(value = "", nickname = "updatePost")
+	public ResponseEntity<Post> updatePost(@RequestBody Post post) {
 		return ResponseEntity.ok(postService.update(post));
 	}
 
 	@DeleteMapping("/{postId}")
-	public void deleteById(@PathVariable Integer postId) {
+	@ApiOperation(value = "", nickname = "deletePostById")
+	public void deletePostById(@PathVariable Integer postId) {
 		postService.deleteById(postId);
 	}
 
 	@GetMapping("/{postId}/tags")
-	public ResponseEntity<List<Tag>> getAllTags(@PathVariable Integer postId) {
+	@ApiOperation(value = "", nickname = "getPostTags")
+	public ResponseEntity<List<Tag>> getPostTags(@PathVariable Integer postId) {
 		return ResponseEntity.ok(postService.findAllTagsById(postId));
 	}
 
+	@PostMapping("/{postId}/tags")
+	@ApiOperation(value = "", nickname = "setPostTags")
+	public ResponseEntity<List<Tag>> setPostTags(@PathVariable Integer postId, @RequestBody List<Tag> tags) {
+		return ResponseEntity.ok(postService.setTagsById(postId, tags));
+	}
+
+	@PutMapping("/{postId}/tags")
+	@ApiOperation(value = "", nickname = "addPostTags")
+	public ResponseEntity<List<Tag>> addPostTags(@PathVariable Integer postId, @RequestBody List<Tag> tags) {
+		return ResponseEntity.ok(postService.addTagsById(postId, tags));
+	}
+
+	@DeleteMapping("/{postId}/tags")
+	@ApiOperation(value = "", nickname = "deletePostTags")
+	public ResponseEntity<List<Tag>> deletePostTags(@PathVariable Integer postId, @RequestBody List<Tag> tags) {
+		return ResponseEntity.ok(postService.deleteTagsById(postId, tags));
+	}
 }
 
