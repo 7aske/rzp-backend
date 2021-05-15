@@ -11,8 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.digitize.backend.entity.*;
+import rs.digitize.backend.entity.domain.RecordStatus;
+import rs.digitize.backend.search.GenericSpecificationConverter;
 import rs.digitize.backend.security.annotaions.AllowAuthor;
 import rs.digitize.backend.service.*;
+import rs.digitize.backend.util.SpecificationUtil;
+
+import static rs.digitize.backend.entity.domain.RecordStatus.*;
 
 
 @RestController
@@ -21,12 +26,22 @@ import rs.digitize.backend.service.*;
 public class PostController {
 	private final PostService postService;
 
-	@GetMapping
+	@AllowAuthor
+	@GetMapping("/all")
 	@ApiOperation(value = "", nickname = "getAllPosts")
 	public ResponseEntity<List<Post>> getAllPosts(@RequestParam(name = "q", required = false) Specification<Post> specification,
 	                                              @RequestParam(name = "page", required = false) Pageable pageable,
 	                                              @RequestParam(name = "sort", required = false) Sort sort) {
 		return ResponseEntity.ok(postService.findAll(specification, sort, pageable));
+	}
+
+	@GetMapping
+	@ApiOperation(value = "", nickname = "getAllPostsNotDeleted")
+	public ResponseEntity<List<Post>> getAllPostsNotDeleted(@RequestParam(name = "q", required = false) Specification<Post> specification,
+	                                              @RequestParam(name = "page", required = false) Pageable pageable,
+	                                              @RequestParam(name = "sort", required = false) Sort sort) {
+		Specification<Post> spec = SpecificationUtil.combineSpecificationFor(specification, ACTIVE);
+		return ResponseEntity.ok(postService.findAll(spec, sort, pageable));
 	}
 
 	@GetMapping("/{identifier}")
