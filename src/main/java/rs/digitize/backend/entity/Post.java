@@ -32,10 +32,8 @@ public class Post extends Auditable {
 	private String excerpt;
 	@Column(name = "body")
 	private String body;
-	@Column(name = "deleted")
-	private boolean deleted;
 	@Column(name = "published")
-	private boolean published;
+	private Boolean published;
 	@Column(name = "views")
 	private Integer views;
 	@Column(name = "slug")

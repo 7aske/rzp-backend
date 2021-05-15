@@ -37,12 +37,12 @@ public class Config {
 	}
 
 	@Bean(name = "passwordEncoder")
-	public static PasswordEncoder passwordEncoder(){
+	public PasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
 	}
 
 	@Bean(name = "errorMessages")
-	public static PropertiesFactoryBean errorMessages() {
+	public PropertiesFactoryBean errorMessages() {
 		PropertiesFactoryBean bean = new PropertiesFactoryBean();
 		bean.setLocation(new ClassPathResource("errors.properties"));
 		return bean;

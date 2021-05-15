@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Sort;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
+import rs.digitize.backend.security.annotaions.AllowAdmin;
+import rs.digitize.backend.security.annotaions.AllowAuthor;
 import rs.digitize.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ import java.util.List;
 public class UserController {
 	private final UserService userService;
 
+	@AllowAdmin
 	@GetMapping
 	@ApiOperation(value = "", nickname = "getAllUsers")
 	public ResponseEntity<List<User>> getAllUsers(@RequestParam(name = "q", required = false) Specification<User> specification,
@@ -37,6 +40,7 @@ public class UserController {
 		}
 	}
 
+	@AllowAdmin
 	@PostMapping
 	@ApiOperation(value = "", nickname = "saveUser")
 	public ResponseEntity<User> save(@RequestBody User user) {
@@ -49,12 +53,14 @@ public class UserController {
 		return ResponseEntity.ok(userService.update(user));
 	}
 
+	@AllowAdmin
 	@DeleteMapping("/{userId}")
 	@ApiOperation(value = "", nickname = "deleteUserById")
 	public void deleteById(@PathVariable Integer userId) {
 		userService.deleteById(userId);
 	}
 
+	@AllowAuthor
 	@GetMapping("/{userId}/roles")
 	@ApiOperation(value = "", nickname = "getAllUserRoles")
 	public ResponseEntity<List<Role>> getAllRoles(@PathVariable Integer userId) {

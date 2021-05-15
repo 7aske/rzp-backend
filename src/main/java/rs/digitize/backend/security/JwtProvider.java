@@ -33,15 +33,12 @@ public class JwtProvider {
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-		Claims claims = Jwts.claims();
-		claims.put(CLAIM_ROLES_KEY, getAuthoritiesAsStringList(authorities));
-		claims.put("user", username);
-
 		return Jwts.builder()
 				.setSubject(username)
 				.setIssuedAt(now)
 				.setExpiration(validity)
-				.setClaims(claims)
+				.claim("user", username)
+				.claim(CLAIM_ROLES_KEY, getAuthoritiesAsStringList(authorities))
 				.signWith(SignatureAlgorithm.HS512, secretKey)
 				.compact();
 	}
@@ -81,7 +78,7 @@ public class JwtProvider {
 		try {
 			Claims claims = getClaims(token);
 			return !claims.getExpiration().before(new Date());
-		} catch (JwtException | IllegalArgumentException e) {
+		} catch (NullPointerException | JwtException | IllegalArgumentException e) {
 			return false;
 		}
 	}

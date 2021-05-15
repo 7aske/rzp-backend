@@ -11,10 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
-	// TODO
-	private final JwtProvider jwtProvider;
-
 	@PostMapping("/verify")
 	public ResponseEntity<?> validate() {
 		return ResponseEntity.ok().build();

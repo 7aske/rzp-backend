@@ -20,17 +20,18 @@ STAGING_PORT="${STAGING_PORT:-"2203"}"
 PROD_USER="${PROD_USER:-"root"}"
 PROD_HOST="${PROD_HOST:-"digitize.rs"}"
 PROD_PORT="${PROD_PORT:-"22"}"
+CONTEXT_PATH="${CONTEXT_PATH:-"rzp-backend"}"
 
 deploy_staging() {
 	echo "deploying $PROFILE -> $STAGING_HOST:$STAGING_PORT"
 	mvn -P staging -D maven.test.skip=true clean install &&
-		scp -P "$STAGING_PORT" "$WAR" "$STAGING_USER@$STAGING_HOST:/var/lib/tomcat9/webapps/reboot.war"
+		scp -P "$STAGING_PORT" "$WAR" "$STAGING_USER@$STAGING_HOST:/var/lib/tomcat9/webapps/$CONTEXT_PATH.war"
 }
 
 deploy_prod() {
 	echo "deploying $PROFILE -> $PROD_HOST:$PROD_PORT"
 	mvn -D maven.test.skip=true clean install &&
-		scp -P "$STAGING_PORT" "$WAR" "$PROD_USER@$PROD_HOST:/var/lib/tomcat9/webapps/reboot.war"
+		scp -P "$STAGING_PORT" "$WAR" "$PROD_USER@$PROD_HOST:/var/lib/tomcat9/webapps/$CONTEXT_PATH.war"
 }
 
 usage() {

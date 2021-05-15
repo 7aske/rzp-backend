@@ -2,6 +2,7 @@ package rs.digitize.backend.service.impl;
 
 import org.springframework.data.domain.Sort;
 import rs.digitize.backend.entity.PostPreview;
+import rs.digitize.backend.entity.domain.RecordStatus;
 import rs.digitize.backend.repository.PostPreviewRepository;
 import rs.digitize.backend.service.PostPreviewService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class PostPreviewServiceImpl implements PostPreviewService {
 	public List<PostPreview> findAll(Pageable pageable) {
 		if (pageable == null)
 			return findAll();
-		return postPreviewRepository.findAllByPublishedTrueAndDeletedFalse(pageable);
+		return postPreviewRepository.findAllByPublishedTrueAndRecordStatus(pageable, RecordStatus.ACTIVE);
 	}
 
 	@Override
@@ -32,6 +33,6 @@ public class PostPreviewServiceImpl implements PostPreviewService {
 
 	@Override
 	public List<PostPreview> findAll() {
-		return postPreviewRepository.findAllByPublishedTrueAndDeletedFalse();
+		return postPreviewRepository.findAllByPublishedTrueAndRecordStatus(RecordStatus.ACTIVE);
 	}
 }

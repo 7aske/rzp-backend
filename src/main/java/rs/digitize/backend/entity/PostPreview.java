@@ -30,12 +30,8 @@ public class PostPreview extends Auditable {
 	private String title;
 	@Column(name = "excerpt")
 	private String excerpt;
-	@Column(name = "deleted")
-	@JsonIgnore
-	private boolean deleted;
 	@Column(name = "published")
-	@JsonIgnore
-	private boolean published;
+	private Boolean published;
 	@Column(name = "views")
 	private Integer views;
 	@Column(name = "slug")

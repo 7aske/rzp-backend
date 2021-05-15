@@ -9,11 +9,17 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import rs.digitize.backend.entity.domain.RecordStatus;
 
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import static javax.persistence.EnumType.*;
+import static rs.digitize.backend.entity.domain.RecordStatus.*;
 
 @Getter
 @Setter
@@ -29,6 +35,7 @@ public abstract class Auditable implements Serializable {
 	@LastModifiedBy
 	@JsonIgnore
 	private String lastModifiedBy;
-	private Integer recordStatus = 1;
+	@Enumerated(ORDINAL)
+	private RecordStatus recordStatus = ACTIVE;
 
 }

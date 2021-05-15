@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.digitize.backend.entity.*;
+import rs.digitize.backend.security.annotaions.AllowAuthor;
 import rs.digitize.backend.service.*;
 
 @RestController
@@ -29,18 +30,21 @@ public class CategoryController {
 		return ResponseEntity.ok(categoryService.findById(categoryId));
 	}
 
+	@AllowAuthor
 	@PostMapping
 	@ApiOperation(value = "", nickname = "saveCategory")
 	public ResponseEntity<Category> saveCategory(@RequestBody Category category) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(category));
 	}
 
+	@AllowAuthor
 	@PutMapping
 	@ApiOperation(value = "", nickname = "updateCategory")
 	public ResponseEntity<Category> updateCategory(@RequestBody Category category) {
 		return ResponseEntity.ok(categoryService.update(category));
 	}
 
+	@AllowAuthor
 	@DeleteMapping("/{categoryId}")
 	@ApiOperation(value = "", nickname = "deleteCategoryById")
 	public void deleteCategoryById(@PathVariable Integer categoryId) {

@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.*;
+import static rs.digitize.backend.entity.domain.RecordStatus.*;
 
 /**
  * Blog user or author
@@ -55,24 +56,24 @@ public class User extends Auditable implements UserDetails {
 	@Override
 	@JsonIgnore
 	public boolean isAccountNonExpired() {
-		return getRecordStatus() == 1;
+		return getRecordStatus() != EXPIRED;
 	}
 
 	@Override
 	@JsonIgnore
 	public boolean isAccountNonLocked() {
-		return getRecordStatus() == 1;
+		return getRecordStatus() != LOCKED;
 	}
 
 	@Override
 	@JsonIgnore
 	public boolean isCredentialsNonExpired() {
-		return getRecordStatus() == 1;
+		return getRecordStatus() != EXPIRED;
 	}
 
 	@Override
 	@JsonIgnore
 	public boolean isEnabled() {
-		return getRecordStatus() == 1;
+		return getRecordStatus() == ACTIVE;
 	}
 }

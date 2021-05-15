@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.digitize.backend.entity.*;
+import rs.digitize.backend.security.annotaions.AllowAuthor;
 import rs.digitize.backend.service.*;
 
 
@@ -38,18 +39,21 @@ public class PostController {
 		}
 	}
 
+	@AllowAuthor
 	@PostMapping
 	@ApiOperation(value = "", nickname = "savePost")
 	public ResponseEntity<Post> savePost(@RequestBody Post post) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(post));
 	}
 
+	@AllowAuthor
 	@PutMapping
 	@ApiOperation(value = "", nickname = "updatePost")
 	public ResponseEntity<Post> updatePost(@RequestBody Post post) {
 		return ResponseEntity.ok(postService.update(post));
 	}
 
+	@AllowAuthor
 	@DeleteMapping("/{postId}")
 	@ApiOperation(value = "", nickname = "deletePostById")
 	public void deletePostById(@PathVariable Integer postId) {
@@ -60,24 +64,6 @@ public class PostController {
 	@ApiOperation(value = "", nickname = "getPostTags")
 	public ResponseEntity<List<Tag>> getPostTags(@PathVariable Integer postId) {
 		return ResponseEntity.ok(postService.findAllTagsById(postId));
-	}
-
-	@PostMapping("/{postId}/tags")
-	@ApiOperation(value = "", nickname = "setPostTags")
-	public ResponseEntity<List<Tag>> setPostTags(@PathVariable Integer postId, @RequestBody List<Tag> tags) {
-		return ResponseEntity.ok(postService.setTagsById(postId, tags));
-	}
-
-	@PutMapping("/{postId}/tags")
-	@ApiOperation(value = "", nickname = "addPostTags")
-	public ResponseEntity<List<Tag>> addPostTags(@PathVariable Integer postId, @RequestBody List<Tag> tags) {
-		return ResponseEntity.ok(postService.addTagsById(postId, tags));
-	}
-
-	@DeleteMapping("/{postId}/tags")
-	@ApiOperation(value = "", nickname = "deletePostTags")
-	public ResponseEntity<List<Tag>> deletePostTags(@PathVariable Integer postId, @RequestBody List<Tag> tags) {
-		return ResponseEntity.ok(postService.deleteTagsById(postId, tags));
 	}
 }
 
