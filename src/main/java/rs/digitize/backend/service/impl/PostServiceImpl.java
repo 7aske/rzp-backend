@@ -14,6 +14,10 @@ import org.springframework.stereotype.Service;
 import rs.digitize.backend.entity.*;
 import rs.digitize.backend.repository.PostRepository;
 import rs.digitize.backend.service.PostService;
+import rs.digitize.backend.util.PageRequestUtil;
+
+import static rs.digitize.backend.util.PageRequestUtil.overrideSort;
+import static rs.digitize.backend.util.Sorts.CREATED_DATE_SORT;
 
 @Data
 @Service
@@ -31,9 +35,10 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<Post> findAll(Specification<Post> specification, Sort sort, Pageable pageable) {
 		if (pageable != null) {
+			pageable = overrideSort(pageable, pageable.getSort().and(CREATED_DATE_SORT));
 			return postRepository.findAll(specification, pageable).toList();
 		}
-		return postRepository.findAll(specification, sort == null ? Sort.unsorted() : sort);
+		return postRepository.findAll(specification, sort == null ?  CREATED_DATE_SORT : sort);
 	}
 
 	@Override

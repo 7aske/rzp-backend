@@ -33,4 +33,29 @@ public enum SearchOperation {
                 return null;
         }
     }
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case EQUALITY:
+                return ":";
+            case NEGATION:
+                return "!";
+            case GREATER_THAN:
+                return ">";
+            case LESS_THAN:
+                return "<";
+            case LIKE:
+            case STARTS_WITH:
+            case ENDS_WITH:
+            case CONTAINS:
+                return "~";
+            case IS_NULL:
+                return ":null";
+            case NOT_NULL:
+                return ":notnull";
+            default:
+                return null;
+        }
+    }
 }

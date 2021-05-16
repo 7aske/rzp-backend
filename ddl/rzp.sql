@@ -12,5 +12,7 @@ values (1, 'admin', '$2a$10$d6.rCRuPmri4fTy2vpItIeo49MPPFS/5tmorQASLfLawEGOip0Du
 
 insert into `user_role` (`role_fk`, `user_fk`)
 values (1, 1);
+insert into `user_role` (`role_fk`, `user_fk`)
+values (3, 1);
 
 insert into `category` (`category_id`, `name`) values (1, 'general');

@@ -121,6 +121,7 @@ create table `comment`
     `comment_id`         int auto_increment primary key,
     `user_fk`            int  not null,
     `post_fk`            int  null,
+    `comment_fk`         int  null,
     `body`               text not null,
 
     -- auditable
@@ -130,6 +131,8 @@ create table `comment`
     `record_status`      int         default 1,
 
     constraint `fk_post_comment` foreign key (`post_fk`) references `post` (`post_id`)
+        on update cascade on delete cascade,
+    constraint `fk_comment_self` foreign key (`comment_fk`) references `comment` (`comment_id`)
         on update cascade on delete cascade,
     constraint `fk_user_comment` foreign key (`user_fk`) references `user` (`user_id`)
         on update cascade on delete cascade

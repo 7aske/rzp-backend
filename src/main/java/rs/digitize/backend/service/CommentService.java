@@ -1,16 +1,16 @@
 package rs.digitize.backend.service;
 
-import java.util.Collection;
 import java.util.List;
-import org.springframework.data.domain.Sort;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import rs.digitize.backend.entity.*;
 
 public interface CommentService {
 
-	List<Comment> findAll(Specification<Comment> specification, Sort sort);
+	List<Comment> findAll(Integer postId, Specification<Comment> specification, Pageable pageable);
 
-	Comment save(Comment comment);
+	Comment save(Integer postId, Comment comment);
 
 	Comment update(Comment comment);
 

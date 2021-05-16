@@ -1,23 +1,23 @@
 package rs.digitize.backend.controller;
 
 import io.swagger.annotations.ApiOperation;
-
-import java.util.List;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.digitize.backend.entity.*;
-import rs.digitize.backend.entity.domain.RecordStatus;
-import rs.digitize.backend.search.GenericSpecificationConverter;
+import rs.digitize.backend.entity.Comment;
+import rs.digitize.backend.entity.Post;
 import rs.digitize.backend.security.annotaions.AllowAuthor;
-import rs.digitize.backend.service.*;
-import rs.digitize.backend.util.SpecificationUtil;
+import rs.digitize.backend.service.CommentService;
+import rs.digitize.backend.service.PostService;
 
-import static rs.digitize.backend.entity.domain.RecordStatus.*;
+import java.util.List;
+
+import static rs.digitize.backend.entity.domain.RecordStatus.ACTIVE;
+import static rs.digitize.backend.util.SpecificationUtil.combineSpecificationFor;
 
 
 @RestController
@@ -25,6 +25,7 @@ import static rs.digitize.backend.entity.domain.RecordStatus.*;
 @RequiredArgsConstructor
 public class PostController {
 	private final PostService postService;
+	private final CommentService commentService;
 
 	@AllowAuthor
 	@GetMapping("/all")
@@ -40,7 +41,7 @@ public class PostController {
 	public ResponseEntity<List<Post>> getAllPostsNotDeleted(@RequestParam(name = "q", required = false) Specification<Post> specification,
 	                                              @RequestParam(name = "page", required = false) Pageable pageable,
 	                                              @RequestParam(name = "sort", required = false) Sort sort) {
-		Specification<Post> spec = SpecificationUtil.combineSpecificationFor(specification, ACTIVE);
+		Specification<Post> spec = combineSpecificationFor(specification, ACTIVE);
 		return ResponseEntity.ok(postService.findAll(spec, sort, pageable));
 	}
 
@@ -75,10 +76,33 @@ public class PostController {
 		postService.deleteById(postId);
 	}
 
-	@GetMapping("/{postId}/tags")
-	@ApiOperation(value = "", nickname = "getPostTags")
-	public ResponseEntity<List<Tag>> getPostTags(@PathVariable Integer postId) {
-		return ResponseEntity.ok(postService.findAllTagsById(postId));
+	@GetMapping("/{postId}/comments")
+	@ApiOperation(value = "", nickname = "getAllPostComments")
+	public ResponseEntity<List<Comment>> getAllPostComments(@PathVariable Integer postId,
+	                                                        @RequestParam(name = "q", required = false) Specification<Comment> specification,
+	                                                        @RequestParam(name = "page", required = false) Pageable pageable) {
+		return ResponseEntity.ok(commentService.findAll(postId, specification, pageable));
+	}
+
+	@PostMapping("/{postId}/comments")
+	@ApiOperation(value = "", nickname = "savePostComment")
+	public ResponseEntity<Comment> savePostComment(@PathVariable Integer postId,
+	                                               @RequestBody Comment comment) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(postId, comment));
+	}
+
+	@PutMapping("/{postId}/comments")
+	@ApiOperation(value = "", nickname = "updatePostComment")
+	public ResponseEntity<Comment> updatePostComment(@PathVariable Integer postId,
+	                                                 @RequestBody Comment comment) {
+		return ResponseEntity.ok(commentService.update(comment));
+	}
+
+	@DeleteMapping("/{postId}/comments/{commentId}")
+	@ApiOperation(value = "", nickname = "deletePostCommentById")
+	public void deletePostCommentById(@PathVariable Integer postId,
+	                                  @PathVariable Integer commentId) {
+		commentService.deleteById(commentId);
 	}
 }
 
