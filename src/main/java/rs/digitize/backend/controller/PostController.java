@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.digitize.backend.entity.Comment;
 import rs.digitize.backend.entity.Post;
+import rs.digitize.backend.security.annotaions.AllowAdmin;
 import rs.digitize.backend.security.annotaions.AllowAuthor;
+import rs.digitize.backend.security.annotaions.AllowUser;
 import rs.digitize.backend.service.CommentService;
 import rs.digitize.backend.service.PostService;
 
@@ -84,6 +86,7 @@ public class PostController {
 		return ResponseEntity.ok(commentService.findAll(postId, specification, pageable));
 	}
 
+	@AllowUser
 	@PostMapping("/{postId}/comments")
 	@ApiOperation(value = "", nickname = "savePostComment")
 	public ResponseEntity<Comment> savePostComment(@PathVariable Integer postId,
@@ -91,6 +94,7 @@ public class PostController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(postId, comment));
 	}
 
+	@AllowAdmin
 	@PutMapping("/{postId}/comments")
 	@ApiOperation(value = "", nickname = "updatePostComment")
 	public ResponseEntity<Comment> updatePostComment(@PathVariable Integer postId,
@@ -98,6 +102,7 @@ public class PostController {
 		return ResponseEntity.ok(commentService.update(comment));
 	}
 
+	@AllowAdmin
 	@DeleteMapping("/{postId}/comments/{commentId}")
 	@ApiOperation(value = "", nickname = "deletePostCommentById")
 	public void deletePostCommentById(@PathVariable Integer postId,

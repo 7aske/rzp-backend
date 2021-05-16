@@ -2,10 +2,16 @@ package rs.digitize.backend.controller;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import rs.digitize.backend.data.ChangePasswordDto;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
 import rs.digitize.backend.security.annotaions.AllowAdmin;
+import rs.digitize.backend.security.annotaions.AllowAuthenticated;
 import rs.digitize.backend.security.annotaions.AllowAuthor;
+import rs.digitize.backend.security.annotaions.AllowUser;
 import rs.digitize.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +36,13 @@ public class UserController {
 		return ResponseEntity.ok(userService.findAll(specification, sort, pageable));
 	}
 
-	@GetMapping("/{userId}")
+	@GetMapping("/{identifier}")
 	@ApiOperation(value = "", nickname = "getUserById")
-	public ResponseEntity<User> getById(@PathVariable String userId) {
+	public ResponseEntity<User> getById(@PathVariable String identifier) {
 		try {
-			return ResponseEntity.ok(userService.findById(Integer.parseInt(userId)));
+			return ResponseEntity.ok(userService.findById(Integer.parseInt(identifier)));
 		} catch (NumberFormatException e) {
-			return ResponseEntity.ok(userService.findByUsername(userId));
+			return ResponseEntity.ok(userService.findByUsername(identifier));
 		}
 	}
 
@@ -47,10 +53,25 @@ public class UserController {
 		return ResponseEntity.ok(userService.save(user));
 	}
 
+	@AllowUser
 	@PutMapping
 	@ApiOperation(value = "", nickname = "updateUser")
 	public ResponseEntity<User> update(@RequestBody User user) {
 		return ResponseEntity.ok(userService.update(user));
+	}
+
+	@AllowAuthenticated
+	@PutMapping("/password")
+	@ApiOperation(value = "", nickname = "updateUserPassword")
+	public void updateUserPassword(@AuthenticationPrincipal User user, @RequestBody ChangePasswordDto passwordDto) {
+		userService.changePassword(user, passwordDto);
+	}
+
+	@AllowAdmin
+	@DeleteMapping("/{userId}/password")
+	@ApiOperation(value = "", nickname = "resetUserPassword")
+	public void resetUserPassword(@PathVariable Integer userId) {
+		userService.resetPassword(userId);
 	}
 
 	@AllowAdmin

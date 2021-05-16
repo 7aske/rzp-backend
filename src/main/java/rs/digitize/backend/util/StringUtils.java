@@ -18,4 +18,8 @@ public class StringUtils extends org.springframework.util.StringUtils {
 				.normalize(toBeNormalized, Normalizer.Form.NFKD)
 				.replaceAll("[^\\p{ASCII}]", "");
 	}
+
+	public static boolean falsy(String str) {
+		return str == null || str.isEmpty();
+	}
 }

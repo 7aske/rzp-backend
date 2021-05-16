@@ -1,6 +1,10 @@
 package rs.digitize.backend.controller;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import rs.digitize.backend.data.ErrorInfo;
+import rs.digitize.backend.data.ResponseError;
 import rs.digitize.backend.exception.http.HttpUnauthorizedException;
 import rs.digitize.backend.exception.io.MediaUploadException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,9 +19,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+
 
 @ControllerAdvice
 @Component
@@ -27,70 +33,90 @@ public class ErrorController {
 
 	@ExceptionHandler({
 			NoSuchElementException.class,
+			UsernameNotFoundException.class
 	})
-	protected ResponseEntity<ErrorInfo> handleNotFound(RuntimeException ex, HttpServletRequest request) {
+	protected ResponseEntity<ResponseError> handleNotFound(RuntimeException ex, HttpServletRequest request) {
 		HttpStatus status = HttpStatus.NOT_FOUND;
-		return getErrorInfoResponseEntity(ex, request, status);
+		return getResponseError(getErrorMessage(ex), request, status);
 	}
 
 	@ExceptionHandler({
 			IllegalArgumentException.class,
+			IllegalStateException.class,
 			SQLIntegrityConstraintViolationException.class,
 			DataIntegrityViolationException.class,
 			HttpMessageNotReadableException.class,
+			MethodArgumentTypeMismatchException.class
 	})
-	protected ResponseEntity<ErrorInfo> handleBadRequest(RuntimeException ex, HttpServletRequest request) {
+	protected ResponseEntity<ResponseError> handleBadRequest(RuntimeException ex, HttpServletRequest request) {
+		String message = ex.getMessage();
+		if (ex instanceof DataIntegrityViolationException) {
+			Throwable rootCause = ((DataIntegrityViolationException) ex).getRootCause();
+			if (rootCause != null && rootCause.getMessage().contains("Cannot delete or update a parent row")) {
+				message = "error.cannotDelete";
+			} else if (rootCause instanceof SQLException) {
+				message = rootCause.getMessage();
+			}
+		} else if (ex instanceof  HttpMessageNotReadableException){
+			if (ex.getCause() instanceof UnrecognizedPropertyException) {
+				String propertyName = ((UnrecognizedPropertyException) ex.getCause()).getPropertyName();
+				String className = ((UnrecognizedPropertyException) ex.getCause()).getReferringClass().getSimpleName();
+				message = String.format("Unrecognized property '%s' in type '%s'", propertyName, className);
+			}
+		}
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		return getErrorInfoResponseEntity(ex, request, status);
+		return getResponseError(getErrorMessage(message), request, status);
 	}
 
 
-	@ExceptionHandler({
-			HttpUnauthorizedException.class,
-			UsernameNotFoundException.class
-	})
-	protected ResponseEntity<ErrorInfo> handleUnauthorized(RuntimeException ex, HttpServletRequest request) {
-		HttpStatus status = HttpStatus.UNAUTHORIZED;
-		return getErrorInfoResponseEntity(ex, request, status);
-	}
+	// @ExceptionHandler({
+	//
+	// })
+	// protected ResponseEntity<ErrorInfo> handleUnauthorized(RuntimeException ex, HttpServletRequest request) {
+	// 	HttpStatus status = HttpStatus.UNAUTHORIZED;
+	// 	return getErrorInfoResponseEntity(getErrorMessage(ex), request, status);
+	// }
 
 	@ExceptionHandler({
-			AccessDeniedException.class,
+			AccessDeniedException.class
 	})
-	protected ResponseEntity<ErrorInfo> handleForbidden(RuntimeException ex, HttpServletRequest request) {
+	protected ResponseEntity<ResponseError> handleForbidden(RuntimeException ex, HttpServletRequest request) {
 		HttpStatus status = HttpStatus.FORBIDDEN;
-		return getErrorInfoResponseEntity(ex, request, status);
+		return getResponseError(getErrorMessage(ex), request, status);
 	}
 
 	@ExceptionHandler({
-			MediaUploadException.class,
 			Exception.class
 	})
-	protected ResponseEntity<ErrorInfo> handleInternalServerError(RuntimeException ex, HttpServletRequest request) {
+	protected ResponseEntity<ResponseError> handleInternalServerError(RuntimeException ex, HttpServletRequest request) {
 		ex.printStackTrace();
+		//
+		ResponseStatus responseStatus = ex.getClass().getAnnotation(ResponseStatus.class);
+		if (responseStatus != null) {
+			String message = responseStatus.reason();
+			if (ex.getMessage() != null)
+				message = String.format("%s: %s", responseStatus.reason(), ex.getMessage());
+
+			return getResponseError(message, request, responseStatus.code());
+		}
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-		return getErrorInfoResponseEntity(ex, request, status);
+		return getResponseError(getErrorMessage(ex), request, status);
 	}
 
 	private String getErrorMessage(String messageProp) {
+		if (messageProp == null)
+			messageProp = "error.generic";
+
 		String message = properties.getProperty(messageProp);
 		return message == null ? messageProp : message;
 	}
 
-	private ResponseEntity<ErrorInfo> getErrorInfoResponseEntity(RuntimeException exception, HttpServletRequest request, HttpStatus status) {
-		ErrorInfo errorInfo = new ErrorInfo(status, request, getErrorMessage(exception));
+	private ResponseEntity<ResponseError> getResponseError(String message, HttpServletRequest request, HttpStatus status) {
+		ResponseError errorInfo = new ResponseError(status, request, message);
 		return ResponseEntity.status(errorInfo.getCode()).body(errorInfo);
 	}
 
 	private String getErrorMessage(Exception exception) {
-		if (exception instanceof DataIntegrityViolationException) {
-			return getErrorMessage(exception.getCause().getCause().getMessage());
-		}
-
-		if (exception instanceof HttpMessageNotReadableException) {
-			return getErrorMessage(exception.getCause().getMessage());
-		}
-
 		return getErrorMessage(exception.getMessage());
 	}
 }

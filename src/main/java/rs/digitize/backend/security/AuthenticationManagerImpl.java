@@ -14,7 +14,11 @@ import rs.digitize.backend.entity.User;
 import rs.digitize.backend.repository.UserRepository;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Properties;
+
+import static rs.digitize.backend.entity.domain.RecordStatus.EXPIRED;
+import static rs.digitize.backend.util.StringUtils.falsy;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +37,10 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException(errors.getProperty("auth.login.user-not-found")));
 
-		if (password == null)
+		if (user.getRecordStatus() == EXPIRED)
+			return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+
+		if (falsy((String)password))
 			throw new BadCredentialsException(errors.getProperty("auth.login.invalid-credentials"));
 
 		if (!passwordEncoder.matches((String) password, user.getPassword()))

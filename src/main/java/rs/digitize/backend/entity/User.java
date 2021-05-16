@@ -76,4 +76,9 @@ public class User extends Auditable implements UserDetails {
 	public boolean isEnabled() {
 		return getRecordStatus() == ACTIVE;
 	}
+
+	@JsonIgnore
+	public String getDefaultPassword(){
+		return "blog-" + getUsername();
+	}
 }
