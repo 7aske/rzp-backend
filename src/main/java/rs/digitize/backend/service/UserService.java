@@ -32,5 +32,5 @@ public interface UserService {
 
 	User register(RegisterUserDto dto);
 
-	void resetPassword(Integer userId);
+	User resetPassword(Integer userId);
 }

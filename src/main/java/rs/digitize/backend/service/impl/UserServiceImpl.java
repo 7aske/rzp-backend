@@ -126,11 +126,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void resetPassword(Integer userId) {
+	public User resetPassword(Integer userId) {
 		User user = findById(userId);
 		user.setPassword(passwordEncoder.encode(user.getDefaultPassword()));
 		user.setRecordStatus(EXPIRED);
-		userRepository.save(user);
+		return userRepository.save(user);
 	}
 
 	public void validateEmail(String emailStr) {

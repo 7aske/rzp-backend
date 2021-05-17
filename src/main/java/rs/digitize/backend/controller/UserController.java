@@ -76,8 +76,8 @@ public class UserController {
 	@AllowAdmin
 	@DeleteMapping("/{userId}/password")
 	@ApiOperation(value = "", nickname = "resetUserPassword")
-	public void resetUserPassword(@PathVariable Integer userId) {
-		userService.resetPassword(userId);
+	public ResponseEntity<User> resetUserPassword(@PathVariable Integer userId) {
+		return ResponseEntity.ok(userService.resetPassword(userId));
 	}
 
 	@AllowAdmin
