@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 import static rs.digitize.backend.entity.Role.USER_ROLE;
 import static rs.digitize.backend.entity.domain.RecordStatus.ACTIVE;
 import static rs.digitize.backend.entity.domain.RecordStatus.EXPIRED;
+import static rs.digitize.backend.util.StringUtils.falsy;
 
 @Data
 @Service
@@ -71,14 +72,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User save(User user) {
-		if (user.getPassword() != null)
+		if (!falsy(user.getPassword()))
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		else {
 			user.setRecordStatus(EXPIRED);
 			user.setPassword(passwordEncoder.encode(user.getDefaultPassword()));
 		}
 
-		// else password is null and set at first login
 		return userRepository.save(user);
 	}
 
