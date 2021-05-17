@@ -10,15 +10,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.digitize.backend.data.ChangePasswordDto;
+import rs.digitize.backend.data.RegisterUserDto;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
+import rs.digitize.backend.exception.EmailValidationException;
 import rs.digitize.backend.exception.InvalidPasswordException;
 import rs.digitize.backend.exception.PasswordMismatchException;
 import rs.digitize.backend.exception.PasswordValidationException;
 import rs.digitize.backend.repository.UserRepository;
 import rs.digitize.backend.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -115,6 +119,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User register(RegisterUserDto dto) {
+		User user = makeUser(dto);
+		user.getRoles().add(USER_ROLE);
+		return userRepository.save(user);
+	}
+
+	@Override
 	public void resetPassword(Integer userId) {
 		User user = findById(userId);
 		user.setPassword(passwordEncoder.encode(user.getDefaultPassword()));
@@ -122,11 +133,11 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 	}
 
-	// public static void validateEmail(String emailStr) {
-	// 	Matcher matcher = EMAIL_REGEX.matcher(emailStr);
-	// 	if (matcher.find())
-	// 		throw new EmailValidationException();
-	// }
+	public void validateEmail(String emailStr) {
+		Matcher matcher = EMAIL_REGEX.matcher(emailStr);
+		if (!matcher.find())
+			throw new EmailValidationException();
+	}
 
 	public static void validatePassword(String passwordStr) {
 		if (passwordStr == null)
@@ -139,5 +150,22 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<Role> findAllRolesById(Integer userId) {
 		return findById(userId).getRoles();
+	}
+
+	private User makeUser(RegisterUserDto dto) {
+		if (!dto.getPassword().equals(dto.getConfirm()))
+			throw new PasswordMismatchException();
+		validateEmail(dto.getEmail());
+		validatePassword(dto.getPassword());
+
+		User user = new User();
+		user.setUsername(dto.getUsername().toLowerCase(Locale.ROOT).trim());
+		user.setDisplayName(user.getUsername());
+		user.setPassword(passwordEncoder.encode(dto.getPassword()));
+		user.setFirstName(dto.getFirstName().trim());
+		user.setLastName(dto.getLastName().trim());
+		user.setEmail(dto.getEmail().trim());
+		user.setRoles(new ArrayList<>());
+		return user;
 	}
 }

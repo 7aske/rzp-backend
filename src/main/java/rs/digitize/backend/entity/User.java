@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import rs.digitize.backend.data.RegisterUserDto;
 
 import javax.persistence.*;
 import java.util.Collection;

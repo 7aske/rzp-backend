@@ -2,6 +2,7 @@ package rs.digitize.backend.service;
 
 import org.springframework.data.domain.Sort;
 import rs.digitize.backend.data.ChangePasswordDto;
+import rs.digitize.backend.data.RegisterUserDto;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,8 @@ public interface UserService {
 	User findByUsername(String username);
 
 	void changePassword(User user, ChangePasswordDto passwordDto);
+
+	User register(RegisterUserDto dto);
 
 	void resetPassword(Integer userId);
 }

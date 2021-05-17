@@ -2,10 +2,12 @@ package rs.digitize.backend.controller;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import rs.digitize.backend.data.ChangePasswordDto;
+import rs.digitize.backend.data.RegisterUserDto;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
 import rs.digitize.backend.security.annotaions.AllowAdmin;
@@ -50,7 +52,13 @@ public class UserController {
 	@PostMapping
 	@ApiOperation(value = "", nickname = "saveUser")
 	public ResponseEntity<User> save(@RequestBody User user) {
-		return ResponseEntity.ok(userService.save(user));
+		return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
+	}
+
+	@PostMapping("/register")
+	@ApiOperation(value = "", nickname = "registerUser")
+	public ResponseEntity<User> save(@RequestBody RegisterUserDto dto) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(dto));
 	}
 
 	@AllowUser
