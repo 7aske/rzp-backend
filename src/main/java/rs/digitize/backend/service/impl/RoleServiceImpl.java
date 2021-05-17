@@ -1,13 +1,13 @@
 package rs.digitize.backend.service.impl;
 
-import rs.digitize.backend.entity.Role;
-import rs.digitize.backend.entity.User;
-import rs.digitize.backend.repository.RoleRepository;
-import rs.digitize.backend.service.RoleService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import rs.digitize.backend.entity.Role;
+import rs.digitize.backend.entity.User;
+import rs.digitize.backend.repository.RoleRepository;
+import rs.digitize.backend.service.RoleService;
 
 import java.util.List;
 import java.util.NoSuchElementException;

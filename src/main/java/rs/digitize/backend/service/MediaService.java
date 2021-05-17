@@ -2,8 +2,8 @@ package rs.digitize.backend.service;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import rs.digitize.backend.entity.Media;
 import org.springframework.web.multipart.MultipartFile;
+import rs.digitize.backend.entity.Media;
 
 import java.util.List;
 

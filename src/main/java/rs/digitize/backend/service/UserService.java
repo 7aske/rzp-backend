@@ -1,12 +1,12 @@
 package rs.digitize.backend.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import rs.digitize.backend.data.ChangePasswordDto;
 import rs.digitize.backend.data.RegisterUserDto;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 

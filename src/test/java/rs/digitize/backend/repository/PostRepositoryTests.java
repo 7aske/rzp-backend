@@ -1,19 +1,19 @@
 package rs.digitize.backend.repository;
 
-import rs.digitize.backend.entity.Category;
-import rs.digitize.backend.entity.Post;
-import rs.digitize.backend.entity.Tag;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import rs.digitize.backend.entity.Category;
+import rs.digitize.backend.entity.Post;
+import rs.digitize.backend.entity.Tag;
 
 import java.util.Collections;
 
-import static rs.digitize.backend.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static rs.digitize.backend.util.TestUtils.*;
 
 @Testcontainers
 @SpringBootTest

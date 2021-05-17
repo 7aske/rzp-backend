@@ -1,11 +1,14 @@
 package rs.digitize.backend.controller;
 
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import rs.digitize.backend.data.ChangePasswordDto;
 import rs.digitize.backend.data.RegisterUserDto;
 import rs.digitize.backend.entity.Role;
@@ -15,11 +18,6 @@ import rs.digitize.backend.security.annotaions.AllowAuthenticated;
 import rs.digitize.backend.security.annotaions.AllowAuthor;
 import rs.digitize.backend.security.annotaions.AllowUser;
 import rs.digitize.backend.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 

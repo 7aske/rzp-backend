@@ -12,14 +12,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import rs.digitize.backend.entity.domain.RecordStatus;
 
 import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import static javax.persistence.EnumType.*;
-import static rs.digitize.backend.entity.domain.RecordStatus.*;
+import static javax.persistence.EnumType.ORDINAL;
+import static rs.digitize.backend.entity.domain.RecordStatus.ACTIVE;
 
 @Getter
 @Setter

@@ -1,16 +1,17 @@
 package rs.digitize.backend.controller;
 
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.digitize.backend.entity.*;
+import rs.digitize.backend.entity.Category;
 import rs.digitize.backend.security.annotaions.AllowAuthor;
-import rs.digitize.backend.service.*;
+import rs.digitize.backend.service.CategoryService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/categories")

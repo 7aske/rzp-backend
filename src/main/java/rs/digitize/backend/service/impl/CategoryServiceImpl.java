@@ -1,14 +1,17 @@
 package rs.digitize.backend.service.impl;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import rs.digitize.backend.entity.*;
+import rs.digitize.backend.entity.Category;
 import rs.digitize.backend.repository.CategoryRepository;
 import rs.digitize.backend.service.CategoryService;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Data
 @Service

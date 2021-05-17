@@ -1,12 +1,12 @@
 package rs.digitize.backend.bean.listener;
 
-import rs.digitize.backend.bean.ProfileManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import rs.digitize.backend.bean.ProfileManager;
 
 @Component
 @RequiredArgsConstructor

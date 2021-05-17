@@ -1,9 +1,5 @@
 package rs.digitize.backend.security;
 
-import rs.digitize.backend.data.ErrorInfo;
-import rs.digitize.backend.data.LoginResponse;
-import rs.digitize.backend.entity.User;
-import rs.digitize.backend.util.ObjectMapperUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +8,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import rs.digitize.backend.data.ErrorInfo;
+import rs.digitize.backend.data.LoginResponse;
+import rs.digitize.backend.entity.User;
+import rs.digitize.backend.util.ObjectMapperUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;

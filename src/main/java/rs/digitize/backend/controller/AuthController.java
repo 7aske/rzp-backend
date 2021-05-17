@@ -1,6 +1,5 @@
 package rs.digitize.backend.controller;
 
-import rs.digitize.backend.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

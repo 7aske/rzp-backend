@@ -1,14 +1,14 @@
 package rs.digitize.backend.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 import rs.digitize.backend.entity.PostPreview;
 import rs.digitize.backend.entity.domain.RecordStatus;
 import rs.digitize.backend.repository.PostPreviewRepository;
 import rs.digitize.backend.service.PostPreviewService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

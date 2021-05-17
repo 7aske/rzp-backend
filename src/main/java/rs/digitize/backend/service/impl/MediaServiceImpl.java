@@ -1,19 +1,19 @@
 package rs.digitize.backend.service.impl;
 
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import rs.digitize.backend.entity.Media;
-import rs.digitize.backend.exception.io.MediaUploadException;
-import rs.digitize.backend.repository.MediaRepository;
-import rs.digitize.backend.service.MediaService;
-import rs.digitize.backend.util.IOUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import rs.digitize.backend.entity.Media;
+import rs.digitize.backend.exception.io.MediaUploadException;
+import rs.digitize.backend.repository.MediaRepository;
+import rs.digitize.backend.service.MediaService;
+import rs.digitize.backend.util.IOUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

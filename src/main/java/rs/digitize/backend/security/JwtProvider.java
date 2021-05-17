@@ -1,13 +1,16 @@
 package rs.digitize.backend.security;
 
-import rs.digitize.backend.entity.User;
-import rs.digitize.backend.service.UserService;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import rs.digitize.backend.entity.User;
+import rs.digitize.backend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;

@@ -6,13 +6,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import rs.digitize.backend.data.RegisterUserDto;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
-import static com.fasterxml.jackson.annotation.JsonProperty.Access.*;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 import static rs.digitize.backend.entity.domain.RecordStatus.*;
 
 /**

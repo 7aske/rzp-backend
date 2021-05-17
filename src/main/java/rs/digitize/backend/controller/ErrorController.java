@@ -1,12 +1,6 @@
 package rs.digitize.backend.controller;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import rs.digitize.backend.data.ErrorInfo;
-import rs.digitize.backend.data.ResponseError;
-import rs.digitize.backend.exception.http.HttpUnauthorizedException;
-import rs.digitize.backend.exception.io.MediaUploadException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import rs.digitize.backend.data.ResponseError;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

@@ -1,24 +1,24 @@
 package rs.digitize.backend.service;
 
-import rs.digitize.backend.entity.Role;
-import rs.digitize.backend.entity.User;
-import rs.digitize.backend.repository.RoleRepository;
-import rs.digitize.backend.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import rs.digitize.backend.entity.Role;
+import rs.digitize.backend.entity.User;
+import rs.digitize.backend.repository.RoleRepository;
+import rs.digitize.backend.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static rs.digitize.backend.util.TestUtils.getRole;
-import static rs.digitize.backend.util.TestUtils.getUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static rs.digitize.backend.util.TestUtils.getRole;
+import static rs.digitize.backend.util.TestUtils.getUser;
 
 @Testcontainers
 @SpringBootTest

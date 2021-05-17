@@ -1,9 +1,9 @@
 package rs.digitize.backend.service;
 
-import org.springframework.data.domain.Sort;
-import rs.digitize.backend.entity.PostPreview;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import rs.digitize.backend.entity.PostPreview;
 
 import java.util.List;
 

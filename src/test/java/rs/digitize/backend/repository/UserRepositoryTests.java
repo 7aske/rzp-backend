@@ -1,20 +1,21 @@
 package rs.digitize.backend.repository;
 
-import rs.digitize.backend.entity.Role;
-import rs.digitize.backend.entity.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import rs.digitize.backend.entity.Role;
+import rs.digitize.backend.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static rs.digitize.backend.util.TestUtils.getRole;
 import static rs.digitize.backend.util.TestUtils.getUser;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @SpringBootTest

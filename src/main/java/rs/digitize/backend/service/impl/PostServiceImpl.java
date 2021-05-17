@@ -1,20 +1,22 @@
 package rs.digitize.backend.service.impl;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import rs.digitize.backend.entity.*;
+import rs.digitize.backend.entity.Post;
+import rs.digitize.backend.entity.Tag;
 import rs.digitize.backend.repository.PostRepository;
 import rs.digitize.backend.service.PostService;
-import rs.digitize.backend.util.PageRequestUtil;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static rs.digitize.backend.util.PageRequestUtil.overrideSort;
 import static rs.digitize.backend.util.Sorts.CREATED_DATE_SORT;

@@ -1,14 +1,8 @@
 package rs.digitize.backend.config;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.cache.annotation.EnableCaching;
-import rs.digitize.backend.bean.converter.PageableConverter;
-import rs.digitize.backend.bean.filter.PostCountFilter;
-import rs.digitize.backend.bean.filter.UserCountFilter;
-import rs.digitize.backend.search.GenericSpecificationConverter;
-import rs.digitize.backend.bean.converter.SortConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.ConverterRegistry;
@@ -16,6 +10,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import rs.digitize.backend.bean.converter.PageableConverter;
+import rs.digitize.backend.bean.converter.SortConverter;
+import rs.digitize.backend.bean.filter.PostCountFilter;
+import rs.digitize.backend.bean.filter.UserCountFilter;
+import rs.digitize.backend.search.GenericSpecificationConverter;
 
 import javax.annotation.PostConstruct;
 

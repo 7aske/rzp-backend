@@ -1,10 +1,10 @@
 package rs.digitize.backend.service;
 
-import java.util.Collection;
-import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import rs.digitize.backend.entity.*;
+import rs.digitize.backend.entity.Category;
+
+import java.util.List;
 
 public interface CategoryService {
 

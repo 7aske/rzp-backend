@@ -1,10 +1,12 @@
 package rs.digitize.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.time.*;
-import java.util.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import lombok.*;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Blog post

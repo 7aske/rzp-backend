@@ -6,8 +6,8 @@ import rs.digitize.backend.entity.domain.RecordStatus;
 import rs.digitize.backend.search.GenericSpecificationConverter;
 import rs.digitize.backend.search.SearchOperation;
 
-import static lombok.AccessLevel.*;
-import static rs.digitize.backend.search.SearchOperation.*;
+import static lombok.AccessLevel.PRIVATE;
+import static rs.digitize.backend.search.SearchOperation.EQUALITY;
 
 @NoArgsConstructor(access = PRIVATE)
 public class SpecificationUtil {
