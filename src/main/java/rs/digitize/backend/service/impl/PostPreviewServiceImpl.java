@@ -11,6 +11,7 @@ import rs.digitize.backend.repository.PostPreviewRepository;
 import rs.digitize.backend.service.PostPreviewService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +35,13 @@ public class PostPreviewServiceImpl implements PostPreviewService {
 	@Override
 	public List<PostPreview> findAll() {
 		return postPreviewRepository.findAllByPublishedTrueAndRecordStatus(RecordStatus.ACTIVE);
+	}
+
+	@Override
+	public PostPreview setRecordStatus(Integer postId, RecordStatus recordStatus) {
+		PostPreview postPreview = postPreviewRepository.findById(postId)
+				.orElseThrow(() -> new NoSuchElementException("PostPreview.notFound"));
+		postPreview.setRecordStatus(recordStatus);
+		return postPreviewRepository.save(postPreview);
 	}
 }

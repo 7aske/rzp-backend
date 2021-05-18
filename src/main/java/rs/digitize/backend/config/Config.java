@@ -51,15 +51,7 @@ public class Config {
 	public FilterRegistrationBean<PostCountFilter> postCountFilterFilterRegistrationBean() {
 		FilterRegistrationBean<PostCountFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new PostCountFilter());
-		registrationBean.addUrlPatterns("/posts");
-		return registrationBean;
-	}
-
-	@Bean
-	public FilterRegistrationBean<PostCountFilter> postPreviewCountFilterFilterRegistrationBean() {
-		FilterRegistrationBean<PostCountFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new PostCountFilter());
-		registrationBean.addUrlPatterns("/previews");
+		registrationBean.addUrlPatterns("/posts", "/posts/all", "/previews", "/previews/all");
 		return registrationBean;
 	}
 
