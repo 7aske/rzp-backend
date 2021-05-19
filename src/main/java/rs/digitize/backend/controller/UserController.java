@@ -62,7 +62,9 @@ public class UserController {
 	@AllowUser
 	@PutMapping
 	@ApiOperation(value = "", nickname = "updateUser")
-	public ResponseEntity<User> update(@RequestBody User user) {
+	public ResponseEntity<User> update(@AuthenticationPrincipal User auth, @RequestBody User user) {
+		if (!auth.isAdmin())
+			user.setRoles(auth.getRoles());
 		return ResponseEntity.ok(userService.update(user));
 	}
 

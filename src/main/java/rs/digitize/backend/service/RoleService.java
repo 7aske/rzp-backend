@@ -15,6 +15,8 @@ public interface RoleService {
 
 	Role findById(Integer roleId);
 
+	Role findByName(String roleId);
+
 	void deleteById(Integer roleId);
 
 	List<User> findAllUsersById(Integer roleId);

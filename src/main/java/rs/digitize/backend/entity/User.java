@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+import static rs.digitize.backend.entity.Role.*;
 import static rs.digitize.backend.entity.domain.RecordStatus.*;
 
 /**
@@ -46,6 +47,11 @@ public class User extends Auditable implements UserDetails {
 	@JsonProperty(access = WRITE_ONLY)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_fk"), inverseJoinColumns = @JoinColumn(name = "role_fk"))
 	private List<Role> roles;
+
+	@JsonIgnore
+	public boolean isAdmin() {
+		return roles.stream().anyMatch(r -> r.equals(ADMIN_ROLE));
+	}
 
 	@Override
 	@JsonIgnore

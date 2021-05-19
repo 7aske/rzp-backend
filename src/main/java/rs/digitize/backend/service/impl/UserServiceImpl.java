@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import rs.digitize.backend.exception.InvalidPasswordException;
 import rs.digitize.backend.exception.PasswordMismatchException;
 import rs.digitize.backend.exception.PasswordValidationException;
 import rs.digitize.backend.repository.UserRepository;
+import rs.digitize.backend.service.RoleService;
 import rs.digitize.backend.service.UserService;
 
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static rs.digitize.backend.entity.Role.USER_ROLE;
 import static rs.digitize.backend.entity.domain.RecordStatus.ACTIVE;
@@ -38,6 +42,7 @@ import static rs.digitize.backend.util.StringUtils.falsy;
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
+	private final RoleService roleService;
 	private final PasswordEncoder passwordEncoder;
 
 	public static final Pattern EMAIL_REGEX =
@@ -85,6 +90,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User update(User user) {
 		User existingUser = findById(user.getId());
+		user.setRoles(user.getRoles().stream().map(r -> {
+			Role role = r;
+			if (r.getId() == null)
+				role = roleService.findByName(r.getName().replace(Role.PREFIX, ""));
+			return role;
+		}).collect(Collectors.toList()));
 		// preserve password
 		user.setPassword(existingUser.getPassword());
 

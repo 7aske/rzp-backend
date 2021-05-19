@@ -19,7 +19,10 @@ import java.util.List;
 @Table(name = "role")
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Role extends Auditable implements GrantedAuthority {
+	public static final Role ADMIN_ROLE = new Role(1, "ADMIN");
+	public static final Role AUTHOR_ROLE = new Role(2, "AUTHOR");
 	public static final Role USER_ROLE = new Role(3, "USER");
+	public static final String PREFIX = "ROLE_";
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
@@ -39,6 +42,6 @@ public class Role extends Auditable implements GrantedAuthority {
 	@Override
 	@JsonIgnore
 	public String getAuthority() {
-		return String.format("ROLE_%s", name);
+		return PREFIX + name;
 	}
 }
