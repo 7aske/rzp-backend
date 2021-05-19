@@ -13,6 +13,9 @@ import rs.digitize.backend.service.PostPreviewService;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static rs.digitize.backend.util.PageRequestUtil.overrideSort;
+import static rs.digitize.backend.util.Sorts.CREATED_DATE_SORT;
+
 @Service
 @RequiredArgsConstructor
 public class PostPreviewServiceImpl implements PostPreviewService {
@@ -27,9 +30,11 @@ public class PostPreviewServiceImpl implements PostPreviewService {
 
 	@Override
 	public List<PostPreview> findAll(Specification<PostPreview> specification, Sort sort, Pageable pageable) {
-		if (pageable != null)
+		if (pageable != null) {
+			pageable = overrideSort(pageable, pageable.getSort().and(CREATED_DATE_SORT));
 			return postPreviewRepository.findAll(specification, pageable).toList();
-		return postPreviewRepository.findAll(specification, sort == null ? Sort.unsorted() : sort);
+		}
+		return postPreviewRepository.findAll(specification, sort == null ? CREATED_DATE_SORT : sort);
 	}
 
 	@Override
