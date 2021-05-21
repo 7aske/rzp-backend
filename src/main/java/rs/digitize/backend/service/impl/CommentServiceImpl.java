@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import rs.digitize.backend.entity.Comment;
 import rs.digitize.backend.entity.Post;
+import rs.digitize.backend.exception.CommentEmptyException;
 import rs.digitize.backend.repository.CommentRepository;
 import rs.digitize.backend.service.CommentService;
 import rs.digitize.backend.service.PostService;
@@ -48,6 +49,9 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public Comment save(Integer postId, Comment comment) {
 		Post post = postService.findById(postId);
+		if (comment.getBody() == null || comment.getBody().isEmpty()) {
+			throw new CommentEmptyException();
+		}
 		comment.setPost(post);
 		return commentRepository.save(comment);
 	}
