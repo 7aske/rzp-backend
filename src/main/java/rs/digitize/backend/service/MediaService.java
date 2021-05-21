@@ -1,5 +1,6 @@
 package rs.digitize.backend.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,11 +12,7 @@ public interface MediaService {
 
 	List<Media> findAll();
 
-	List<Media> findAll(Specification<Media> specification, Sort sort);
-
-	Media save(Media media);
-
-	Media update(Media media);
+	List<Media> findAll(Specification<Media> specification, Pageable pageable, Sort sort);
 
 	Media findById(Integer mediaId);
 

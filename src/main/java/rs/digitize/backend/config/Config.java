@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import rs.digitize.backend.bean.converter.PageableConverter;
 import rs.digitize.backend.bean.converter.SortConverter;
+import rs.digitize.backend.bean.filter.MediaCountFilter;
 import rs.digitize.backend.bean.filter.PostCountFilter;
 import rs.digitize.backend.bean.filter.UserCountFilter;
 import rs.digitize.backend.search.GenericSpecificationConverter;
@@ -52,6 +53,14 @@ public class Config {
 		FilterRegistrationBean<PostCountFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new PostCountFilter());
 		registrationBean.addUrlPatterns("/posts", "/posts/all", "/previews", "/previews/all");
+		return registrationBean;
+	}
+
+	@Bean
+	public FilterRegistrationBean<MediaCountFilter> mediaCountFilterFilterRegistrationBean() {
+		FilterRegistrationBean<MediaCountFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new MediaCountFilter());
+		registrationBean.addUrlPatterns("/medias");
 		return registrationBean;
 	}
 

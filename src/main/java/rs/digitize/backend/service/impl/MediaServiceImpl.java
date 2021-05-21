@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,10 @@ public class MediaServiceImpl implements MediaService {
 	}
 
 	@Override
-	public List<Media> findAll(Specification<Media> specification, Sort sort) {
+	public List<Media> findAll(Specification<Media> specification, Pageable pageable, Sort sort) {
+		if (pageable != null) {
+			return mediaRepository.findAll(specification, pageable).toList();
+		}
 		return mediaRepository.findAll(specification, sort == null ? Sort.unsorted() : sort);
 	}
 
@@ -51,16 +55,6 @@ public class MediaServiceImpl implements MediaService {
 	public Media findById(Integer mediaId) {
 		return mediaRepository.findById(mediaId)
 				.orElseThrow(() -> new NoSuchElementException("MediaService.notFound"));
-	}
-
-	@Override
-	public Media save(Media media) {
-		return mediaRepository.save(media);
-	}
-
-	@Override
-	public Media update(Media media) {
-		return mediaRepository.save(media);
 	}
 
 	@Override
@@ -74,7 +68,7 @@ public class MediaServiceImpl implements MediaService {
 
 	@Override
 	public Media upload(MultipartFile file) {
-		if (file.isEmpty()) throw new MediaUploadException("media.upload.file-empty");
+		if (file == null || file.isEmpty()) throw new MediaUploadException("media.upload.file-empty");
 
 		String filename = getUploadedFilename(file);
 		String contentType = file.getContentType();
@@ -93,6 +87,9 @@ public class MediaServiceImpl implements MediaService {
 			ImageIO.write(src, contentType == null ? "png" : contentType.split("/")[1], destFile);
 
 			Media media = new Media();
+			media.setHeight(src.getHeight());
+			media.setWidth(src.getWidth());
+			media.setSize(destFile.length());
 			media.setUri(uri);
 			return mediaRepository.save(media);
 		} catch (IOException e) {

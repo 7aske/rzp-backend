@@ -22,5 +22,10 @@ public class Media extends Auditable {
 	private Integer id;
 	@Column(name = "uri")
 	private String uri;
-	
+	@Column(name = "height")
+	private Integer height;
+	@Column(name = "width")
+	private Integer width;
+	@Column(name = "size")
+	private Long size;
 }

@@ -18,6 +18,9 @@ create table `media`
 (
     `media_id`           int auto_increment primary key,
     `uri`                varchar(1024) not null,
+    `height`             int           null,
+    `width`              int           null,
+    `size`               long          null,
 
     -- auditable
     `created_date`       timestamp   default current_timestamp(),
