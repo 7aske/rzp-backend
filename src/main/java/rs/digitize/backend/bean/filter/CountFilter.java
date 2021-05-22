@@ -36,8 +36,10 @@ public abstract class CountFilter<T> implements Filter {
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		if (!request.getMethod().equals(HttpMethod.GET.name()))
+		if (!request.getMethod().equals(HttpMethod.GET.name())) {
 			filterChain.doFilter(servletRequest, servletResponse);
+			return;
+		}
 		initPostRepository(servletRequest);
 		String query = getQuery(servletRequest);
 		Specification<T> specification = (Specification<T>) converter.convert(query);

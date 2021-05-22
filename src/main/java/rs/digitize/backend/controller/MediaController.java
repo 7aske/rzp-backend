@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +12,9 @@ import rs.digitize.backend.entity.Media;
 import rs.digitize.backend.service.MediaService;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+
 
 @RestController
 @RequestMapping("/medias")
@@ -37,7 +39,7 @@ public class MediaController {
 	@PostMapping
 	@ApiOperation(value = "", nickname = "uploadMedia")
 	public ResponseEntity<Media> saveMedia(@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(mediaService.upload(multipartFile));
+		return ResponseEntity.status(CREATED).body(mediaService.upload(multipartFile));
 	}
 
 	@DeleteMapping("/{mediaId}")
