@@ -30,7 +30,11 @@ public interface UserService {
 
 	void changePassword(User user, ChangePasswordDto passwordDto);
 
+	void disableUser(Integer userId);
+
 	User register(RegisterUserDto dto);
 
 	User resetPassword(Integer userId);
+
+	void enableUser(Integer userId);
 }

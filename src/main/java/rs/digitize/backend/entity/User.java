@@ -77,6 +77,16 @@ public class User extends Auditable implements UserDetails {
 		return getRecordStatus() != EXPIRED;
 	}
 
+	@JsonIgnore
+	public boolean isCredentialsExpired() {
+		return getRecordStatus() == EXPIRED;
+	}
+
+	@JsonIgnore
+	public boolean isDisabled() {
+		return getRecordStatus() == DISABLED;
+	}
+
 	@Override
 	@JsonIgnore
 	public boolean isEnabled() {

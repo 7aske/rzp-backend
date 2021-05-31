@@ -3,6 +3,7 @@ package rs.digitize.backend.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -31,6 +32,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		if (user == null)
 			throw new UsernameNotFoundException(errorMessages.getProperty("auth.login.invalid-credentials"));
+
+		if (user.isDisabled())
+			throw new DisabledException(errorMessages.getProperty("auth.login.user-disabled"));
 
 		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), null));
 	}

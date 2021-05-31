@@ -21,6 +21,8 @@ import rs.digitize.backend.service.UserService;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.*;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -50,13 +52,13 @@ public class UserController {
 	@PostMapping
 	@ApiOperation(value = "", nickname = "saveUser")
 	public ResponseEntity<User> save(@RequestBody User user) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
+		return ResponseEntity.status(CREATED).body(userService.save(user));
 	}
 
 	@PostMapping("/register")
 	@ApiOperation(value = "", nickname = "registerUser")
 	public ResponseEntity<User> save(@RequestBody RegisterUserDto dto) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(dto));
+		return ResponseEntity.status(CREATED).body(userService.register(dto));
 	}
 
 	@AllowUser
@@ -80,6 +82,22 @@ public class UserController {
 	@ApiOperation(value = "", nickname = "resetUserPassword")
 	public ResponseEntity<User> resetUserPassword(@PathVariable Integer userId) {
 		return ResponseEntity.ok(userService.resetPassword(userId));
+	}
+
+	@AllowAdmin
+	@PutMapping("/{userId}/enable")
+	@ApiOperation(value = "", nickname = "enableUser")
+	@ResponseStatus(code = OK)
+	public void enableUser(@PathVariable Integer userId) {
+		userService.enableUser(userId);
+	}
+
+	@AllowAdmin
+	@DeleteMapping("/{userId}/enable")
+	@ApiOperation(value = "", nickname = "disableUser")
+	@ResponseStatus(code = OK)
+	public void disableUser(@PathVariable Integer userId) {
+		userService.disableUser(userId);
 	}
 
 	@AllowAdmin

@@ -15,6 +15,7 @@ import rs.digitize.backend.data.ChangePasswordDto;
 import rs.digitize.backend.data.RegisterUserDto;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
+import rs.digitize.backend.entity.domain.RecordStatus;
 import rs.digitize.backend.exception.EmailValidationException;
 import rs.digitize.backend.exception.InvalidPasswordException;
 import rs.digitize.backend.exception.PasswordMismatchException;
@@ -32,8 +33,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static rs.digitize.backend.entity.Role.USER_ROLE;
-import static rs.digitize.backend.entity.domain.RecordStatus.ACTIVE;
-import static rs.digitize.backend.entity.domain.RecordStatus.EXPIRED;
+import static rs.digitize.backend.entity.domain.RecordStatus.*;
 import static rs.digitize.backend.util.StringUtils.falsy;
 
 @Data
@@ -130,6 +130,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void enableUser(Integer userId) {
+		setUserStatus(userId, ACTIVE);
+	}
+
+	@Override
+	public void disableUser(Integer userId) {
+		setUserStatus(userId, DISABLED);
+	}
+
+	private void setUserStatus(Integer userId, RecordStatus recordStatus){
+		User user = findById(userId);
+		user.setRecordStatus(recordStatus);
+		userRepository.save(user);
+	}
+
+	@Override
 	public User register(RegisterUserDto dto) {
 		User user = makeUser(dto);
 		user.getRoles().add(USER_ROLE);
@@ -143,6 +159,8 @@ public class UserServiceImpl implements UserService {
 		user.setRecordStatus(EXPIRED);
 		return userRepository.save(user);
 	}
+
+
 
 	public void validateEmail(String emailStr) {
 		Matcher matcher = EMAIL_REGEX.matcher(emailStr);

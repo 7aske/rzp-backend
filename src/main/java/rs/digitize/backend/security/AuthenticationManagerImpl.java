@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,17 +35,21 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 	public Authentication authenticate(Authentication authentication) {
 		String username = authentication.getName();
 		Object password = authentication.getCredentials();
+
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException(errors.getProperty("auth.login.user-not-found")));
 
-		if (user.getRecordStatus() == EXPIRED)
-			return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+		if (user.isDisabled())
+			 throw new DisabledException(errors.getProperty("auth.login.user-disabled"));
 
 		if (falsy((String)password))
 			throw new BadCredentialsException(errors.getProperty("auth.login.invalid-credentials"));
 
 		if (!passwordEncoder.matches((String) password, user.getPassword()))
 			throw new BadCredentialsException(errors.getProperty("auth.login.invalid-credentials"));
+
+		if (user.isCredentialsExpired())
+			return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
 
 		return new UsernamePasswordAuthenticationToken(username, password, user.getRoles());
 	}
