@@ -21,7 +21,7 @@ public class CriteriaParser {
 
     private static final Pattern SpecCriteriaRegex =
             Pattern.compile("^([\\w.]+?)(" + Joiner.on("|")
-                    .join(SearchOperation.SIMPLE_OPERATION_SET) + ")(\\p{Punct}?)(\\w+\\.?\\w*)(\\p{Punct}?)$");
+                    .join(SearchOperation.SIMPLE_OPERATION_SET) + ")(\\p{Punct}?)([\\w-:/.@#$^\\s+]+?)(\\p{Punct}?)$");
 
     public Deque<?> parse(String searchParam) {
 
