@@ -16,12 +16,18 @@ import rs.digitize.backend.service.*;
 @RequestMapping("/contacts")
 @RequiredArgsConstructor
 public class ContactController {
+	private final ContactService contactService;
+
+	@DeleteMapping("/{contactId}")
+	@ApiOperation(value = "", nickname = "deleteContactById")
+	public void deleteContactById(@PathVariable Integer contactId) {
+		contactService.deleteById(contactId);
+	}
 
 	@GetMapping("/types")
 	@ApiOperation(value = "", nickname = "getAllContactTypes")
 	public ResponseEntity<Object[]> getAllContactTypes(){
 		return ResponseEntity.ok(ContactType.values());
 	}
-
 }
 

@@ -3,6 +3,7 @@ package rs.digitize.backend.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import rs.digitize.backend.util.PostUtil;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -42,7 +43,17 @@ public class Post extends Auditable {
 	private String slug;
 	@Column(name = "date_posted")
 	private LocalDate datePosted;
+	@Column(name = "image")
+	private String image;
 	@ManyToMany
 	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_fk"), inverseJoinColumns = @JoinColumn(name = "tag_fk"))
 	private List<Tag> tags;
+
+	@PreUpdate
+	@PrePersist
+	private void updatePicture() {
+		if (body == null) return;
+		if (image == null || image.isEmpty())
+			image = PostUtil.getFirstImageUrl(body);
+	}
 }

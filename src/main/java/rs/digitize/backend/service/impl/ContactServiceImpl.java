@@ -5,8 +5,11 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import rs.digitize.backend.entity.*;
+import rs.digitize.backend.exception.http.HttpForbiddenException;
 import rs.digitize.backend.repository.ContactRepository;
 import rs.digitize.backend.service.ContactService;
 
@@ -38,7 +41,12 @@ public class ContactServiceImpl implements ContactService {
 
 	@Override
 	public void deleteById(Integer contactId) {
-		contactRepository.deleteById(contactId);
+		Contact contact = findById(contactId);
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
+		if (user.isAdmin() || user.equals(contact.getUser()))
+			contactRepository.deleteById(contactId);
+		else
+			throw new HttpForbiddenException();
 	}
 
 

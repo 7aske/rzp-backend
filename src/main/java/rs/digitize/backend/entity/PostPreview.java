@@ -35,6 +35,8 @@ public class PostPreview extends Auditable {
 	private Integer views;
 	@Column(name = "slug")
 	private String slug;
+	@Column(name = "image")
+	private String image;
 	@ManyToMany
 	@JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_fk"), inverseJoinColumns = @JoinColumn(name = "tag_fk"))
 	private List<Tag> tags;
