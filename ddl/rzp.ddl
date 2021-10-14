@@ -20,7 +20,7 @@ create table `media`
     `uri`                varchar(1024) not null,
     `height`             int           null,
     `width`              int           null,
-    `size`               long          null,
+    `size`               int(11)          null,
 
     -- auditable
     `created_date`       timestamp   default current_timestamp(),

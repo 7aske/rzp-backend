@@ -3,7 +3,7 @@
 groupId="$(xpath -q -e '/project/groupId/text()' ./pom.xml)"
 artifactId="$(xpath -q -e '/project/artifactId/text()' ./pom.xml)"
 
-springstrap ddl/rzp.ddl \
+springstrap -f ddl/rzp.ddl \
 	-d "$groupId.$artifactId" \
 	-slawprA \
 	-o ./ \

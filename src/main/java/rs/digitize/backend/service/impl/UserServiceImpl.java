@@ -90,14 +90,25 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User update(User user) {
 		User existingUser = findById(user.getId());
+
+		if (user.getRoles() == null)
+			user.setRoles(existingUser.getRoles());
+
 		user.setRoles(user.getRoles().stream().map(r -> {
 			Role role = r;
 			if (r.getId() == null)
 				role = roleService.findByName(r.getName().replace(Role.PREFIX, ""));
 			return role;
 		}).collect(Collectors.toList()));
+
 		// preserve password
 		user.setPassword(existingUser.getPassword());
+		user.setContacts(user.getContacts()
+				.stream()
+				.filter(c -> c.getValue() != null && !c.getValue().isEmpty()).collect(Collectors.toList()));
+		if (user.getContacts() != null) {
+			user.getContacts().forEach(c -> c.setUser(user));
+		}
 
 		return userRepository.save(user);
 	}
@@ -139,7 +150,7 @@ public class UserServiceImpl implements UserService {
 		setUserStatus(userId, DISABLED);
 	}
 
-	private void setUserStatus(Integer userId, RecordStatus recordStatus){
+	private void setUserStatus(Integer userId, RecordStatus recordStatus) {
 		User user = findById(userId);
 		user.setRecordStatus(recordStatus);
 		userRepository.save(user);
@@ -159,7 +170,6 @@ public class UserServiceImpl implements UserService {
 		user.setRecordStatus(EXPIRED);
 		return userRepository.save(user);
 	}
-
 
 
 	public void validateEmail(String emailStr) {

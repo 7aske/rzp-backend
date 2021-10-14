@@ -13,6 +13,7 @@ import rs.digitize.backend.data.ChangePasswordDto;
 import rs.digitize.backend.data.RegisterUserDto;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
+import rs.digitize.backend.exception.http.HttpUnauthorizedException;
 import rs.digitize.backend.security.annotaions.AllowAdmin;
 import rs.digitize.backend.security.annotaions.AllowAuthenticated;
 import rs.digitize.backend.security.annotaions.AllowAuthor;
@@ -65,8 +66,11 @@ public class UserController {
 	@PutMapping
 	@ApiOperation(value = "", nickname = "updateUser")
 	public ResponseEntity<User> update(@AuthenticationPrincipal User auth, @RequestBody User user) {
-		if (!auth.isAdmin())
+		if (!auth.isAdmin()) {
+			if (!auth.equals(user))
+				throw new HttpUnauthorizedException();
 			user.setRoles(auth.getRoles());
+		}
 		return ResponseEntity.ok(userService.update(user));
 	}
 

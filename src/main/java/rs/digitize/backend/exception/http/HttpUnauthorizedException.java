@@ -1,18 +1,10 @@
 package rs.digitize.backend.exception.http;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(code = HttpStatus.UNAUTHORIZED, reason = "Access is denied")
 public class HttpUnauthorizedException extends RuntimeException {
 	public HttpUnauthorizedException() {
-	}
-
-	public HttpUnauthorizedException(String s) {
-		super(s);
-	}
-
-	public HttpUnauthorizedException(String s, Throwable throwable) {
-		super(s, throwable);
-	}
-
-	public HttpUnauthorizedException(Throwable throwable) {
-		super(throwable);
 	}
 }

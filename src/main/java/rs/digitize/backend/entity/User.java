@@ -47,6 +47,8 @@ public class User extends Auditable implements UserDetails {
 	@JsonProperty(access = WRITE_ONLY)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_fk"), inverseJoinColumns = @JoinColumn(name = "role_fk"))
 	private List<Role> roles;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+	private List<Contact> contacts;
 
 	@JsonIgnore
 	public boolean isAdmin() {
