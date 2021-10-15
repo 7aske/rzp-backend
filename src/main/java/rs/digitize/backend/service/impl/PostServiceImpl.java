@@ -9,9 +9,12 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import rs.digitize.backend.entity.Post;
 import rs.digitize.backend.entity.Tag;
+import rs.digitize.backend.entity.User;
+import rs.digitize.backend.exception.http.HttpUnauthorizedException;
 import rs.digitize.backend.repository.PostRepository;
 import rs.digitize.backend.service.PostService;
 
@@ -69,7 +72,14 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public Post update(Post post) {
-		return postRepository.save(post);
+		Post existing = findById(post.getId());
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
+		if (user.isAdmin() || user.equals(existing.getUser())) {
+			post.setUser(user);
+			return postRepository.save(post);
+		} else {
+			throw new HttpUnauthorizedException();
+		}
 	}
 
 	@Override

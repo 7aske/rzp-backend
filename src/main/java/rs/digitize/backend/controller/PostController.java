@@ -7,9 +7,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import rs.digitize.backend.entity.Comment;
 import rs.digitize.backend.entity.Post;
+import rs.digitize.backend.entity.User;
 import rs.digitize.backend.security.annotaions.AllowAdmin;
 import rs.digitize.backend.security.annotaions.AllowAuthor;
 import rs.digitize.backend.security.annotaions.AllowUser;
@@ -32,9 +34,13 @@ public class PostController {
 	@AllowAuthor
 	@GetMapping("/all")
 	@ApiOperation(value = "", nickname = "getAllPosts")
-	public ResponseEntity<List<Post>> getAllPosts(@RequestParam(name = "q", required = false) Specification<Post> specification,
+	public ResponseEntity<List<Post>> getAllPosts(@AuthenticationPrincipal User user,
+	                                              @RequestParam(name = "q", required = false) Specification<Post> specification,
 	                                              @RequestParam(name = "page", required = false) Pageable pageable,
 	                                              @RequestParam(name = "sort", required = false) Sort sort) {
+		if (!user.isAdmin()) {
+			specification = combineSpecificationFor(specification, "user.username", user.getUsername());
+		}
 		return ResponseEntity.ok(postService.findAll(specification, sort, pageable));
 	}
 
