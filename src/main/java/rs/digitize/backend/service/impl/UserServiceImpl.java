@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
 		}).collect(Collectors.toList()));
 
 		// image
-		if (!user.getImage().equals(existingUser.getImage())) {
+		if (!user.getImage().equals(existingUser.getImage()) && existingUser.getImage() != null) {
 			mediaService.deleteById(existingUser.getImage().getId());
 		}
 
