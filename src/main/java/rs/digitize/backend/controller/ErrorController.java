@@ -1,6 +1,7 @@
 package rs.digitize.backend.controller;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import rs.digitize.backend.data.ResponseError;
 
 import javax.annotation.Resource;
@@ -43,7 +45,8 @@ public class ErrorController {
 			SQLIntegrityConstraintViolationException.class,
 			DataIntegrityViolationException.class,
 			HttpMessageNotReadableException.class,
-			MethodArgumentTypeMismatchException.class
+			MethodArgumentTypeMismatchException.class,
+			MaxUploadSizeExceededException.class
 	})
 	protected ResponseEntity<ResponseError> handleBadRequest(RuntimeException ex, HttpServletRequest request) {
 		String message = ex.getMessage();

@@ -21,6 +21,7 @@ import rs.digitize.backend.exception.InvalidPasswordException;
 import rs.digitize.backend.exception.PasswordMismatchException;
 import rs.digitize.backend.exception.PasswordValidationException;
 import rs.digitize.backend.repository.UserRepository;
+import rs.digitize.backend.service.MediaService;
 import rs.digitize.backend.service.RoleService;
 import rs.digitize.backend.service.UserService;
 
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final RoleService roleService;
 	private final PasswordEncoder passwordEncoder;
+	private final MediaService mediaService;
 
 	public static final Pattern EMAIL_REGEX =
 			Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -100,6 +102,11 @@ public class UserServiceImpl implements UserService {
 				role = roleService.findByName(r.getName().replace(Role.PREFIX, ""));
 			return role;
 		}).collect(Collectors.toList()));
+
+		// image
+		if (!user.getImage().equals(existingUser.getImage())) {
+			mediaService.deleteById(existingUser.getImage().getId());
+		}
 
 		// preserve password
 		user.setPassword(existingUser.getPassword());

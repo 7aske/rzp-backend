@@ -1,5 +1,6 @@
 package rs.digitize.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -28,6 +29,10 @@ public class User extends Auditable implements UserDetails {
 	@EqualsAndHashCode.Include
 	@Column(name = "user_id")
 	private Integer id;
+	@JoinColumn(name = "image_fk", referencedColumnName = "media_id")
+	@ManyToOne
+	@JsonProperty(access = WRITE_ONLY)
+	private Media image;
 	@Column(name = "username")
 	private String username;
 	@JsonProperty(access = WRITE_ONLY)
@@ -98,5 +103,10 @@ public class User extends Auditable implements UserDetails {
 	@JsonIgnore
 	public String getDefaultPassword(){
 		return "blog-" + getUsername();
+	}
+
+	@JsonGetter
+	public String getProfileImage() {
+		return image == null ? null : image.getUri();
 	}
 }

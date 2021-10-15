@@ -18,9 +18,11 @@ create table `media`
 (
     `media_id`           int auto_increment primary key,
     `uri`                varchar(1024) not null,
+    `type`               varchar(32)   null,
+    `keywords`           varchar(1024) null,
     `height`             int           null,
     `width`              int           null,
-    `size`               int(11)          null,
+    `size`               int(11)       null,
 
     -- auditable
     `created_date`       timestamp   default current_timestamp(),
@@ -60,6 +62,7 @@ create table `user`
 (
     `user_id`            int auto_increment primary key,
     `username`           varchar(32)  not null,
+    `image_fk`           int          null,
     `password`           varchar(512) not null,
     `email`              varchar(32)  not null,
     `first_name`         varchar(32)  not null,
@@ -71,7 +74,10 @@ create table `user`
     `created_date`       timestamp   default current_timestamp(),
     `last_modified_by`   varchar(32) default 'system',
     `last_modified_date` timestamp   default current_timestamp(),
-    `record_status`      int         default 1
+    `record_status`      int         default 1,
+
+    constraint foreign key `fk_user_media` (`image_fk`) references `media` (`media_id`)
+        on update cascade on delete set null
 ) comment 'Blog user or author';
 
 drop table if exists `contact`;

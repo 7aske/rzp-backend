@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import rs.digitize.backend.entity.Media;
+import rs.digitize.backend.entity.domain.MediaType;
 import rs.digitize.backend.exception.io.MediaUploadException;
 import rs.digitize.backend.repository.MediaRepository;
 import rs.digitize.backend.service.MediaService;
@@ -68,6 +69,11 @@ public class MediaServiceImpl implements MediaService {
 
 	@Override
 	public Media upload(MultipartFile file) {
+		return upload(file, MediaType.POST_IMAGE);
+	}
+
+	@Override
+	public Media upload(MultipartFile file, MediaType type) {
 		if (file == null || file.isEmpty()) throw new MediaUploadException("media.upload.file-empty");
 
 		String filename = getUploadedFilename(file);
@@ -91,6 +97,7 @@ public class MediaServiceImpl implements MediaService {
 			media.setWidth(src.getWidth());
 			media.setSize(destFile.length());
 			media.setUri(uri);
+			media.setType(type);
 			return mediaRepository.save(media);
 		} catch (IOException e) {
 			e.printStackTrace();
