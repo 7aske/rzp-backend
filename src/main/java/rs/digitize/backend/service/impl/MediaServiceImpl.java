@@ -59,6 +59,16 @@ public class MediaServiceImpl implements MediaService {
 	}
 
 	@Override
+	public Media update(Media media) {
+		Media existing = findById(media.getId());
+		media.setHeight(existing.getHeight());
+		media.setSize(existing.getSize());
+		media.setWidth(existing.getWidth());
+		media.setUri(existing.getUri());
+		return mediaRepository.save(media);
+	}
+
+	@Override
 	public void deleteById(Integer mediaId) {
 		Media media = mediaRepository.findById(mediaId)
 				.orElseThrow(() -> new NoSuchElementException("media.not-found"));

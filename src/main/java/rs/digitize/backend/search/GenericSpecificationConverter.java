@@ -22,7 +22,6 @@ public class GenericSpecificationConverter implements Converter<String, Specific
             GenericSpecificationBuilder<User> specificationBuilder = new GenericSpecificationBuilder<>();
             return specificationBuilder.build(deque, GenericSpecification::new);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

@@ -17,6 +17,8 @@ public interface MediaService {
 
 	Media findById(Integer mediaId);
 
+	Media update(Media media);
+
 	void deleteById(Integer mediaId);
 
 	Media upload(MultipartFile file);

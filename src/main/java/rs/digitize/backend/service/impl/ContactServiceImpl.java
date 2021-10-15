@@ -42,7 +42,7 @@ public class ContactServiceImpl implements ContactService {
 	@Override
 	public void deleteById(Integer contactId) {
 		Contact contact = findById(contactId);
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (user.isAdmin() || user.equals(contact.getUser()))
 			contactRepository.deleteById(contactId);
 		else

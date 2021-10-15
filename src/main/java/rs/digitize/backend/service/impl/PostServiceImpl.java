@@ -73,8 +73,8 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public Post update(Post post) {
 		Post existing = findById(post.getId());
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
-		if (user.isAdmin() || user.equals(existing.getUser())) {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (user != null && (user.isAdmin() || user.equals(existing.getUser()))) {
 			post.setUser(user);
 			return postRepository.save(post);
 		} else {
