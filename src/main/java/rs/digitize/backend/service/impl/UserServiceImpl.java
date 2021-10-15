@@ -25,10 +25,7 @@ import rs.digitize.backend.service.MediaService;
 import rs.digitize.backend.service.RoleService;
 import rs.digitize.backend.service.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -104,9 +101,8 @@ public class UserServiceImpl implements UserService {
 		}).collect(Collectors.toList()));
 
 		// image
-		if (!user.getImage().equals(existingUser.getImage()) && existingUser.getImage() != null) {
+		if (existingUser.getImage() != null && !Objects.equals(user.getImage(), existingUser.getImage()))
 			mediaService.deleteById(existingUser.getImage().getId());
-		}
 
 		// preserve password
 		user.setPassword(existingUser.getPassword());
