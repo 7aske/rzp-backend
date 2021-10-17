@@ -46,7 +46,6 @@ public class ErrorController {
 			DataIntegrityViolationException.class,
 			HttpMessageNotReadableException.class,
 			MethodArgumentTypeMismatchException.class,
-			MaxUploadSizeExceededException.class
 	})
 	protected ResponseEntity<ResponseError> handleBadRequest(RuntimeException ex, HttpServletRequest request) {
 		String message = ex.getMessage();
@@ -68,14 +67,14 @@ public class ErrorController {
 		return getResponseError(getErrorMessage(message), request, status);
 	}
 
-
-	// @ExceptionHandler({
-	//
-	// })
-	// protected ResponseEntity<ErrorInfo> handleUnauthorized(RuntimeException ex, HttpServletRequest request) {
-	// 	HttpStatus status = HttpStatus.UNAUTHORIZED;
-	// 	return getErrorInfoResponseEntity(getErrorMessage(ex), request, status);
-	// }
+	@ExceptionHandler({
+			MaxUploadSizeExceededException.class
+	})
+	protected ResponseEntity<ResponseError> handlePayloadTooLarge(RuntimeException ex, HttpServletRequest request) {
+		String message = ex.getMessage();
+		HttpStatus status = HttpStatus.PAYLOAD_TOO_LARGE;
+		return getResponseError(getErrorMessage(message), request, status);
+	}
 
 	@ExceptionHandler({
 			AccessDeniedException.class
