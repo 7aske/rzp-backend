@@ -101,8 +101,10 @@ public class UserServiceImpl implements UserService {
 		}).collect(Collectors.toList()));
 
 		// image
-		if (existingUser.getImage() != null && !Objects.equals(user.getImage(), existingUser.getImage()))
+		if (existingUser.getImage() != null && user.getImage() != null &&
+				!Objects.equals(user.getImage(), existingUser.getImage())) {
 			mediaService.deleteById(existingUser.getImage().getId());
+		}
 
 		// preserve password
 		user.setPassword(existingUser.getPassword());

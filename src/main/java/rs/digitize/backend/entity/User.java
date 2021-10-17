@@ -31,7 +31,6 @@ public class User extends Auditable implements UserDetails {
 	private Integer id;
 	@JoinColumn(name = "image_fk", referencedColumnName = "media_id")
 	@ManyToOne
-	@JsonProperty(access = WRITE_ONLY)
 	private Media image;
 	@Column(name = "username")
 	private String username;

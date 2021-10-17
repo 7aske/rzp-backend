@@ -24,6 +24,7 @@ import static rs.digitize.backend.util.SpecificationUtil.*;
 @RestController
 @RequestMapping("/medias")
 @RequiredArgsConstructor
+@CrossOrigin
 public class MediaController {
 	private final MediaService mediaService;
 
@@ -49,12 +50,16 @@ public class MediaController {
 		return ResponseEntity.ok(mediaService.update(media));
 	}
 
-	@PostMapping
-	@ApiOperation(value = "", nickname = "uploadMedia")
-	public ResponseEntity<Media> saveMedia(@RequestParam(value = "file", required = false) MultipartFile multipartFile, @RequestParam(value = "type", defaultValue = "POST_IMAGE", required = false) MediaType type) {
-		if (type == null)
-			return ResponseEntity.status(CREATED).body(mediaService.upload(multipartFile));
-		return ResponseEntity.status(CREATED).body(mediaService.upload(multipartFile, type));
+	@PostMapping("/post")
+	@ApiOperation(value = "", nickname = "uploadPostImage")
+	public ResponseEntity<Media> uploadPostImage(@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
+		return ResponseEntity.status(CREATED).body(mediaService.upload(multipartFile, MediaType.POST_IMAGE));
+	}
+
+	@PostMapping("/profile")
+	@ApiOperation(value = "", nickname = "uploadProfileImage")
+	public ResponseEntity<Media> uploadProfileImage(@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
+		return ResponseEntity.status(CREATED).body(mediaService.upload(multipartFile, MediaType.PROFILE_IMAGE));
 	}
 
 	@DeleteMapping("/{mediaId}")
