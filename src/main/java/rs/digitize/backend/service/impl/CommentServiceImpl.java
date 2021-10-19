@@ -8,10 +8,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import rs.digitize.backend.entity.Comment;
+import rs.digitize.backend.entity.Notification;
 import rs.digitize.backend.entity.Post;
 import rs.digitize.backend.exception.CommentEmptyException;
 import rs.digitize.backend.repository.CommentRepository;
 import rs.digitize.backend.service.CommentService;
+import rs.digitize.backend.service.NotificationService;
 import rs.digitize.backend.service.PostService;
 
 import java.util.List;
@@ -27,6 +29,7 @@ import static rs.digitize.backend.util.SpecificationUtil.combineSpecificationFor
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class CommentServiceImpl implements CommentService {
 	private final CommentRepository commentRepository;
+	private final NotificationService notificationService;
 	private final PostService postService;
 
 	@Override
@@ -38,6 +41,11 @@ public class CommentServiceImpl implements CommentService {
 		if (pageable == null)
 			return commentRepository.findAll(specification, defaultSort);
 		return commentRepository.findAll(specification, pageable).toList();
+	}
+
+	@Override
+	public List<Comment> findAllForPost(Post post) {
+		return commentRepository.findAllByPost(post);
 	}
 
 	@Override
@@ -53,7 +61,11 @@ public class CommentServiceImpl implements CommentService {
 			throw new CommentEmptyException();
 		}
 		comment.setPost(post);
-		return commentRepository.save(comment);
+		try {
+			return commentRepository.save(comment);
+		} finally {
+			notificationService.createForComment(post, comment);
+		}
 	}
 
 	@Override

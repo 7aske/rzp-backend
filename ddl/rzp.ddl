@@ -171,4 +171,26 @@ create table `user_role`
         on update cascade on delete cascade
 );
 
+drop table if exists `notification`;
+create table `notification`
+(
+    `notification_id` int auto_increment primary key,
+    `title` varchar(128) not null,
+    `body` text not null,
+    `seen` tinyint default 0,
+    `read` tinyint default 0,
+    `user_fk` int null,
+    `type` varchar(32) null,
+    `action_url` varchar(256) null,
+
+    -- auditable
+    `created_date`       timestamp   default current_timestamp(),
+    `last_modified_by`   varchar(32) default 'system',
+    `last_modified_date` timestamp   default current_timestamp(),
+    `record_status`      int         default 1,
+
+    constraint `fk_notification_user` foreign key (`user_fk`) references `user`(`user_id`)
+        on update cascade on delete set null
+);
+
 set foreign_key_checks = 1;

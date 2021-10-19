@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import rs.digitize.backend.data.ChangePasswordDto;
 import rs.digitize.backend.data.RegisterUserDto;
+import rs.digitize.backend.entity.Notification;
 import rs.digitize.backend.entity.Role;
 import rs.digitize.backend.entity.User;
 import rs.digitize.backend.exception.http.HttpUnauthorizedException;
@@ -18,6 +19,7 @@ import rs.digitize.backend.security.annotaions.AllowAdmin;
 import rs.digitize.backend.security.annotaions.AllowAuthenticated;
 import rs.digitize.backend.security.annotaions.AllowAuthor;
 import rs.digitize.backend.security.annotaions.AllowUser;
+import rs.digitize.backend.service.NotificationService;
 import rs.digitize.backend.service.UserService;
 
 import java.util.List;
@@ -29,6 +31,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class UserController {
 	private final UserService userService;
+	private final NotificationService notificationService;
 
 	@AllowAdmin
 	@GetMapping
@@ -47,6 +50,13 @@ public class UserController {
 		} catch (NumberFormatException e) {
 			return ResponseEntity.ok(userService.findByUsername(identifier));
 		}
+	}
+
+	@GetMapping("/notifications")
+	@ApiOperation(value = "", nickname = "getNotificationsForUser")
+	public ResponseEntity<List<Notification>> getNotificationsForUser(@AuthenticationPrincipal User user,
+	                                                                  @RequestParam(name = "page", required = false) Pageable pageable) {
+		return ResponseEntity.ok(notificationService.findAllForUser(user, pageable));
 	}
 
 	@AllowAdmin
