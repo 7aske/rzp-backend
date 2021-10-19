@@ -3,6 +3,7 @@ package rs.digitize.backend.service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import rs.digitize.backend.data.PostSummary;
 import rs.digitize.backend.entity.Post;
 import rs.digitize.backend.entity.Tag;
 
@@ -34,4 +35,5 @@ public interface PostService {
 
 	List<Tag> deleteTagsById(Integer postId, List<Tag> tags);
 
+	PostSummary getSummary(PostSummary.SummaryType type);
 }

@@ -11,12 +11,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import rs.digitize.backend.data.PostSummary;
 import rs.digitize.backend.entity.Post;
 import rs.digitize.backend.entity.Tag;
 import rs.digitize.backend.entity.User;
+import rs.digitize.backend.exception.InvalidPostSummaryTypeException;
 import rs.digitize.backend.exception.http.HttpUnauthorizedException;
 import rs.digitize.backend.repository.PostRepository;
 import rs.digitize.backend.service.PostService;
+import rs.digitize.backend.service.TagService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,9 +31,10 @@ import static rs.digitize.backend.util.Sorts.CREATED_DATE_SORT;
 @Service
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
-@CacheConfig(cacheNames={"post-count"})
+@CacheConfig(cacheNames = {"post-count"})
 public class PostServiceImpl implements PostService {
 	private final PostRepository postRepository;
+	private final TagService tagService;
 
 	@Override
 	public List<Post> findAll() {
@@ -43,7 +47,7 @@ public class PostServiceImpl implements PostService {
 			pageable = overrideSort(pageable, pageable.getSort().and(CREATED_DATE_SORT));
 			return postRepository.findAll(specification, pageable).toList();
 		}
-		return postRepository.findAll(specification, sort == null ?  CREATED_DATE_SORT : sort);
+		return postRepository.findAll(specification, sort == null ? CREATED_DATE_SORT : sort);
 	}
 
 	@Override
@@ -112,5 +116,26 @@ public class PostServiceImpl implements PostService {
 		Post post = findById(postId);
 		post.getTags().removeAll(tags);
 		return postRepository.save(post).getTags();
+	}
+
+	@Override
+	public PostSummary getSummary(PostSummary.SummaryType type) {
+		List<Post> posts = findAll();
+		switch (type) {
+			case TAG:
+				List<Tag> tags = tagService.findAll(null, null);
+				return PostSummary.builder()
+						.posts(posts)
+						.tags(tags)
+						.build()
+						.byTag();
+			case CATEGORY:
+				return PostSummary.builder()
+						.posts(posts)
+						.build()
+						.byCategory();
+			default:
+				throw new InvalidPostSummaryTypeException();
+		}
 	}
 }

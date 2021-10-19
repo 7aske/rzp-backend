@@ -1,5 +1,6 @@
 package rs.digitize.backend.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import rs.digitize.backend.data.PostSummary;
 import rs.digitize.backend.entity.Comment;
 import rs.digitize.backend.entity.Post;
 import rs.digitize.backend.entity.User;
@@ -61,6 +63,13 @@ public class PostController {
 		} catch (NumberFormatException ignored) {
 			return ResponseEntity.ok(postService.findBySlug(identifier));
 		}
+	}
+
+	@AllowAuthor
+	@GetMapping("/summary")
+	@ApiOperation(value = "", nickname = "getPostSummary")
+	public ResponseEntity<PostSummary> getPostSummary(@RequestParam PostSummary.SummaryType type) {
+		return ResponseEntity.ok(postService.getSummary(type));
 	}
 
 	@AllowAuthor
