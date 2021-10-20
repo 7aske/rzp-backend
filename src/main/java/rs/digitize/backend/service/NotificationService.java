@@ -12,6 +12,8 @@ public interface NotificationService {
 
 	List<Notification> findAll(Specification<Notification> specification, Sort sort);
 
+	List<Notification> findAllUnreadForUser(User user, Pageable pageable);
+
 	List<Notification> findAllForUser(User user, Pageable pageable);
 
 	void createForComment(Post post, Comment comment);

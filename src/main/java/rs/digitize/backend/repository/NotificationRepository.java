@@ -10,5 +10,6 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Integer>, JpaSpecificationExecutor<Notification> {
-	List<Notification> findAllByUserAndReadFalse(User user, Pageable pageable);
+	List<Notification> findAllByUserAndReadFalseOrderByCreatedDateDesc(User user, Pageable pageable);
+	List<Notification> findAllByUserOrderByCreatedDateDesc(User user, Pageable pageable);
 }

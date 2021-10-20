@@ -34,8 +34,13 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
+	public List<Notification> findAllUnreadForUser(User user, Pageable pageable) {
+		return notificationRepository.findAllByUserAndReadFalseOrderByCreatedDateDesc(user, pageable);
+	}
+
+	@Override
 	public List<Notification> findAllForUser(User user, Pageable pageable) {
-		return notificationRepository.findAllByUserAndReadFalse(user, pageable);
+		return notificationRepository.findAllByUserOrderByCreatedDateDesc(user, pageable);
 	}
 
 	@Override

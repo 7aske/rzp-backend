@@ -55,8 +55,11 @@ public class UserController {
 	@GetMapping("/notifications")
 	@ApiOperation(value = "", nickname = "getNotificationsForUser")
 	public ResponseEntity<List<Notification>> getNotificationsForUser(@AuthenticationPrincipal User user,
+	                                                                  @RequestParam(required = false, name = "all") Boolean all,
 	                                                                  @RequestParam(name = "page", required = false) Pageable pageable) {
-		return ResponseEntity.ok(notificationService.findAllForUser(user, pageable));
+		if (all != null && all)
+			return ResponseEntity.ok(notificationService.findAllForUser(user, pageable));
+		return ResponseEntity.ok(notificationService.findAllUnreadForUser(user, pageable));
 	}
 
 	@AllowAdmin
