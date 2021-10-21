@@ -14,6 +14,7 @@ import rs.digitize.backend.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +47,20 @@ public class JwtProvider {
 				.compact();
 	}
 
-	private static List<String> getAuthoritiesAsStringList(Collection<? extends GrantedAuthority> authorities){
+	public String createRefreshToken(String username) {
+		Date now = new Date();
+		Date validity = new Date(now.getTime() + 60 * 60 * 24 * 1000);
+
+		return Jwts.builder()
+				.setSubject(username)
+				.setIssuedAt(now)
+				.setExpiration(validity)
+				.claim("user", username)
+				.signWith(SignatureAlgorithm.HS512, secretKey)
+				.compact();
+	}
+
+	private static List<String> getAuthoritiesAsStringList(Collection<? extends GrantedAuthority> authorities) {
 		return authorities.stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
@@ -57,22 +71,35 @@ public class JwtProvider {
 		return new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getRoles());
 	}
 
+	public Authentication getRefreshAuthentication(String token) {
+		User user = this.userService.findByUsername(getUsername(token));
+		return new UsernamePasswordAuthenticationToken(user, user.getPassword(), Collections.emptyList());
+	}
+
 	public String getUsername(String token) {
 		return getClaims(token).getSubject();
 	}
 
-	private Claims getClaims(String token){
+	private Claims getClaims(String token) {
 		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 	}
 
-	public String resolveToken(HttpServletRequest req) {
-		String bearerToken = req.getHeader(HEADER_STRING);
+	public String resolveRefreshToken(HttpServletRequest req) {
+		return doResolveToken(req, REFRESH_TOKEN_HEADER, REFRESH_TOKEN_PREFIX);
+	}
 
-		if (bearerToken == null || !bearerToken.startsWith(TOKEN_PREFIX)) {
+	public String resolveToken(HttpServletRequest req) {
+		return doResolveToken(req, TOKEN_HEADER, TOKEN_PREFIX);
+	}
+
+	public String doResolveToken(HttpServletRequest req, String header, String prefix) {
+		String bearerToken = req.getHeader(header);
+
+		if (bearerToken == null || !bearerToken.startsWith(prefix)) {
 			return null;
 		}
 
-		return bearerToken.substring(TOKEN_PREFIX.length());
+		return bearerToken.substring(prefix.length());
 	}
 
 	public boolean validateToken(String token) {

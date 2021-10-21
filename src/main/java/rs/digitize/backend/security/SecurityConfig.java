@@ -68,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,
 				HttpHeaders.AUTHORIZATION,
 				HttpHeaders.CONTENT_TYPE,
+				SecurityConstants.REFRESH_TOKEN_HEADER,
 				"X-Data-Count");
 
 		configuration.setAllowedHeaders(headers);
