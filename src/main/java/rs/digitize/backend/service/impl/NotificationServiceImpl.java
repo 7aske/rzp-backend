@@ -49,7 +49,7 @@ public class NotificationServiceImpl implements NotificationService {
 		Notification notification = new Notification();
 		notification.setTitle(String.format("%s commented on post %s", comment.getUser().getDisplayName(), post.getTitle()));
 		notification.setBody(comment.getBody());
-		notification.setActionUrl("/posts/" + post.getSlug());
+		notification.setActionUrl("/posts/" + post.getSlug() + "#comments");
 		commentService.findAllForPost(post)
 				.stream()
 				.map(Comment::getUser)
