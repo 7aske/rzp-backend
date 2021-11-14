@@ -78,8 +78,8 @@ public class PostServiceImpl implements PostService {
 	public Post update(Post post) {
 		Post existing = findById(post.getId());
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		post.setUser(existing.getUser());
 		if (user != null && (user.isAdmin() || user.equals(existing.getUser()))) {
-			post.setUser(user);
 			return postRepository.save(post);
 		} else {
 			throw new HttpUnauthorizedException();
