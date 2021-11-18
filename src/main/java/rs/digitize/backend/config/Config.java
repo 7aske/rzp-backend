@@ -5,6 +5,7 @@ import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.convert.converter.ConverterRegistry;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -22,6 +23,7 @@ import javax.annotation.PostConstruct;
 @Configuration
 @EnableJpaAuditing
 @RequiredArgsConstructor
+@EnableAspectJAutoProxy
 public class Config {
 	private final ConverterRegistry converterRegistry;
 
